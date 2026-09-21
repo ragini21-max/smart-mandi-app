@@ -108,8 +108,15 @@ button:hover {
   background-color: #1b4332;
 }
 
-.btn-warn { background-color: #e0a96d; color: black; }
-.btn-danger { background-color: #d90429; color: white; }
+.btn-warn {
+  background-color: #e0a96d;
+  color: black;
+}
+
+.btn-danger {
+  background-color: #d90429;
+  color: white;
+}
 
 .status-badge {
   background-color: #e8f5e9;
