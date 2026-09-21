@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Mandi Queue Engine (PS ID 26032)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Smart Mandi Queue & Procurement Engine</h1>
+    <p>InnovateX | Problem Statement ID: 26032</p>
+  </header>
+
+  <main class="container">
+    <!-- Executive Summary Card -->
+    <section class="card">
+      <h2>Executive Summary</h2>
+      <p>Transforming chaotic physical queues into predictable digital gate arrivals with dynamic capacity quotas and multi-channel offline fallback.</p>
+      <div class="metrics">
+        <div class="metric-box">
+          <span class="value">85%</span>
+          <span class="label">Wait Time Reduction</span>
+        </div>
+        <div class="metric-box">
+          <span class="value">45 mins</span>
+          <span class="label">Target ETA (from 10h)</span>
+        </div>
+        <div class="metric-box">
+          <span class="value">&lt; ₹0.15</span>
+          <span class="label">Cost / Processed Token</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Calculator -->
+    <section class="card">
+      <h2>Dynamic ETA Wait Time Simulator</h2>
+      <p>Simulate estimated waiting time ($W_i$) based on incoming produce tonnage and active weighbridges:</p>
+      
+      <div class="calculator-form">
+        <label for="tonnage">Produce Quantity (Tons):</label>
+        <input type="number" id="tonnage" value="10" min="1" max="100">
+
+        <label for="bridges">Active Weighbridges:</label>
+        <input type="number" id="bridges" value="2" min="1" max="10">
+
+        <button onclick="calculateETA()">Calculate Wait Time</button>
+      </div>
+
+      <div class="result" id="etaResult">
+        Estimated Wait Time: <strong>30 minutes</strong>
+      </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="card">
+      <h2>Core Features</h2>
+      <ul>
+        <li><strong>Dynamic Yard Inflow:</strong> Auto-throttles token issuance to prevent vehicle gridlock.</li>
+        <li><strong>AgriToken Offline & IVR/SMS:</strong> Addresses low rural smartphone penetration via automatic SMS triggers.</li>
+        <li><strong>Tamper-Proof QR Gate-Pass:</strong> Encrypted passes linked to Aadhaar/Kisan ID for 15-second verifications.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

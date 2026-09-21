@@ -1,0 +1,110 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #1b4332;
+  color: #fff;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+header p {
+  margin: 0.5rem 0 0 0;
+  opacity: 0.8;
+}
+
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: #ffffff;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  color: #2d6a4f;
+  margin-top: 0;
+}
+
+.metrics {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.metric-box {
+  background-color: #e8f5e9;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  flex: 1;
+}
+
+.metric-box .value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1b4332;
+}
+
+.metric-box .label {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.calculator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+input, button {
+  padding: 0.6rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #2d6a4f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+button:hover {
+  background-color: #1b4332;
+}
+
+.result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #d8f3dc;
+  border-radius: 4px;
+  color: #1b4332;
+}
+
+ul {
+  padding-left: 1.2rem;
+  line-height: 1.6;
+}
