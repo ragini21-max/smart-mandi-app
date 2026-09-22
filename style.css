@@ -22,7 +22,7 @@ body {
   justify-content: center;
 }
 
-/* App Outer Shell Container (Modern App View) */
+/* App Outer Shell Container */
 .app-shell {
   width: 100%;
   max-width: 500px;
@@ -261,12 +261,17 @@ input:focus, select:focus {
   margin-top: 1rem;
 }
 
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
 .btn-group {
   display: flex;
   gap: 0.5rem;
 }
 
-/* OTP Timer text */
+/* OTP Timer Text */
 .timer-text {
   font-size: 0.8rem;
   color: var(--danger);
@@ -411,7 +416,17 @@ input:focus, select:focus {
   color: var(--primary);
 }
 
-/* Weight Display & Logs */
+/* Engine & Result Displays */
+.result-box {
+  background: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  color: #1b5e20;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+}
+
 .weight-display {
   font-size: 1.8rem;
   font-family: monospace;
