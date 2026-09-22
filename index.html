@@ -3,535 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#17633a">
-  <title data-i18n="appTitle">Smart Mandi Engine</title>
-
+  <title>Smart Mandi Procurement System</title>
   <link rel="stylesheet" href="style.css">
-
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-    defer>
-  </script>
-  <script src="script.js" defer></script>
+  <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="header-top">
-        <div class="brand">
-          <span class="logo-icon" aria-hidden="true">🌾</span>
-          <div>
-            <h1 data-i18n="appTitle">Smart Mandi Engine</h1>
-            <div class="sub-title" data-i18n="subTitle">
-              APMC Dynamic Queue &amp; Pass
-            </div>
-          </div>
-        </div>
 
-        <div class="lang-picker">
-          <label for="langSelect" class="sr-only">Language</label>
-          <select id="langSelect" aria-label="Select language">
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-          </select>
-        </div>
+  <header class="navbar">
+    <h1>Smart Mandi Management</h1>
+    <div id="connectionStatus" class="status-online">Online</div>
+  </header>
+
+  <main class="container">
+    <!-- Booking Section -->
+    <section class="card" id="bookingCard">
+      <h2>Farmer Registration & Slot Booking</h2>
+
+      <div id="quotaAlertBox" class="result-box info-result">
+        <strong>Daily Capacity Alert:</strong> <span id="quotaMessage">Select details to check capacity</span>
       </div>
 
-      <nav class="nav-tabs" aria-label="Main navigation">
-        <button class="tab-btn active" data-module="farmerModule">
-          <span class="tab-icon">🚜</span>
-          <span data-i18n="tabFarmer">Farmer App</span>
-        </button>
-
-        <button class="tab-btn" data-module="officerModule">
-          <span class="tab-icon">👨‍💼</span>
-          <span data-i18n="tabOfficer">Officer Desk</span>
-        </button>
-
-        <button class="tab-btn" data-module="engineModule">
-          <span class="tab-icon">⚙️</span>
-          <span data-i18n="tabEngine">Queue Engine</span>
-        </button>
-
-        <button class="tab-btn" data-module="smsModule">
-          <span class="tab-icon">💬</span>
-          <span data-i18n="tabSms">SMS Logs</span>
-        </button>
-      </nav>
-    </header>
-
-    <main class="app-content">
-      <!-- Farmer Module -->
-      <section id="farmerModule" class="module active">
-        <div class="module-header">
-          <span class="eyebrow">01</span>
-          <h2 data-i18n="farmerPortal">Farmer Portal &amp; Digital Pass</h2>
-          <p data-i18n="farmerDescription">
-            Verify your mobile number, schedule slot, and track procurement &amp; payment status.
-          </p>
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="farmerName">Farmer Full Name</label>
+          <input type="text" id="farmerName" required placeholder="Enter full name">
         </div>
 
-        <div class="card" id="loginCard">
-          <div class="card-header">
-            <span class="card-step">1</span>
-            <div>
-              <h3 data-i18n="otpHeading">Kisan OTP Authentication</h3>
-              <p data-i18n="otpDescription">Use your registered mobile number.</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="farmerPhone" data-i18n="lblPhone">Mobile Number</label>
-            <div class="input-with-prefix">
-              <span>+91</span>
-              <input
-                type="tel"
-                id="farmerPhone"
-                inputmode="numeric"
-                autocomplete="tel"
-                maxlength="10"
-                data-i18n-ph="phPhone"
-                placeholder="Enter 10-digit mobile number">
-            </div>
-          </div>
-
-          <button class="btn btn-primary" id="sendOtpBtn" type="button">
-            <span data-i18n="sendOtp">Send OTP</span>
-            <span aria-hidden="true">→</span>
-          </button>
-
-          <div id="otpSection" class="otp-container hidden">
-            <div class="timer-text" id="otpTimer"></div>
-
-            <div class="form-group">
-              <label for="otpCode" data-i18n="lblOtpCode">Verification Code</label>
-              <input
-                type="text"
-                id="otpCode"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="4"
-                data-i18n-ph="phOtp"
-                placeholder="Enter 4-digit OTP">
-            </div>
-
-            <button class="btn btn-success" id="verifyOtpBtn" type="button">
-              <span data-i18n="verifyLogin">Verify &amp; Login</span>
-              <span aria-hidden="true">✓</span>
-            </button>
-
-            <div id="demoOtp" class="demo-note hidden"></div>
+        <div class="form-group">
+          <label for="phoneNumber">Mobile Number</label>
+          <div class="input-inline">
+            <input type="tel" id="phoneNumber" placeholder="10-digit number" required>
+            <button type="button" id="sendOtpBtn" class="btn btn-secondary">Send OTP</button>
           </div>
         </div>
 
-        <div class="card hidden" id="bookingCard">
-          <div class="card-header">
-            <span class="card-step">2</span>
-            <div>
-              <h3 data-i18n="bookSlotHeading">Book Procurement Schedule</h3>
-              <p data-i18n="bookingDescription">
-                Select schedule date, time slot, produce, and vehicle details.
-              </p>
-            </div>
+        <div class="form-group hidden" id="otpGroup">
+          <label for="otpCode">Enter OTP</label>
+          <div class="input-inline">
+            <input type="text" id="otpCode" placeholder="Enter OTP">
+            <button type="button" id="verifyOtpBtn" class="btn btn-secondary">Verify</button>
           </div>
-
-          <form id="bookingForm">
-            <div class="form-group">
-              <label for="farmerName" data-i18n="lblFarmerName">
-                Farmer Name / ID
-              </label>
-              <input
-                type="text"
-                id="farmerName"
-                autocomplete="name"
-                data-i18n-ph="phFarmerName"
-                placeholder="e.g. Ramesh Patil"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="mandiSelect" data-i18n="lblMandi">
-                Select Mandi Center
-              </label>
-              <select id="mandiSelect" required>
-                <option value="" disabled selected data-i18n="optSelectMandi">
-                  -- Select APMC Mandi --
-                </option>
-                <option value="Nashik Main APMC" data-i18n="mandiNashik">
-                  Nashik Main APMC
-                </option>
-                <option value="Lasalgaon Mandi" data-i18n="mandiLasalgaon">
-                  Lasalgaon Mandi
-                </option>
-                <option value="Pune Market Yard" data-i18n="mandiPune">
-                  Pune Market Yard
-                </option>
-                <option value="Nagpur APMC Hub" data-i18n="mandiNagpur">
-                  Nagpur APMC Hub
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="procurementDate" data-i18n="lblDate">Procurement Schedule Date</label>
-              <input type="date" id="procurementDate" required>
-            </div>
-
-            <div class="form-group">
-              <label for="slotTime" data-i18n="lblSlotTime">Preferred Time Window</label>
-              <select id="slotTime" required>
-                <option value="" disabled selected data-i18n="optSelectSlot">-- Select Time Window --</option>
-                <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM (Low Traffic)</option>
-                <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM (Moderate)</option>
-                <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM (Peak Rush)</option>
-                <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM (Moderate)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="commoditySelect" data-i18n="lblCommodity">
-                Commodity Type
-              </label>
-              <select id="commoditySelect" required>
-                <option value="" disabled selected data-i18n="optSelectCommodity">
-                  -- Select Commodity --
-                </option>
-                <option value="Onion" data-i18n="cropOnion">Onion</option>
-                <option value="Pulses" data-i18n="cropPulses">Pulses</option>
-                <option value="Vegetables" data-i18n="cropVegetables">Vegetables</option>
-                <option value="Wheat" data-i18n="cropWheat">Wheat</option>
-                <option value="Cotton" data-i18n="cropCotton">Cotton</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="produceQty" data-i18n="lblQty">
-                Produce Quantity (Tons)
-              </label>
-              <input
-                type="number"
-                id="produceQty"
-                min="0.1"
-                step="0.1"
-                data-i18n-ph="phQty"
-                placeholder="e.g. 5.5"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="vehicleType" data-i18n="lblVehicle">
-                Vehicle Type
-              </label>
-              <select id="vehicleType" required>
-                <option value="" disabled selected data-i18n="optSelectVehicle">
-                  -- Select Vehicle --
-                </option>
-                <option value="Tractor Trolley" data-i18n="vehicleTractor">Tractor Trolley</option>
-                <option value="Mini Truck" data-i18n="vehicleMiniTruck">Mini Truck</option>
-                <option value="Heavy Commercial Truck" data-i18n="vehicleHeavyTruck">Heavy Commercial Truck</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <span data-i18n="btnBookSlot">
-                Book Slot &amp; Generate QR Pass
-              </span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </form>
+          <small id="otpHint" class="hint-text"></small>
         </div>
 
-        <div class="card digital-pass-card hidden" id="passCard">
-          <div class="pass-header">
-            <div>
-              <span class="eyebrow" data-i18n="passEyebrow">SECURE PASS</span>
-              <h3 data-i18n="passHeading">Digital Gate Pass &amp; Status</h3>
-            </div>
-            <span class="status-badge" id="passStatusBadge" data-i18n="slotConfirmed">
-              SLOT CONFIRMED
-            </span>
-          </div>
-
-          <div class="qr-placeholder">
-            <div id="qrcode" class="qr-box"></div>
-            <div class="token-tag" id="qrTokenId">#MND-00000</div>
-            <p data-i18n="scanAtGate">Show this QR code at entry gate.</p>
-          </div>
-
-          <div class="summary-box">
-            <div class="summary-grid">
-              <div class="summary-item">
-                <span data-i18n="lblFarmerName">Farmer Name / ID</span>
-                <strong id="summaryFarmerName">--</strong>
-              </div>
-              <div class="summary-item">
-                <span data-i18n="lblMandi">Mandi Center</span>
-                <strong id="summaryMandi">--</strong>
-              </div>
-              <div class="summary-item">
-                <span data-i18n="lblSchedule">Schedule Window</span>
-                <strong id="summarySchedule">--</strong>
-              </div>
-              <div class="summary-item">
-                <span data-i18n="lblCommodity">Commodity Type</span>
-                <strong id="summaryCommodity">--</strong>
-              </div>
-              <div class="summary-item">
-                <span data-i18n="lblQty">Produce Quantity</span>
-                <strong id="summaryQty">--</strong>
-              </div>
-            </div>
-          </div>
-
-          <!-- Procurement & Payment Status Tracker -->
-          <div class="procurement-tracker">
-            <h4 data-i18n="procurementStatusTitle">Procurement &amp; Payment Status</h4>
-            <div class="pipeline">
-              <div class="pipe-step completed" id="stepBooked">
-                <span class="dot">✓</span>
-                <small data-i18n="stepBooked">Slot Reserved</small>
-              </div>
-              <div class="pipe-step pending" id="stepGate">
-                <span class="dot">2</span>
-                <small data-i18n="stepGate">Gate Entry</small>
-              </div>
-              <div class="pipe-step pending" id="stepWeighed">
-                <span class="dot">3</span>
-                <small data-i18n="stepWeighed">Weighbridge</small>
-              </div>
-              <div class="pipe-step pending" id="stepApproved">
-                <span class="dot">4</span>
-                <small data-i18n="stepApproved">Quality Quality/Procured</small>
-              </div>
-              <div class="pipe-step pending" id="stepPaid">
-                <span class="dot">5</span>
-                <small data-i18n="stepPaid">DBT Payment</small>
-              </div>
-            </div>
-            <div id="paymentDetailsBox" class="result-box info-result hidden">
-              <strong>DBT Payment Ref:</strong> <span id="paymentRef">N/A</span> | <strong>Amount:</strong> ₹<span id="paymentAmount">0</span>
-            </div>
-          </div>
-
-          <div class="status-tracker" style="margin-top: 15px;">
-            <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblLivePos">Live Position</span>
-              <span class="tracker-val" id="farmerPos">#3</span>
-            </div>
-            <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblETA">Dynamic ETA</span>
-              <span class="tracker-val" id="farmerETA">10:45 AM</span>
-            </div>
-            <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblGrace">Grace Period</span>
-              <span class="tracker-val" id="farmerGrace">15 min</span>
-            </div>
-          </div>
-
-          <button class="btn btn-audio" id="ttsBtn" type="button">
-            🔊 <span data-i18n="btnTTS">Listen to Status</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Officer Module -->
-      <section id="officerModule" class="module">
-        <div class="module-header">
-          <span class="eyebrow">02</span>
-          <h2 data-i18n="officerDeskTitle">Mandi Officer Control Desk</h2>
-          <p data-i18n="officerDescription">
-            Verify passes, approve procurement quality, and initiate DBT payment settlement.
-          </p>
+        <div class="form-group">
+          <label for="procurementDate">Procurement Date</label>
+          <input type="date" id="procurementDate" required>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">🎫</span>
-            <div>
-              <h3 data-i18n="gatePassHeading">Gate Pass Verification</h3>
-              <p class="card-desc" data-i18n="gatePassDesc">
-                Scan or enter token ID at mandi entry gate.
-              </p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="scanInput" data-i18n="lblToken">Token ID</label>
-            <input
-              type="text"
-              id="scanInput"
-              data-i18n-ph="phTokenInput"
-              placeholder="Enter token ID, e.g. #MND-84920">
-          </div>
-
-          <div class="btn-group">
-            <button class="btn btn-primary" id="scanTokenBtn" type="button">
-              <span data-i18n="btnVerifyEntry">Verify Entry</span>
-            </button>
-            <button class="btn btn-outline" id="camToggleBtn" type="button">
-              📷 <span data-i18n="btnCamScanner">Open Camera Scanner</span>
-            </button>
-          </div>
-
-          <div id="scanResult" class="result-box info-result"></div>
+        <div class="form-group">
+          <label for="mandiSelect">Select Mandi</label>
+          <select id="mandiSelect" required>
+            <option value="">-- Choose Mandi --</option>
+            <option value="Central Mandi A">Central Mandi A</option>
+            <option value="North Market Yard B">North Market Yard B</option>
+            <option value="South Hub C">South Hub C</option>
+          </select>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">⚖️</span>
-            <div>
-              <h3 data-i18n="weighbridgeHeading">Automated Weighbridge Station</h3>
-              <p class="card-desc" data-i18n="weighbridgeDesc">
-                Simulate live weight scale input from IoT sensor.
-              </p>
-            </div>
-          </div>
-
-          <div class="weight-display" id="weighValue">--.--- TONS</div>
-
-          <button class="btn btn-success" id="weighBtn" type="button">
-            <span data-i18n="btnCaptureWeight">Capture Weight &amp; Confirm Procurement</span>
-          </button>
+        <div class="form-group">
+          <label for="commoditySelect">Commodity</label>
+          <select id="commoditySelect" required>
+            <option value="">-- Choose Commodity --</option>
+            <option value="Wheat">Wheat</option>
+            <option value="Paddy">Paddy</option>
+            <option value="Maize">Maize</option>
+            <option value="Mustard">Mustard</option>
+          </select>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">💳</span>
-            <div>
-              <h3>Procurement Approval &amp; Payment Settlement</h3>
-              <p class="card-desc">Approve grade quality and disburse Direct Benefit Transfer (DBT) funds.</p>
-            </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="produceQty">Quantity (in Tons)</label>
+            <input type="number" id="produceQty" min="0.1" step="0.1" placeholder="e.g. 5.5" required>
           </div>
-          <div class="btn-group">
-            <button class="btn btn-success" id="approveProcurementBtn" type="button">
-              Approve Produce &amp; Pay DBT
-            </button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">🚦</span>
-            <div>
-              <h3 data-i18n="exceptionsHeading">Queue Exceptions &amp; Controls</h3>
-            </div>
-          </div>
-
-          <div class="btn-group">
-            <button class="btn btn-warn" id="graceBtn" type="button">
-              <span data-i18n="btnGrantGrace">Grant 15-min Buffer</span>
-            </button>
-            <button class="btn btn-danger" id="emergencyBtn" type="button">
-              <span data-i18n="btnPauseGate">Pause Gate Entry</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Engine Module -->
-      <section id="engineModule" class="module">
-        <div class="module-header">
-          <span class="eyebrow">03</span>
-          <h2 data-i18n="engineTitle">Queue Processing Engine</h2>
-          <p data-i18n="engineDescription">
-            Adjust capacity and monitor real-time mandi traffic to reduce congestion.
-          </p>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">⚙️</span>
-            <div>
-              <h3 data-i18n="engineHeading">Capacity &amp; Speed Adjuster</h3>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="engineBridges" data-i18n="lblActiveBridges">
-              Active Weighbridges
-            </label>
-            <input type="number" id="engineBridges" value="2" min="1" max="10">
-          </div>
-
-          <div class="form-group">
-            <label for="shiftStatus" data-i18n="lblShiftFactor">
-              Shift Efficiency Factor
-            </label>
-            <select id="shiftStatus">
-              <option value="1" data-i18n="optNormalSpeed">Normal Speed (100%)</option>
-              <option value="1.5" data-i18n="optPeakSpeed">Peak Rush (150%)</option>
-              <option value="0.7" data-i18n="optSlowSpeed">Lunch Break / Slow (70%)</option>
+          <div class="form-group half">
+            <label for="slotTime">Preferred Slot</label>
+            <select id="slotTime" required>
+              <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM</option>
+              <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
+              <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM</option>
+              <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
             </select>
           </div>
-
-          <div id="engineOutput" class="result-box success-result"></div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">📊</span>
-            <div>
-              <h3 data-i18n="activeStatusHeading">Active Mandi Status</h3>
-            </div>
-          </div>
-
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <span data-i18n="lblInQueue">In Queue</span>
-              <strong id="metricInQueue">14</strong>
-              <small data-i18n="vehicles">Vehicles</small>
-            </div>
-
-            <div class="metric-card">
-              <span data-i18n="lblAvgWait">Average Wait</span>
-              <strong id="metricAvgWait">25</strong>
-              <small data-i18n="minutes">Minutes</small>
-            </div>
-
-            <div class="metric-card">
-              <span data-i18n="lblClearedToday">Cleared Today</span>
-              <strong>82</strong>
-              <small data-i18n="tons">Tons</small>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SMS Module -->
-      <section id="smsModule" class="module">
-        <div class="module-header">
-          <span class="eyebrow">04</span>
-          <h2 data-i18n="smsTitle">SMS Gateway &amp; Broadcast Logs</h2>
-          <p data-i18n="smsDescription">
-            View real-time system and farmer SMS communication logs.
-          </p>
+        <div class="form-group">
+          <label for="vehicleType">Vehicle Type</label>
+          <select id="vehicleType" required>
+            <option value="Tractor">Tractor</option>
+            <option value="Small Truck">Small Truck</option>
+            <option value="Large Commercial Truck">Large Commercial Truck</option>
+          </select>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <span class="card-icon">💬</span>
-            <div>
-              <h3 data-i18n="smsHeading">Live Telephony Logs</h3>
-            </div>
-          </div>
+        <button type="submit" id="submitBookingBtn" class="btn btn-primary" disabled>Generate E-Pass Token</button>
+      </form>
+    </section>
 
-          <div class="log-box" id="smsLogBox"></div>
+    <!-- Digital Pass & Tracking Section -->
+    <section class="card hidden" id="passCard">
+      <h2>Digital Entry Token Pass</h2>
+      <div class="pass-box">
+        <div class="pass-header">
+          <span class="pass-id" id="passTokenId">#MND-00000</span>
+          <span class="badge" id="passStageBadge">BOOKED</span>
         </div>
-      </section>
-    </main>
-  </div>
+        <div class="pass-body">
+          <p><strong>Farmer:</strong> <span id="passFarmerName">-</span></p>
+          <p><strong>Mandi:</strong> <span id="passMandi">-</span></p>
+          <p><strong>Commodity:</strong> <span id="passCommodity">-</span></p>
+          <p><strong>Schedule:</strong> <span id="passSchedule">-</span></p>
+          <p><strong>Vehicle:</strong> <span id="passVehicle">-</span></p>
+          <p><strong>Requested Qty:</strong> <span id="passRequestedQty">0</span> Tons</p>
+          <p><strong>Verified Weight:</strong> <span id="passVerifiedQty">Pending</span></p>
+        </div>
+        
+        <div class="queue-status">
+          <p>Queue Position: <strong id="passQueuePos">-</strong></p>
+          <p>Estimated Entry ETA: <strong id="passEta">-</strong></p>
+        </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="paymentDetailsBox" class="payment-box hidden">
+          <h3>Payment Status: <span id="paymentStatus" class="status-completed">COMPLETED</span></h3>
+          <p>DBT Ref Number: <strong id="paymentRef">-</strong></p>
+          <p>Total Paid Amount: <strong>₹<span id="paymentAmount">0</span></strong></p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registered successfully.', reg))
-          .catch(err => console.error('Service Worker registration failed:', err));
-      });
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
