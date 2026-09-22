@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Mandi Engine (PS ID 26032)</title>
+  <title>Smart Mandi Engine</title>
   <link rel="stylesheet" href="style.css">
   
   <!-- QRCode Generation Library -->
@@ -14,213 +14,267 @@
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
-  <header>
-    <div class="header-content">
-      <h1 data-i18n="appTitle">Smart Mandi Engine</h1>
-      <div class="lang-picker">
-        <label for="langSelect">🌐 Bhashini AI:</label>
-        <select id="langSelect" onchange="switchLanguage()">
-          <option value="en">English</option>
-          <option value="hi">हिंदी (Hindi)</option>
-          <option value="mr">मराठी (Marathi)</option>
-          <option value="bn">বাংলা (Bengali)</option>
-          <option value="te">తెలుగు (Telugu)</option>
-          <option value="ta">தமிழ் (Tamil)</option>
-          <option value="gu">ગુજરાતી (Gujarati)</option>
-          <option value="ur">اردو (Urdu)</option>
-          <option value="kn">ಕನ್ನಡ (Kannada)</option>
-          <option value="or">ଓଡ଼ିଆ (Odia)</option>
-          <option value="ml">മലയാളം (Malayalam)</option>
-          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-          <option value="as">অসমীয়া (Assamese)</option>
-          <option value="ma">मैथिली (Maithili)</option>
-          <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
-          <option value="ks">کأشُر (Kashmiri)</option>
-          <option value="ne">नेपाली (Nepali)</option>
-          <option value="sd">सिन्धी (Sindhi)</option>
-          <option value="kok">कोंकणी (Konkani)</option>
-          <option value="doi">डोगरी (Dogri)</option>
-          <option value="mni">মৈতৈলোন্ (Manipuri)</option>
-          <option value="sa">संस्कृतम् (Sanskrit)</option>
-        </select>
-      </div>
-    </div>
+  <!-- App Outer Wrapper for Mobile-First App Look -->
+  <div class="app-shell">
     
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="showModule('farmerModule', this)" data-i18n="tabFarmer">1. Farmer App</button>
-      <button class="tab-btn" onclick="showModule('officerModule', this)" data-i18n="tabOfficer">2. Officer Desk</button>
-      <button class="tab-btn" onclick="showModule('engineModule', this)" data-i18n="tabEngine">3. Queue Engine</button>
-      <button class="tab-btn" onclick="showModule('smsModule', this)" data-i18n="tabSms">4. SMS/IVR Logs</button>
-    </nav>
-  </header>
-
-  <main class="container">
-
-    <!-- MODULE 1: FARMER APPLICATION -->
-    <section id="farmerModule" class="module active">
-      <h2 data-i18n="farmerPortal">Farmer Portal & Digital Pass</h2>
+    <!-- Header Navigation Bar -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand">
+          <span class="logo-icon">🌾</span>
+          <div>
+            <h1 data-i18n="appTitle">Smart Mandi Engine</h1>
+            <span class="sub-title">PS ID 26032</span>
+          </div>
+        </div>
+        <div class="lang-picker">
+          <select id="langSelect" onchange="switchLanguage()">
+            <option value="en">🌐 English</option>
+            <option value="hi">🌐 हिंदी (Hindi)</option>
+            <option value="mr">🌐 मराठी (Marathi)</option>
+          </select>
+        </div>
+      </div>
       
-      <!-- OTP Login Card -->
-      <div class="card" id="loginCard">
-        <h3 data-i18n="otpHeading">1. Kisan OTP Authentication</h3>
-        <input type="tel" id="farmerPhone" placeholder="Enter Mobile Number (+91)" required>
-        <button id="sendOtpBtn" onclick="sendOTP()" data-i18n="sendOtp">Send OTP</button>
+      <!-- Navigation Tabs Bar -->
+      <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="showModule('farmerModule', this)">
+          <span class="tab-icon">👨‍🌾</span> <span data-i18n="tabFarmer">Farmer App</span>
+        </button>
+        <button class="tab-btn" onclick="showModule('officerModule', this)">
+          <span class="tab-icon">👮‍♂️</span> <span data-i18n="tabOfficer">Officer Desk</span>
+        </button>
+        <button class="tab-btn" onclick="showModule('engineModule', this)">
+          <span class="tab-icon">⚖️</span> <span data-i18n="tabEngine">Queue Engine</span>
+        </button>
+        <button class="tab-btn" onclick="showModule('smsModule', this)">
+          <span class="tab-icon">💬</span> <span data-i18n="tabSms">SMS Logs</span>
+        </button>
+      </nav>
+    </header>
+
+    <main class="app-content">
+
+      <!-- MODULE 1: FARMER APPLICATION -->
+      <section id="farmerModule" class="module active">
+        <div class="module-header">
+          <h2 data-i18n="farmerPortal">Farmer Portal & Digital Pass</h2>
+        </div>
         
-        <div id="otpSection" style="display:none; margin-top: 10px;">
-          <input type="text" id="otpCode" placeholder="Enter 4-Digit OTP Sent via SMS">
-          <div id="otpTimer" class="timer-text">OTP expires in: 10s</div>
-          <button id="verifyOtpBtn" onclick="verifyOTP()" data-i18n="verifyLogin">Verify & Login</button>
-        </div>
-      </div>
-
-      <!-- Token Booking Form -->
-      <div class="card" id="bookingCard" style="display:none;">
-        <h3 data-i18n="bookSlotHeading">2. Book Procurement Slot</h3>
-        <form onsubmit="generateToken(event)">
-          <label data-i18n="lblFarmerName">Farmer Name / Farmer ID:</label>
-          <input type="text" id="farmerName" placeholder="e.g. Ramesh Patil" required>
-
-          <label data-i18n="lblMandi">Select Mandi Center:</label>
-          <select id="mandiSelect" required>
-            <option value="" disabled selected>-- Select APMC Mandi --</option>
-            <option value="Nashik Main APMC">Nashik Main APMC</option>
-            <option value="Puntamba Sub-Mandi">Puntamba Sub-Mandi</option>
-            <option value="Amravati Central APMC">Amravati Central APMC</option>
-            <option value="Lasalgaon Mandi Yard">Lasalgaon Mandi Yard</option>
-          </select>
-
-          <label data-i18n="lblCommodity">Commodity Type:</label>
-          <select id="commoditySelect" required>
-            <option value="" disabled selected>-- Select Commodity --</option>
-            <option value="Onion (Kanda)" data-i18n="optOnion">Onion (Kanda)</option>
-            <option value="Pulses (Dal)" data-i18n="optPulses">Pulses (Dal)</option>
-            <option value="Vegetables" data-i18n="optVeg">Vegetables</option>
-            <option value="Wheat (Gehun)">Wheat (Gehun)</option>
-            <option value="Cotton (Kapas)">Cotton (Kapas)</option>
-          </select>
-
-          <label data-i18n="lblQty">Produce Quantity (Tons):</label>
-          <input type="number" id="produceQty" min="0.5" step="0.1" placeholder="e.g. 5.5" required>
-
-          <label data-i18n="lblVehicle">Vehicle Type:</label>
-          <select id="vehicleType" required>
-            <option value="" disabled selected>-- Select Vehicle --</option>
-            <option value="Tractor Trolley">Tractor Trolley</option>
-            <option value="Mini Truck">Mini Truck</option>
-            <option value="Heavy Commercial Truck">Heavy Commercial Truck</option>
-          </select>
-
-          <button type="submit" data-i18n="btnBookSlot">Book Slot & Generate QR Pass</button>
-        </form>
-      </div>
-
-      <!-- Pass & Queue Status -->
-      <div class="card" id="passCard" style="display:none;">
-        <span class="status-badge" id="passStatus">Status: GATE ENROUTE</span>
-        <h3 data-i18n="passHeading">Digital Gate Pass</h3>
-        
-        <div class="qr-placeholder">
-          <div id="qrcode" class="qr-box"></div>
-          <p id="qrTokenId">Token ID: Pending...</p>
+        <!-- OTP Login Card -->
+        <div class="card" id="loginCard">
+          <div class="card-header">
+            <span class="card-step">1</span>
+            <h3 data-i18n="otpHeading">Kisan OTP Authentication</h3>
+          </div>
+          <div class="form-group">
+            <label for="farmerPhone">Mobile Number (+91)</label>
+            <input type="tel" id="farmerPhone" placeholder="Enter 10-digit mobile number" maxlength="10" required>
+          </div>
+          <button class="btn btn-primary" id="sendOtpBtn" onclick="sendOTP()" data-i18n="sendOtp">Send OTP</button>
+          
+          <div id="otpSection" class="otp-container" style="display:none;">
+            <div class="form-group">
+              <input type="text" id="otpCode" placeholder="Enter 4-Digit OTP" maxlength="4">
+            </div>
+            <div id="otpTimer" class="timer-text">OTP expires in: 30s</div>
+            <button class="btn btn-success" id="verifyOtpBtn" onclick="verifyOTP()" data-i18n="verifyLogin">Verify & Login</button>
+          </div>
         </div>
 
-        <div class="info-summary-card">
-          <h4>Booking Summary</h4>
-          <p><strong>Farmer Name:</strong> <span id="summaryFarmerName">-</span></p>
-          <p><strong>Mandi Yard:</strong> <span id="summaryMandi">-</span></p>
-          <p><strong>Commodity:</strong> <span id="summaryCommodity">-</span> (<span id="summaryQty">-</span> Tons)</p>
-          <p><strong>Vehicle:</strong> <span id="summaryVehicle">-</span></p>
+        <!-- Token Booking Form -->
+        <div class="card" id="bookingCard" style="display:none;">
+          <div class="card-header">
+            <span class="card-step">2</span>
+            <h3 data-i18n="bookSlotHeading">Book Procurement Slot</h3>
+          </div>
+          <form id="bookingForm" onsubmit="generateToken(event)">
+            <div class="form-group">
+              <label data-i18n="lblFarmerName">Farmer Name / ID:</label>
+              <input type="text" id="farmerName" placeholder="e.g. Ramesh Patil" required>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="lblMandi">Select Mandi Center:</label>
+              <select id="mandiSelect" required>
+                <option value="" disabled selected>-- Select APMC Mandi --</option>
+                <option value="Nashik Main APMC">Nashik Main APMC</option>
+                <option value="Puntamba Sub-Mandi">Puntamba Sub-Mandi</option>
+                <option value="Amravati Central APMC">Amravati Central APMC</option>
+                <option value="Lasalgaon Mandi Yard">Lasalgaon Mandi Yard</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="lblCommodity">Commodity Type:</label>
+              <select id="commoditySelect" required>
+                <option value="" disabled selected>-- Select Commodity --</option>
+                <option value="Onion (Kanda)" data-i18n="optOnion">Onion (Kanda)</option>
+                <option value="Pulses (Dal)" data-i18n="optPulses">Pulses (Dal)</option>
+                <option value="Vegetables" data-i18n="optVeg">Vegetables</option>
+                <option value="Wheat (Gehun)">Wheat (Gehun)</option>
+                <option value="Cotton (Kapas)">Cotton (Kapas)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="lblQty">Produce Quantity (Tons):</label>
+              <input type="number" id="produceQty" min="0.5" step="0.1" placeholder="e.g. 5.5" required>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="lblVehicle">Vehicle Type:</label>
+              <select id="vehicleType" required>
+                <option value="" disabled selected>-- Select Vehicle --</option>
+                <option value="Tractor Trolley">Tractor Trolley</option>
+                <option value="Mini Truck">Mini Truck</option>
+                <option value="Heavy Commercial Truck">Heavy Commercial Truck</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" data-i18n="btnBookSlot">Book Slot & Generate QR Pass</button>
+          </form>
         </div>
 
-        <div class="info-grid">
-          <div><strong data-i18n="lblLivePos">Live Position:</strong> <span id="farmerPos">#3 in line</span></div>
-          <div><strong data-i18n="lblETA">Dynamic ETA:</strong> <span id="farmerETA">~25 minutes</span></div>
-          <div><strong data-i18n="lblGrace">Grace Period:</strong> <span id="graceTimer">15:00 Mins</span></div>
+        <!-- Pass & Queue Status -->
+        <div class="card digital-pass-card" id="passCard" style="display:none;">
+          <div class="pass-header">
+            <h3 data-i18n="passHeading">Digital Gate Pass</h3>
+            <span class="status-badge" id="passStatus">GATE ENROUTE</span>
+          </div>
+          
+          <div class="qr-placeholder">
+            <div id="qrcode" class="qr-box"></div>
+            <p id="qrTokenId" class="token-tag">Token ID: Pending...</p>
+          </div>
+
+          <div class="summary-box">
+            <h4>📋 Booking Summary</h4>
+            <div class="summary-grid">
+              <div class="summary-item"><span>Farmer Name:</span> <strong id="summaryFarmerName">-</strong></div>
+              <div class="summary-item"><span>Mandi Yard:</span> <strong id="summaryMandi">-</strong></div>
+              <div class="summary-item"><span>Commodity:</span> <strong id="summaryCommodity">-</strong> (<span id="summaryQty">-</span> Tons)</div>
+              <div class="summary-item"><span>Vehicle:</span> <strong id="summaryVehicle">-</strong></div>
+            </div>
+          </div>
+
+          <div class="status-tracker">
+            <div class="tracker-item">
+              <span class="tracker-label" data-i18n="lblLivePos">Live Position</span>
+              <span class="tracker-val" id="farmerPos">#3 in line</span>
+            </div>
+            <div class="tracker-item">
+              <span class="tracker-label" data-i18n="lblETA">Dynamic ETA</span>
+              <span class="tracker-val" id="farmerETA">~25 mins</span>
+            </div>
+            <div class="tracker-item">
+              <span class="tracker-label" data-i18n="lblGrace">Grace Period</span>
+              <span class="tracker-val" id="graceTimer">15:00 Mins</span>
+            </div>
+          </div>
+
+          <button onclick="triggerVoiceAssistance()" class="btn btn-audio btn-block" data-i18n="btnTTS">🔊 Listen Status (Bhashini Audio)</button>
+        </div>
+      </section>
+
+      <!-- MODULE 2: MANDI OFFICER DASHBOARD -->
+      <section id="officerModule" class="module">
+        <div class="module-header">
+          <h2 data-i18n="officerDeskTitle">Mandi Officer Control Desk</h2>
         </div>
 
-        <button onclick="triggerVoiceAssistance()" data-i18n="btnTTS">🔊 Listen Status (Bhashini TTS)</button>
-      </div>
-    </section>
-
-    <!-- MODULE 2: MANDI OFFICER DASHBOARD -->
-    <section id="officerModule" class="module">
-      <h2 data-i18n="officerDeskTitle">Mandi Officer Control Desk</h2>
-
-      <div class="card">
-        <h3>Live Yard Operations</h3>
-        <div class="metrics-grid">
-          <div class="metric"><span>In-Queue:</span> <strong id="officerQueueCount">12 Vehicles</strong></div>
-          <div class="metric"><span>Active Bridges:</span> <strong>2 Operational</strong></div>
-          <div class="metric"><span>Avg Throughput:</span> <strong>15 Tons/hr</strong></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Gate-In & QR Scanner</h3>
-        <input type="text" id="scanInput" placeholder="Scan or enter Token ID (#MND-XXXXX)">
-        <button onclick="scanToken()">Verify Manual Token ID</button>
-        
-        <div class="camera-scanner-container">
-          <button onclick="toggleCameraScanner()" class="btn-warn" id="camToggleBtn">📷 Open Camera QR Scanner</button>
-          <div id="reader" style="display:none; margin-top: 15px; width: 100%;"></div>
+        <div class="card">
+          <h3>Live Yard Operations</h3>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span>In-Queue</span>
+              <strong id="officerQueueCount">12 Vehicles</strong>
+            </div>
+            <div class="metric-card">
+              <span>Active Bridges</span>
+              <strong>2 Operational</strong>
+            </div>
+            <div class="metric-card">
+              <span>Throughput</span>
+              <strong>15 Tons/hr</strong>
+            </div>
+          </div>
         </div>
 
-        <div id="scanResult" class="log-output">Awaiting QR scan...</div>
-      </div>
+        <div class="card">
+          <h3>Gate-In Verification & Scanner</h3>
+          <div class="form-group">
+            <input type="text" id="scanInput" placeholder="Scan or enter Token ID (#MND-XXXXX)">
+          </div>
+          <button onclick="scanToken()" class="btn btn-primary">Verify Manual Token ID</button>
+          
+          <div class="camera-scanner-container">
+            <button onclick="toggleCameraScanner()" class="btn btn-warn btn-block" id="camToggleBtn">📷 Open Camera QR Scanner</button>
+            <div id="reader" style="display:none; margin-top: 15px; width: 100%;"></div>
+          </div>
 
-      <div class="card">
-        <h3>Queue Adjustments & Re-Queue Rules</h3>
-        <button onclick="applyGracePeriod()" class="btn-warn">Apply 15-Min Grace Period</button>
-        <button onclick="triggerEmergency()" class="btn-danger">Pause Gate Entry (Emergency)</button>
-      </div>
-    </section>
-
-    <!-- MODULE 3: QUEUE ENGINE -->
-    <section id="engineModule" class="module">
-      <h2>Dynamic Queue & Weighbridge Engine</h2>
-
-      <div class="card">
-        <h3>Dynamic Capacity & Throttle Engine</h3>
-        <p>Calculates real-time farmer wait time based on tonnage and bridge speed.</p>
-        
-        <label>Active Weighbridges:</label>
-        <input type="number" id="engineBridges" value="2" min="1" onchange="recalculateEngine()">
-
-        <label>Operational Shift Delay:</label>
-        <select id="shiftStatus" onchange="recalculateEngine()">
-          <option value="1">Normal Speed</option>
-          <option value="1.5">Lunch / Maintenance Slowdown</option>
-        </select>
-
-        <div class="result-box" id="engineOutput">
-          Calculated System Throughput: <strong>12 mins per tractor</strong>
+          <div id="scanResult" class="log-output">Awaiting QR scan...</div>
         </div>
-      </div>
 
-      <div class="card">
-        <h3>Weighbridge IoT Capture Mock</h3>
-        <p>Direct IoT weight sync linked to digital pass:</p>
-        <div class="weight-display">00.000 TONS</div>
-        <button onclick="simulateWeighment()">Simulate Weight Capture</button>
-      </div>
-    </section>
-
-    <!-- MODULE 4: SMS LOGS -->
-    <section id="smsModule" class="module">
-      <h2>Multi-Channel Offline Fallback (SMS & IVR)</h2>
-      <div class="card">
-        <h3>Automated Gate Notifications</h3>
-        <p>Pushes updates to basic feature phones via SMS and toll-free IVR audio queries.</p>
-        
-        <div id="smsLogBox" class="log-box">
-          <div class="sms-item">[SYSTEM]: SMS Service Initialized.</div>
+        <div class="card">
+          <h3>Queue Controls</h3>
+          <div class="btn-group">
+            <button onclick="applyGracePeriod()" class="btn btn-warn">Apply 15-Min Buffer</button>
+            <button onclick="triggerEmergency()" class="btn btn-danger">Pause Gate Entry</button>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <!-- MODULE 3: QUEUE ENGINE -->
+      <section id="engineModule" class="module">
+        <div class="module-header">
+          <h2>Dynamic Queue & Weighbridge Engine</h2>
+        </div>
+
+        <div class="card">
+          <h3>Capacity & Throttle Calculator</h3>
+          <p class="card-desc">Calculates real-time processing dynamic times per vehicle based on weighbridge status.</p>
+          
+          <div class="form-group">
+            <label>Active Weighbridges:</label>
+            <input type="number" id="engineBridges" value="2" min="1" onchange="recalculateEngine()">
+          </div>
+
+          <div class="form-group">
+            <label>Operational Shift Condition:</label>
+            <select id="shiftStatus" onchange="recalculateEngine()">
+              <option value="1">Normal Speed</option>
+              <option value="1.5">Lunch / Maintenance Slowdown</option>
+            </select>
+          </div>
+
+          <div class="result-box" id="engineOutput">
+            Calculated System Throughput: <strong>10 mins per tractor</strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Weighbridge IoT Simulation</h3>
+          <div class="weight-display">00.000 TONS</div>
+          <button onclick="simulateWeighment()" class="btn btn-primary btn-block">Simulate Weight Capture</button>
+        </div>
+      </section>
+
+      <!-- MODULE 4: SMS LOGS -->
+      <section id="smsModule" class="module">
+        <div class="module-header">
+          <h2>Offline Multi-Channel Logs (SMS & IVR)</h2>
+        </div>
+        <div class="card">
+          <h3>System Message Feed</h3>
+          <div id="smsLogBox" class="log-box">
+            <div class="sms-item">[SYSTEM]: Automated Gate Notification Engine Running...</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
