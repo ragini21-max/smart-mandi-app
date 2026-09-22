@@ -11,7 +11,7 @@ const translations = {
     sendOtp: "Send OTP",
     verifyLogin: "Verify & Login",
     bookSlotHeading: "2. Book Procurement Slot",
-    lblFarmerName: "Farmer Name / Aadhaar:",
+    lblFarmerName: "Farmer Name / Identity:",
     lblMandi: "Select Mandi Center:",
     lblCommodity: "Commodity Type:",
     optOnion: "Onion (Kanda)",
@@ -29,7 +29,7 @@ const translations = {
     ttsAlert: "🔊 Bhashini Voice Output: 'Your turn is 3rd in line. Estimated wait time: 25 minutes'"
   },
   mr: {
-    appTitle: "स्मार्ट म्हाडी इंजिन",
+    appTitle: "स्मार्ट मंडी इंजिन",
     tabFarmer: "१. शेतकरी ॲप",
     tabOfficer: "२. अधिकारी डेस्क",
     tabEngine: "३. रांग इंजिन",
@@ -39,7 +39,7 @@ const translations = {
     sendOtp: "ओटीपी पाठवा",
     verifyLogin: "पडताळणी करा आणि लॉगिन करा",
     bookSlotHeading: "२. खरेदी स्लॉट बुक करा",
-    lblFarmerName: "शेतकऱ्याचे नाव / आधार:",
+    lblFarmerName: "शेतकऱ्याचे नाव / ओळख:",
     lblMandi: "मंडी केंद्र निवडा:",
     lblCommodity: "शेतीमाल प्रकार:",
     optOnion: "कांदा",
@@ -67,7 +67,7 @@ const translations = {
     sendOtp: "ओटीपी भेजें",
     verifyLogin: "सत्यापित करें और लॉगिन करें",
     bookSlotHeading: "२. खरीद स्लॉट बुक करें",
-    lblFarmerName: "किसान का नाम / आधार:",
+    lblFarmerName: "किसान का नाम / पहचान:",
     lblMandi: "मंडी केंद्र चुनें:",
     lblCommodity: "कृषि उपज का प्रकार:",
     optOnion: "प्याज (कांदा)",
@@ -92,7 +92,6 @@ function switchLanguage() {
   currentLang = document.getElementById('langSelect').value;
   const langData = translations[currentLang] || translations.en;
   
-  // Update all DOM elements with data-i18n attribute
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (langData[key]) {
@@ -112,7 +111,7 @@ function showModule(moduleId, btnElement) {
   }
 }
 
-// --- 2. OTP Authentication & 10-Second Timer ---
+// --- 2. OTP Authentication & 10-Second Expiration Timer ---
 let otpTimerInterval = null;
 
 function sendOTP() {
@@ -170,7 +169,7 @@ function generateToken(e) {
   
   // Render QR Code using qrcode.js
   const qrContainer = document.getElementById('qrcode');
-  qrContainer.innerHTML = ""; // Clear previous QR
+  qrContainer.innerHTML = "";
   qrcodeInstance = new QRCode(qrContainer, {
     text: token,
     width: 160,
@@ -216,10 +215,10 @@ function toggleCameraScanner() {
       (decodedText) => {
         document.getElementById('scanInput').value = decodedText;
         verifyTokenProcess(decodedText);
-        toggleCameraScanner(); // Stop camera after successful scan
+        toggleCameraScanner();
       },
       (errorMessage) => {
-        // Scanning errors/failures expected when no QR in frame
+        // Scanning errors are expected when frame is empty
       }
     ).catch(err => {
       alert("Unable to access camera: " + err);
