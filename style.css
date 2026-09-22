@@ -348,6 +348,24 @@ input:focus, select:focus {
   border-radius: 4px;
 }
 
+.clickable {
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.clickable:hover {
+  background: #ffe0b2;
+}
+
+.voice-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: #e65100;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
 .payment-box {
   margin-top: 1rem;
   padding: 0.8rem;
