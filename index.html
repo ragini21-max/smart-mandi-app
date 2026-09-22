@@ -22,8 +22,27 @@
         <label for="langSelect">🌐 Bhashini AI:</label>
         <select id="langSelect" onchange="switchLanguage()">
           <option value="en">English</option>
-          <option value="mr">मराठी (Marathi)</option>
           <option value="hi">हिंदी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="ur">اردو (Urdu)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="as">অসমীয়া (Assamese)</option>
+          <option value="ma">मैथिली (Maithili)</option>
+          <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
+          <option value="ks">کأشُر (Kashmiri)</option>
+          <option value="ne">नेपाली (Nepali)</option>
+          <option value="sd">सिन्धी (Sindhi)</option>
+          <option value="kok">कोंकणी (Konkani)</option>
+          <option value="doi">डोगरी (Dogri)</option>
+          <option value="mni">মৈতৈলোন্ (Manipuri)</option>
+          <option value="sa">संस्कृतम् (Sanskrit)</option>
         </select>
       </div>
     </div>
@@ -46,57 +65,73 @@
       <!-- OTP Login Simulation -->
       <div class="card" id="loginCard">
         <h3 data-i18n="otpHeading">1. Kisan OTP Authentication</h3>
-        <input type="tel" id="farmerPhone" placeholder="Enter Mobile Number (+91)">
+        <input type="tel" id="farmerPhone" placeholder="Enter Mobile Number (+91)" required>
         <button id="sendOtpBtn" onclick="sendOTP()" data-i18n="sendOtp">Send OTP</button>
         
         <div id="otpSection" style="display:none; margin-top: 10px;">
-          <input type="text" id="otpCode" placeholder="Enter 4-Digit OTP (Use 1234)">
+          <input type="text" id="otpCode" placeholder="Enter 4-Digit OTP Sent via SMS">
           <div id="otpTimer" class="timer-text">OTP expires in: 10s</div>
           <button id="verifyOtpBtn" onclick="verifyOTP()" data-i18n="verifyLogin">Verify & Login</button>
         </div>
       </div>
 
-      <!-- Token Booking Form -->
+      <!-- Interactive Token Booking Form (Blank Input) -->
       <div class="card" id="bookingCard" style="display:none;">
         <h3 data-i18n="bookSlotHeading">2. Book Procurement Slot</h3>
         <form onsubmit="generateToken(event)">
-          <label data-i18n="lblFarmerName">Farmer Name / Identity:</label>
-          <input type="text" id="farmerName" value="Ramesh Patil" required>
+          <label data-i18n="lblFarmerName">Farmer Name / Farmer ID:</label>
+          <input type="text" id="farmerName" placeholder="e.g. Ramesh Patil" required>
 
           <label data-i18n="lblMandi">Select Mandi Center:</label>
-          <select id="mandiSelect">
-            <option>Nashik Main APMC</option>
-            <option>Puntamba Sub-Mandi</option>
+          <select id="mandiSelect" required>
+            <option value="" disabled selected>-- Select APMC Mandi --</option>
+            <option value="Nashik Main APMC">Nashik Main APMC</option>
+            <option value="Puntamba Sub-Mandi">Puntamba Sub-Mandi</option>
+            <option value="Amravati Central APMC">Amravati Central APMC</option>
+            <option value="Lasalgaon Mandi Yard">Lasalgaon Mandi Yard</option>
           </select>
 
           <label data-i18n="lblCommodity">Commodity Type:</label>
-          <select id="commoditySelect">
-            <option data-i18n="optOnion">Onion (Kanda)</option>
-            <option data-i18n="optPulses">Pulses (Dal)</option>
-            <option data-i18n="optVeg">Vegetables</option>
+          <select id="commoditySelect" required>
+            <option value="" disabled selected>-- Select Commodity --</option>
+            <option value="Onion (Kanda)" data-i18n="optOnion">Onion (Kanda)</option>
+            <option value="Pulses (Dal)" data-i18n="optPulses">Pulses (Dal)</option>
+            <option value="Vegetables" data-i18n="optVeg">Vegetables</option>
+            <option value="Wheat (Gehun)">Wheat (Gehun)</option>
+            <option value="Cotton (Kapas)">Cotton (Kapas)</option>
           </select>
 
           <label data-i18n="lblQty">Produce Quantity (Tons):</label>
-          <input type="number" id="produceQty" value="8" required>
+          <input type="number" id="produceQty" min="0.5" step="0.1" placeholder="e.g. 5.5" required>
 
           <label data-i18n="lblVehicle">Vehicle Type:</label>
-          <select id="vehicleType">
+          <select id="vehicleType" required>
+            <option value="" disabled selected>-- Select Vehicle --</option>
             <option value="Tractor Trolley">Tractor Trolley</option>
             <option value="Mini Truck">Mini Truck</option>
+            <option value="Heavy Commercial Truck">Heavy Commercial Truck</option>
           </select>
 
           <button type="submit" data-i18n="btnBookSlot">Book Slot & Generate QR Pass</button>
         </form>
       </div>
 
-      <!-- Active Pass & Live Queue Status -->
+      <!-- Dynamic Active Pass & Live Queue Status -->
       <div class="card" id="passCard" style="display:none;">
         <span class="status-badge" id="passStatus">Status: GATE ENROUTE</span>
         <h3 data-i18n="passHeading">Digital Gate Pass</h3>
         
         <div class="qr-placeholder">
           <div id="qrcode" class="qr-box"></div>
-          <p id="qrTokenId">Token ID: #MND-84920</p>
+          <p id="qrTokenId">Token ID: Pending...</p>
+        </div>
+
+        <div class="info-summary-card">
+          <h4>Booking Summary</h4>
+          <p><strong>Farmer Name:</strong> <span id="summaryFarmerName">-</span></p>
+          <p><strong>Mandi Yard:</strong> <span id="summaryMandi">-</span></p>
+          <p><strong>Commodity:</strong> <span id="summaryCommodity">-</span> (<span id="summaryQty">-</span> Tons)</p>
+          <p><strong>Vehicle:</strong> <span id="summaryVehicle">-</span></p>
         </div>
 
         <div class="info-grid">
@@ -124,7 +159,7 @@
 
       <div class="card">
         <h3>Gate-In & QR Scanner</h3>
-        <input type="text" id="scanInput" placeholder="Scan or enter Token ID (#MND-84920)">
+        <input type="text" id="scanInput" placeholder="Scan or enter Token ID (#MND-XXXXX)">
         <button onclick="scanToken()">Verify Manual Token ID</button>
         
         <div class="camera-scanner-container">
@@ -181,7 +216,6 @@
         
         <div id="smsLogBox" class="log-box">
           <div class="sms-item">[SYSTEM]: SMS Service Initialized.</div>
-          <div class="sms-item">[SMS -> +91 98***]: Your Token #MND-84920 booked. Target arrival: 10:30 AM.</div>
         </div>
       </div>
     </section>
