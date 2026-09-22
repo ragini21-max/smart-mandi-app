@@ -1,4 +1,4 @@
-// Register Service Worker
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -7,7 +7,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Translations Data (English & Hindi)
+// Translations Data
 const translations = {
   en: {
     appTitle: "Smart Mandi Management",
@@ -21,7 +21,7 @@ const translations = {
     btnVerify: "Verify OTP",
     labelDate: "Procurement Date",
     labelMandi: "Select Mandi",
-    labelCommodity: "Commodity",
+    labelCommodity: "Vegetable / Commodity",
     labelQty: "Quantity (Tons)",
     labelSlot: "Preferred Slot",
     labelVehicle: "Vehicle Type",
@@ -36,7 +36,7 @@ const translations = {
     tokenTitle: "Digital Entry Token Pass",
     passFarmer: "Farmer:",
     passMandi: "Mandi:",
-    passCommodity: "Commodity:",
+    passCommodity: "Vegetable/Commodity:",
     passSchedule: "Schedule:",
     passVehicle: "Vehicle:",
     passReqQty: "Requested Qty:",
@@ -48,7 +48,7 @@ const translations = {
     payRef: "DBT Ref Number:",
     payAmt: "Total Paid Amount:",
     officerTitle: "Mandi Officer Operations Dashboard",
-    officerSubtitle: "Scan farmer entry passes, verify weighment bridge data, and trigger direct bank transfers (DBT).",
+    officerSubtitle: "Scan farmer entry passes, adjust intake rate, verify weighment bridge data, and trigger direct bank transfers (DBT).",
     scanHeader: "1. Gate Verification (QR Scanner)",
     labelManualToken: "Or Enter Token ID Manually:",
     btnFetch: "Fetch Token",
@@ -71,7 +71,7 @@ const translations = {
     btnVerify: "सत्यापित करें",
     labelDate: "खरीद की तारीख",
     labelMandi: "मंडी चुनें",
-    labelCommodity: "जिंस (फसल)",
+    labelCommodity: "सब्जी / जिंस",
     labelQty: "मात्रा (टन में)",
     labelSlot: "पसंदीदा स्लॉट",
     labelVehicle: "वाहन का प्रकार",
@@ -86,7 +86,7 @@ const translations = {
     tokenTitle: "डिजिटल प्रवेश टोकन पास",
     passFarmer: "किसान:",
     passMandi: "मंडी:",
-    passCommodity: "जिंस:",
+    passCommodity: "सब्जी/जिंस:",
     passSchedule: "समय सारणी:",
     passVehicle: "वाहन:",
     passReqQty: "अनुरोधित मात्रा:",
@@ -98,7 +98,7 @@ const translations = {
     payRef: "डीबीटी संदर्भ संख्या:",
     payAmt: "कुल भुगतान राशि:",
     officerTitle: "मंडी अधिकारी संचालन डैशबोर्ड",
-    officerSubtitle: "किसान प्रवेश पास स्कैन करें, वजन की जांच करें और डीबीटी भुगतान स्वीकृत करें।",
+    officerSubtitle: "किसान प्रवेश पास स्कैन करें, कतार गति बदलें, वजन जांचें और भुगतान स्वीकृत करें।",
     scanHeader: "1. गेट सत्यापन (क्यूआर स्कैनर)",
     labelManualToken: "या मैन्युअल रूप से टोकन आईडी दर्ज करें:",
     btnFetch: "टोकन खोजें",
@@ -114,24 +114,25 @@ const translations = {
 let currentLang = 'en';
 let isOtpVerified = false;
 let currentDemoOtp = null;
+let otpTimerInterval = null;
 let currentActiveTokenId = null;
 let lastBookedToken = null;
 
-// Local In-Memory Database for Standalone Operation
+// Machine Intake Slowdown state
+let isMachineSlowedDown = false;
+const NORMAL_DAILY_LIMIT = 50.0;
+const SLOW_DAILY_LIMIT = 20.0;
+let currentDailyLimit = NORMAL_DAILY_LIMIT;
+
+// In-Memory Database
 const localDatabase = {
-  dailyBookings: {}, // Stores booked tonnage per "Date_Mandi_Commodity"
-  tokens: {}        // Stores token objects keyed by tokenId
+  dailyBookings: {},
+  tokens: {}
 };
 
-const DAILY_LIMIT_TONS = 50.0;
-
-// Bhashini Voice TTS Engine Helper Function
+// Bhashini TTS Engine with Web Speech Fallback
 async function speakWithBhashini(text, languageCode) {
-  const bhashiniLangMap = {
-    'hi': 'Hindi',
-    'en': 'English'
-  };
-  
+  const bhashiniLangMap = { 'hi': 'Hindi', 'en': 'English' };
   const targetLanguage = bhashiniLangMap[languageCode] || 'English';
 
   try {
@@ -144,7 +145,7 @@ async function speakWithBhashini(text, languageCode) {
       body: JSON.stringify({
         text: text,
         language: targetLanguage,
-        voiceName: targetLanguage === 'Hindi' ? 'Female1' : 'Female1'
+        voiceName: 'Female1'
       })
     });
 
@@ -156,10 +157,10 @@ async function speakWithBhashini(text, languageCode) {
       return;
     }
   } catch (e) {
-    console.warn('Bhashini TTS API fallback triggered:', e);
+    console.warn('Bhashini TTS API unreachable, falling back to browser voice speech synthesis:', e);
   }
 
-  // Web Speech API fallback if Bhashini endpoint is unreachable
+  // Fallback to Browser Native Web Speech API
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
@@ -168,53 +169,41 @@ async function speakWithBhashini(text, languageCode) {
   }
 }
 
-// Speak Voice Announcements
+// Bhashini Speech Details Generator (Includes Name, Vehicle, Vegetable, Quantity, Queue position)
 function speakBookingConfirmation(token) {
-  let speechMessage = "";
+  let speechText = "";
   if (currentLang === 'hi') {
-    speechMessage = `आपकी बुकिंग सफल रही। किसान ${token.farmerName}, आपकी मंडी ${token.mandi} है। फसल ${token.commodity}, मात्रा ${token.requestedQty} टन है। आपकी कतार स्थिति ${token.queuePosition} है और अनुमानित समय ${token.eta} है।`;
+    speechText = `बुकिंग विवरण: किसान का नाम ${token.farmerName}, वाहन का प्रकार ${token.vehicleType}, सब्जी या फसल ${token.commodity}, मात्रा ${token.requestedQty} टन, और आपकी कतार स्थिति संख्या ${token.queuePosition} है।`;
   } else {
-    speechMessage = `Booking confirmed for ${token.farmerName}. Mandi: ${token.mandi}, Commodity: ${token.commodity}, Quantity: ${token.requestedQty} Tons. Your queue position is ${token.queuePosition} and estimated entry time is ${token.eta}.`;
+    speechText = `Booking Details: Farmer Name ${token.farmerName}, Vehicle Type ${token.vehicleType}, Vegetable or Commodity ${token.commodity}, Quantity ${token.requestedQty} Tons, and your queue position is number ${token.queuePosition}.`;
   }
-  speakWithBhashini(speechMessage, currentLang);
+  speakWithBhashini(speechText, currentLang);
 }
 
-function speakQueuePosition(token) {
-  if (!token) return;
-  let speechMessage = "";
-  if (currentLang === 'hi') {
-    speechMessage = `वर्तमान कतार की स्थिति ${token.queuePosition} है। मंडी में प्रवेश का अनुमानित समय ${token.eta} है।`;
-  } else {
-    speechMessage = `Current queue position is ${token.queuePosition}. Estimated entry time is ${token.eta}.`;
-  }
-  speakWithBhashini(speechMessage, currentLang);
-}
-
-// Application Initializer
+// Application Initialization
 document.addEventListener('DOMContentLoaded', () => {
   setupLanguage();
   setupRoleSwitcher();
   setupFormEvents();
   setupOfficerEvents();
+  setupSlowdownControls();
   initQrScanner();
 
-  // Queue Status Card Click Event for Bhashini TTS Announcement
-  const queueCard = document.getElementById('queueStatusCard');
-  if (queueCard) {
-    queueCard.addEventListener('click', () => {
+  const readAudioBtn = document.getElementById('readAudioBtn');
+  if (readAudioBtn) {
+    readAudioBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (lastBookedToken) {
-        speakQueuePosition(lastBookedToken);
+        speakBookingConfirmation(lastBookedToken);
       } else {
-        const msg = currentLang === 'hi' 
-          ? "कोई बुकिंग टोकन नहीं मिला। कृपया पहले बुकिंग करें।" 
-          : "No booking pass found. Please make a booking first.";
+        const msg = currentLang === 'hi' ? "कोई बुकिंग टोकन नहीं मिला।" : "No booking pass found.";
         speakWithBhashini(msg, currentLang);
       }
     });
   }
 });
 
-// Language Switcher Handler
+// Setup Language Selector
 function setupLanguage() {
   const langSelect = document.getElementById('langSelector');
   if (!langSelect) return;
@@ -229,7 +218,7 @@ function setupLanguage() {
   });
 }
 
-// Role Switcher Handler (Farmer vs Officer)
+// Setup Role Switcher
 function setupRoleSwitcher() {
   const roleSelect = document.getElementById('roleSelector');
   if (!roleSelect) return;
@@ -248,7 +237,7 @@ function setupRoleSwitcher() {
   });
 }
 
-// Simulated Mobile SMS Box
+// Push Simulated Mobile SMS
 function pushSmsNotification(messageText) {
   const smsList = document.getElementById('smsMessageList');
   if (!smsList) return;
@@ -258,18 +247,86 @@ function pushSmsNotification(messageText) {
 
   const smsItem = document.createElement('div');
   smsItem.className = 'sms-item';
-  smsItem.style.padding = '8px';
-  smsItem.style.marginBottom = '8px';
-  smsItem.style.background = '#eef2ff';
-  smsItem.style.borderRadius = '4px';
   smsItem.innerHTML = `<strong>Mandi Alert:</strong> ${messageText}`;
   smsList.prepend(smsItem);
 }
 
-// Form & Local Handlers
+// Setup Machine Slowdown / Restore Controls
+function setupSlowdownControls() {
+  const btnSlowdown = document.getElementById('btnSlowdownLunch');
+  const btnRestore = document.getElementById('btnRestoreSpeed');
+
+  if (btnSlowdown) {
+    btnSlowdown.addEventListener('click', () => {
+      isMachineSlowedDown = true;
+      currentDailyLimit = SLOW_DAILY_LIMIT;
+      updateSlowdownUI();
+      alert(currentLang === 'hi' ? 'मशीन धीमी कर दी गई है! दोपहर के भोजन / आपातकालीन ब्रेक के कारण सेवन दर कम हो गई है।' : 'Machine slowed down for Lunch / Emergency break! Intake per hour reduced.');
+      checkDailyQuota();
+    });
+  }
+
+  if (btnRestore) {
+    btnRestore.addEventListener('click', () => {
+      isMachineSlowedDown = false;
+      currentDailyLimit = NORMAL_DAILY_LIMIT;
+      updateSlowdownUI();
+      alert(currentLang === 'hi' ? 'मूल सेवन दर पुनर्स्थापित हो गई है!' : 'Original intake rate restored successfully!');
+      checkDailyQuota();
+    });
+  }
+}
+
+function updateSlowdownUI() {
+  const card = document.getElementById('slowdownStatusCard');
+  const text = document.getElementById('slowdownModeText');
+  const icon = document.getElementById('slowdownModeIcon');
+  const maxCap = document.getElementById('maxCapacityText');
+
+  if (maxCap) maxCap.innerText = currentDailyLimit.toFixed(0);
+
+  if (card && text && icon) {
+    if (isMachineSlowedDown) {
+      card.className = 'slowdown-status-card status-slowed';
+      icon.innerText = '⚠️';
+      text.innerText = currentLang === 'hi' ? 'गति: मशीन धीमी (लंच/आपातकालीन ब्रेक - क्षमता 20 टन)' : 'Speed: SLOWED DOWN for Lunch/Emergency (Quota reduced to 20 Tons)';
+    } else {
+      card.className = 'slowdown-status-card status-normal';
+      icon.innerText = '⚡';
+      text.innerText = currentLang === 'hi' ? 'गति: सामान्य प्रसंस्करण दर (क्षमता 50 टन)' : 'Speed: Normal Processing Rate (Capacity 50 Tons)';
+    }
+  }
+}
+
+// OTP with 20-Second Expiry Countdown Timer
+function startOtpCountdownTimer() {
+  let timeLeft = 20;
+  const countdownElem = document.getElementById('otpCountdown');
+  const verifyBtn = document.getElementById('verifyOtpBtn');
+  
+  if (otpTimerInterval) clearInterval(otpTimerInterval);
+  if (verifyBtn) verifyBtn.disabled = false;
+
+  otpTimerInterval = setInterval(() => {
+    timeLeft--;
+    if (countdownElem) {
+      countdownElem.innerText = `Expires in ${timeLeft}s`;
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(otpTimerInterval);
+      currentDemoOtp = null; // Expire current OTP
+      if (countdownElem) countdownElem.innerText = "❌ OTP Expired! Click 'Send OTP' again.";
+      if (verifyBtn) verifyBtn.disabled = true;
+      pushSmsNotification("Demo OTP expired after 20 seconds. Please request a new OTP.");
+    }
+  }, 1000);
+}
+
+// Form Handlers & Slot Booking
 function setupFormEvents() {
   
-  // 1. Send OTP Action (Client-side Offline safe)
+  // 1. Send OTP Action
   const sendOtpBtn = document.getElementById('sendOtpBtn');
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener('click', (e) => {
@@ -282,19 +339,18 @@ function setupFormEvents() {
         return;
       }
 
-      // Generate random 4-digit code locally
       currentDemoOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
-      // Reveal OTP Group & Display Demo OTP code directly on screen
       const otpGroup = document.getElementById('otpGroup');
       const otpHint = document.getElementById('otpHint');
       const otpInput = document.getElementById('otpCode');
 
       if (otpGroup) otpGroup.classList.remove('hidden');
-      if (otpHint) otpHint.innerText = currentLang === 'hi' ? `डेमो ओटीपी: ${currentDemoOtp} (नीचे भरा गया)` : `Demo OTP: ${currentDemoOtp} (Auto-filled below)`;
-      if (otpInput) otpInput.value = currentDemoOtp; // Auto-fills for demo ease
+      if (otpHint) otpHint.innerText = currentLang === 'hi' ? `डेमो ओटीपी: ${currentDemoOtp}` : `Demo OTP: ${currentDemoOtp}`;
+      if (otpInput) otpInput.value = currentDemoOtp; // Auto-fill for convenience
 
-      pushSmsNotification(`Your Mandi Login OTP is ${currentDemoOtp}. Valid for 5 mins.`);
+      startOtpCountdownTimer();
+      pushSmsNotification(`Your Mandi OTP is ${currentDemoOtp}. Valid for 20 seconds.`);
     });
   }
 
@@ -306,25 +362,31 @@ function setupFormEvents() {
       const otpInput = document.getElementById('otpCode');
       const otpCode = otpInput ? otpInput.value : '';
 
+      if (!currentDemoOtp) {
+        alert(currentLang === 'hi' ? 'ओटीपी की समयावधि समाप्त हो गई है! कृपया फिर से ओटीपी भेजें।' : 'OTP has expired! Please request a new OTP.');
+        return;
+      }
+
       if (otpCode && otpCode === currentDemoOtp) {
         isOtpVerified = true;
+        if (otpTimerInterval) clearInterval(otpTimerInterval);
         alert(currentLang === 'hi' ? 'ओटीपी सफलतापूर्वक सत्यापित हो गया!' : 'OTP Verified Successfully!');
         const otpGroup = document.getElementById('otpGroup');
         if (otpGroup) otpGroup.classList.add('hidden');
         checkDailyQuota();
       } else {
-        alert(currentLang === 'hi' ? 'अमान्य ओटीपी कोड! कृपया जनरेट किया गया डेमो ओटीपी दर्ज करें।' : 'Invalid OTP Code! Please enter the generated Demo OTP.');
+        alert(currentLang === 'hi' ? 'अमान्य ओटीपी कोड!' : 'Invalid OTP Code!');
       }
     });
   }
 
-  // 3. Quota Check Listeners
+  // 3. Quota Listeners
   ['procurementDate', 'mandiSelect', 'commoditySelect'].forEach(id => {
     const elem = document.getElementById(id);
     if (elem) elem.addEventListener('change', checkDailyQuota);
   });
 
-  // 4. Form Submission and Token Pass Generation
+  // 4. Form Submission and Pass Generation
   const bookingForm = document.getElementById('bookingForm');
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
@@ -343,15 +405,14 @@ function setupFormEvents() {
       const quotaKey = `${date}_${mandi}_${commodity}`;
       const currentBooked = localDatabase.dailyBookings[quotaKey] || 0.0;
 
-      if (currentBooked + produceQty > DAILY_LIMIT_TONS) {
-        alert(`Booking Failed! Exceeds daily quota limit. Remaining capacity: ${(DAILY_LIMIT_TONS - currentBooked).toFixed(1)} Tons.`);
+      if (currentBooked + produceQty > currentDailyLimit) {
+        alert(`Booking Failed! Exceeds current quota limit. Remaining capacity: ${(currentDailyLimit - currentBooked).toFixed(1)} Tons.`);
         return;
       }
 
-      // Update Daily Bookings Quota
+      // Update Database Quota
       localDatabase.dailyBookings[quotaKey] = currentBooked + produceQty;
 
-      // Generate Pass Token
       const randomId = Math.floor(10000 + Math.random() * 90000);
       const tokenId = `#MND-${randomId}`;
 
@@ -364,30 +425,28 @@ function setupFormEvents() {
         verifiedQty: null,
         schedule: `${date} [${document.getElementById('slotTime') ? document.getElementById('slotTime').value : 'Morning'}]`,
         vehicleType: document.getElementById('vehicleType') ? document.getElementById('vehicleType').value : 'Tractor',
-        queuePosition: 3,
-        eta: "10:45 AM",
+        queuePosition: Math.floor(Math.random() * 5) + 1,
+        eta: "10:30 AM",
         stage: "BOOKED",
         paymentStatus: "PENDING",
         dbtTxnId: null,
         totalPayment: 0
       };
 
-      // Store token state
       localDatabase.tokens[tokenId] = newToken;
       lastBookedToken = newToken;
 
-      // Render Pass & Display QR Code
       renderPassToken(newToken);
       pushSmsNotification(`Booking Confirmed! Pass ID: ${tokenId}. Schedule: ${newToken.schedule}.`);
       checkDailyQuota();
 
-      // Trigger Bhashini Voice Confirmation Speech
+      // Trigger Bhashini Audio Announcement
       speakBookingConfirmation(newToken);
     });
   }
 }
 
-// Capacity Checker (Client-Side)
+// Capacity & Quota Checker with Fulfillment Lock
 function checkDailyQuota() {
   const dateElem = document.getElementById('procurementDate');
   const mandiElem = document.getElementById('mandiSelect');
@@ -406,19 +465,23 @@ function checkDailyQuota() {
   if (date && mandi && commodity) {
     const quotaKey = `${date}_${mandi}_${commodity}`;
     const bookedQty = localDatabase.dailyBookings[quotaKey] || 0.0;
-    const remainingQuota = Math.max(0, DAILY_LIMIT_TONS - bookedQty);
-    const fillPercentage = Math.min(100, (bookedQty / DAILY_LIMIT_TONS) * 100);
+    const remainingQuota = Math.max(0, currentDailyLimit - bookedQty);
+    const fillPercentage = Math.min(100, (bookedQty / currentDailyLimit) * 100);
 
     if (capacityBar) capacityBar.style.width = `${fillPercentage}%`;
     if (bookedCapacityText) bookedCapacityText.innerText = bookedQty.toFixed(1);
 
     if (quotaMsg) {
       if (remainingQuota <= 0) {
-        quotaMsg.innerText = currentLang === 'hi' ? "❌ दैनिक क्षमता समाप्त हो गई है! चुनी गई तिथि के लिए बुकिंग बंद है।" : "❌ Daily capacity reached! Booking is closed for selected date.";
+        quotaMsg.innerText = currentLang === 'hi' 
+          ? "❌ आवश्यक मात्रा पूरी हो गई है! चुनी गई स्थिति के लिए बुकिंग बंद कर दी गई है।" 
+          : "❌ Required quantity fulfilled! Slot booking stopped for selected date.";
         if (quotaMsg.parentElement) quotaMsg.parentElement.className = "result-box danger-result";
-        if (submitBtn) submitBtn.disabled = true;
+        if (submitBtn) submitBtn.disabled = true; // Stop booking upon fulfillment
       } else {
-        quotaMsg.innerText = currentLang === 'hi' ? `✅ क्षमता उपलब्ध है: चुने गए पैरामीटर के लिए ${remainingQuota.toFixed(1)} टन शेष है।` : `✅ Capacity Available: ${remainingQuota.toFixed(1)} Tons remaining for selected parameters.`;
+        quotaMsg.innerText = currentLang === 'hi' 
+          ? `✅ क्षमता उपलब्ध है: ${remainingQuota.toFixed(1)} टन शेष है।` 
+          : `✅ Capacity Available: ${remainingQuota.toFixed(1)} Tons remaining for selected date.`;
         if (quotaMsg.parentElement) quotaMsg.parentElement.className = "result-box success-result";
         if (submitBtn) submitBtn.disabled = !isOtpVerified;
       }
@@ -426,7 +489,7 @@ function checkDailyQuota() {
   }
 }
 
-// Fallback Canvas QR Code Generator
+// Canvas Fallback QR Generator
 function generateFallbackQr(elementId, text) {
   const container = document.getElementById(elementId);
   if (!container) return;
@@ -442,9 +505,7 @@ function generateFallbackQr(elementId, text) {
 
   ctx.fillStyle = '#000000';
   let hash = 0;
-  for (let i = 0; i < text.length; i++) {
-    hash = text.charCodeAt(i) + ((hash << 5) - hash);
-  }
+  for (let i = 0; i < text.length; i++) hash = text.charCodeAt(i) + ((hash << 5) - hash);
 
   const gridSize = 10;
   const cellSize = 120 / gridSize;
@@ -457,16 +518,14 @@ function generateFallbackQr(elementId, text) {
         else if ((x === 0 || x === 2 || y === gridSize - 1 || y === gridSize - 3) && x < 3 && y > gridSize - 4) ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
       } else {
         const val = Math.abs((hash ^ (x * 31 + y * 17)) % 2);
-        if (val === 1) {
-          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
+        if (val === 1) ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
       }
     }
   }
   container.appendChild(canvas);
 }
 
-// Render Entry Pass Card with Dynamic QR Code
+// Render Entry Token Pass & QR Code
 function renderPassToken(token) {
   const passCard = document.getElementById('passCard');
   if (passCard) passCard.classList.remove('hidden');
@@ -488,16 +547,7 @@ function renderPassToken(token) {
   setText('passQueuePos', token.queuePosition);
   setText('passEta', token.eta);
 
-  const payBox = document.getElementById('paymentDetailsBox');
-  if (token.paymentStatus === 'COMPLETED') {
-    if (payBox) payBox.classList.remove('hidden');
-    setText('paymentRef', token.dbtTxnId);
-    setText('paymentAmount', token.totalPayment.toLocaleString('en-IN'));
-  } else {
-    if (payBox) payBox.classList.add('hidden');
-  }
-
-  // Generate QR code locally
+  // Generate QR code
   if (typeof QRCode !== 'undefined') {
     try {
       const qrElem = document.getElementById('qrcode');
@@ -512,12 +562,11 @@ function renderPassToken(token) {
     generateFallbackQr('qrcode', token.tokenId);
   }
 
-  // Pre-fill token ID into officer panel for testing
   const manualInput = document.getElementById('manualTokenInput');
   if (manualInput) manualInput.value = token.tokenId;
 }
 
-// Officer Operations Handlers
+// Officer Dashboard Events
 function setupOfficerEvents() {
   const searchBtn = document.getElementById('searchTokenBtn');
   if (searchBtn) {
@@ -528,23 +577,19 @@ function setupOfficerEvents() {
     });
   }
 
-  // Approve Gate Entry Action
   const gateBtn = document.getElementById('verifyGateBtn');
   if (gateBtn) {
     gateBtn.addEventListener('click', () => {
       if (!currentActiveTokenId || !localDatabase.tokens[currentActiveTokenId]) return;
-      
       const token = localDatabase.tokens[currentActiveTokenId];
       token.stage = "GATE_VERIFIED";
       token.queuePosition = 1;
-
       alert(`Gate entry approved for ${token.tokenId}!`);
       fetchOfficerTokenDetails(currentActiveTokenId);
       renderPassToken(token);
     });
   }
 
-  // Record Weighment Bridge Weight Action
   const saveWeightBtn = document.getElementById('saveWeightBtn');
   if (saveWeightBtn) {
     saveWeightBtn.addEventListener('click', () => {
@@ -559,14 +604,12 @@ function setupOfficerEvents() {
       const token = localDatabase.tokens[currentActiveTokenId];
       token.verifiedQty = weight;
       token.stage = "WEIGHED";
-
       alert(`Weighment of ${weight} Tons recorded for ${token.tokenId}!`);
       fetchOfficerTokenDetails(currentActiveTokenId);
       renderPassToken(token);
     });
   }
 
-  // Release Payment (DBT) Action
   const approveDbtBtn = document.getElementById('approveDbtBtn');
   if (approveDbtBtn) {
     approveDbtBtn.addEventListener('click', () => {
@@ -582,27 +625,19 @@ function setupOfficerEvents() {
       token.paymentStatus = "COMPLETED";
 
       alert(`Payment Approved! DBT Ref: ${token.dbtTxnId} Amount: ₹${token.totalPayment.toLocaleString('en-IN')}`);
-      
       fetchOfficerTokenDetails(currentActiveTokenId);
       renderPassToken(token);
-
       pushSmsNotification(`DBT Transfer Complete! ₹${token.totalPayment.toLocaleString('en-IN')} credited for Token ${token.tokenId}. Ref: ${token.dbtTxnId}`);
     });
   }
 }
 
-// Fetch active token details in Officer Portal
 function fetchOfficerTokenDetails(tokenId) {
   const token = localDatabase.tokens[tokenId];
-
   if (token) {
     currentActiveTokenId = token.tokenId;
-
-    const noTokenMsg = document.getElementById('officerNoTokenMsg');
-    const tokenDetails = document.getElementById('officerTokenDetails');
-
-    if (noTokenMsg) noTokenMsg.classList.add('hidden');
-    if (tokenDetails) tokenDetails.classList.remove('hidden');
+    document.getElementById('officerNoTokenMsg').classList.add('hidden');
+    document.getElementById('officerTokenDetails').classList.remove('hidden');
 
     const setText = (id, val) => {
       const el = document.getElementById(id);
@@ -613,17 +648,12 @@ function fetchOfficerTokenDetails(tokenId) {
     setText('offFarmerName', token.farmerName);
     setText('offCommodity', token.commodity);
     setText('offStage', token.stage);
-
-    const weighInput = document.getElementById('weighmentInput');
-    if (weighInput) {
-      weighInput.value = token.verifiedQty ? token.verifiedQty : '';
-    }
   } else {
     alert('Token ID not found. Please create a booking first.');
   }
 }
 
-// Camera Scanner Setup
+// Camera Scanner
 function initQrScanner() {
   if (typeof Html5QrcodeScanner !== 'undefined') {
     try {
@@ -634,7 +664,7 @@ function initQrScanner() {
         fetchOfficerTokenDetails(decodedText);
       }, () => {});
     } catch (e) {
-      console.log("QR camera initialization bypassed.");
+      console.log("QR Scanner bypass initialized.");
     }
   }
 }
