@@ -11,6 +11,18 @@ body {
   line-height: 1.5;
 }
 
+/* Accessibility Helpers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 /* Navbar Navigation */
 .navbar {
   background-color: #2e7d32;
@@ -41,13 +53,14 @@ body {
 }
 
 .nav-select {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 4px;
   border: none;
   font-weight: bold;
   background-color: #ffffff;
   color: #2e7d32;
   cursor: pointer;
+  outline: none;
 }
 
 .status-online {
@@ -137,10 +150,12 @@ input, select {
   border-radius: 4px;
   font-size: 0.95rem;
   outline: none;
+  background-color: #ffffff;
 }
 
 input:focus, select:focus {
   border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
 }
 
 .input-inline {
@@ -150,6 +165,13 @@ input:focus, select:focus {
 
 .input-inline input {
   flex: 1;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: #2e7d32;
+  font-weight: 600;
+  margin-top: 4px;
 }
 
 /* Buttons */
@@ -169,6 +191,10 @@ input:focus, select:focus {
   width: 100%;
 }
 
+.btn-primary:hover:not(:disabled) {
+  background-color: #1b5e20;
+}
+
 .btn-primary:disabled {
   background-color: #a5d6a7;
   cursor: not-allowed;
@@ -180,10 +206,18 @@ input:focus, select:focus {
   white-space: nowrap;
 }
 
+.btn-secondary:hover {
+  background-color: #01579b;
+}
+
 .btn-success {
   background-color: #2e7d32;
   color: #ffffff;
   width: 100%;
+}
+
+.btn-success:hover {
+  background-color: #1b5e20;
 }
 
 /* Capacity Meter UI */
@@ -297,10 +331,13 @@ input:focus, select:focus {
 
 .qr-container {
   text-align: center;
+  min-width: 120px;
+  min-height: 120px;
 }
 
-#qrcode img {
+#qrcode canvas, #qrcode img {
   margin: 0 auto;
+  display: block;
 }
 
 .queue-status {
