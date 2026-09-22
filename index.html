@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Mandi Engine</title>
+  <title data-i18n="appTitle">Smart Mandi Engine</title>
   <link rel="stylesheet" href="style.css">
   <!-- External Libraries for QR Code Generation and Scanning -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -75,7 +75,7 @@
             <h3 data-i18n="otpHeading">Kisan OTP Authentication</h3>
           </div>
           <div class="form-group">
-            <label for="farmerPhone">Mobile Number:</label>
+            <label for="farmerPhone" data-i18n="phPhone">Mobile Number:</label>
             <input type="tel" id="farmerPhone" data-i18n-ph="phPhone" placeholder="Enter 10-digit mobile number" maxlength="10" required>
           </div>
           <button class="btn btn-primary" onclick="sendOTP()" data-i18n="sendOtp">Send OTP</button>
@@ -83,7 +83,7 @@
           <div id="otpSection" class="otp-container" style="display: none;">
             <div class="timer-text" id="otpTimer">OTP expires in: 30s</div>
             <div class="form-group">
-              <label for="otpCode">Verification Code:</label>
+              <label for="otpCode" data-i18n="phOtp">Verification Code:</label>
               <input type="text" id="otpCode" data-i18n-ph="phOtp" placeholder="Enter 4-Digit OTP" maxlength="4">
             </div>
             <button class="btn btn-success" id="verifyOtpBtn" onclick="verifyOTP()" data-i18n="verifyLogin">Verify & Login</button>
@@ -156,23 +156,23 @@
             <div class="token-tag" id="qrTokenId">#MND-84920</div>
           </div>
 
-          <!-- Dynamic Booking Details Summary -->
+          <!-- Summary Box -->
           <div class="summary-box">
             <div class="summary-grid">
               <div class="summary-item">
-                <span>Farmer:</span> <strong id="summaryFarmerName">--</strong>
+                <span data-i18n="lblFarmerName">Farmer Name / ID:</span> <strong id="summaryFarmerName">--</strong>
               </div>
               <div class="summary-item">
-                <span>Mandi:</span> <strong id="summaryMandi">--</strong>
+                <span data-i18n="lblMandi">Select Mandi Center:</span> <strong id="summaryMandi">--</strong>
               </div>
               <div class="summary-item">
-                <span>Produce:</span> <strong id="summaryCommodity">--</strong>
+                <span data-i18n="lblCommodity">Commodity Type:</span> <strong id="summaryCommodity">--</strong>
               </div>
               <div class="summary-item">
-                <span>Quantity:</span> <strong id="summaryQty">--</strong> Tons
+                <span data-i18n="lblQty">Produce Quantity (Tons):</span> <strong id="summaryQty">--</strong> Tons
               </div>
               <div class="summary-item">
-                <span>Vehicle:</span> <strong id="summaryVehicle">--</strong>
+                <span data-i18n="lblVehicle">Vehicle Type:</span> <strong id="summaryVehicle">--</strong>
               </div>
             </div>
           </div>
@@ -205,7 +205,6 @@
           <h2 data-i18n="officerDeskTitle">Mandi Officer Control Desk</h2>
         </div>
 
-        <!-- Token Entry / Scanner -->
         <div class="card">
           <h3>Gate Pass Verification</h3>
           <p class="card-desc">Scan or enter token ID at Mandi entry gate.</p>
@@ -219,7 +218,6 @@
             <button class="btn btn-warn" id="camToggleBtn" onclick="toggleCameraScanner()">📷 Open Camera QR Scanner</button>
           </div>
 
-          <!-- Camera Stream Box -->
           <div id="reader" style="width: 100%; display: none; margin-top: 1rem;"></div>
 
           <div id="scanResult" class="result-box" style="margin-top: 1rem;">
@@ -227,7 +225,6 @@
           </div>
         </div>
 
-        <!-- Weighbridge Automation -->
         <div class="card">
           <h3>Automated Weighbridge Station</h3>
           <p class="card-desc">Simulate live weight scale input from IoT sensor.</p>
@@ -235,7 +232,6 @@
           <button class="btn btn-success" onclick="simulateWeighment()">Capture Weight from Scale</button>
         </div>
 
-        <!-- Exception Handlers -->
         <div class="card">
           <h3>Queue Exceptions & Controls</h3>
           <div class="btn-group">
