@@ -115,6 +115,7 @@ let currentLang = 'en';
 let isOtpVerified = false;
 let currentDemoOtp = null;
 let currentActiveTokenId = null;
+let lastBookedToken = null;
 
 // Local In-Memory Database for Standalone Operation
 const localDatabase = {
@@ -124,6 +125,71 @@ const localDatabase = {
 
 const DAILY_LIMIT_TONS = 50.0;
 
+// Bhashini Voice TTS Engine Helper Function
+async function speakWithBhashini(text, languageCode) {
+  const bhashiniLangMap = {
+    'hi': 'Hindi',
+    'en': 'English'
+  };
+  
+  const targetLanguage = bhashiniLangMap[languageCode] || 'English';
+
+  try {
+    const response = await fetch('https://tts.bhashini.ai/v1/synthesize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        text: text,
+        language: targetLanguage,
+        voiceName: targetLanguage === 'Hindi' ? 'Female1' : 'Female1'
+      })
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+      return;
+    }
+  } catch (e) {
+    console.warn('Bhashini TTS API fallback triggered:', e);
+  }
+
+  // Web Speech API fallback if Bhashini endpoint is unreachable
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = languageCode === 'hi' ? 'hi-IN' : 'en-US';
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+// Speak Voice Announcements
+function speakBookingConfirmation(token) {
+  let speechMessage = "";
+  if (currentLang === 'hi') {
+    speechMessage = `आपकी बुकिंग सफल रही। किसान ${token.farmerName}, आपकी मंडी ${token.mandi} है। फसल ${token.commodity}, मात्रा ${token.requestedQty} टन है। आपकी कतार स्थिति ${token.queuePosition} है और अनुमानित समय ${token.eta} है।`;
+  } else {
+    speechMessage = `Booking confirmed for ${token.farmerName}. Mandi: ${token.mandi}, Commodity: ${token.commodity}, Quantity: ${token.requestedQty} Tons. Your queue position is ${token.queuePosition} and estimated entry time is ${token.eta}.`;
+  }
+  speakWithBhashini(speechMessage, currentLang);
+}
+
+function speakQueuePosition(token) {
+  if (!token) return;
+  let speechMessage = "";
+  if (currentLang === 'hi') {
+    speechMessage = `वर्तमान कतार की स्थिति ${token.queuePosition} है। मंडी में प्रवेश का अनुमानित समय ${token.eta} है।`;
+  } else {
+    speechMessage = `Current queue position is ${token.queuePosition}. Estimated entry time is ${token.eta}.`;
+  }
+  speakWithBhashini(speechMessage, currentLang);
+}
+
 // Application Initializer
 document.addEventListener('DOMContentLoaded', () => {
   setupLanguage();
@@ -131,6 +197,21 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFormEvents();
   setupOfficerEvents();
   initQrScanner();
+
+  // Queue Status Card Click Event for Bhashini TTS Announcement
+  const queueCard = document.getElementById('queueStatusCard');
+  if (queueCard) {
+    queueCard.addEventListener('click', () => {
+      if (lastBookedToken) {
+        speakQueuePosition(lastBookedToken);
+      } else {
+        const msg = currentLang === 'hi' 
+          ? "कोई बुकिंग टोकन नहीं मिला। कृपया पहले बुकिंग करें।" 
+          : "No booking pass found. Please make a booking first.";
+        speakWithBhashini(msg, currentLang);
+      }
+    });
+  }
 });
 
 // Language Switcher Handler
@@ -185,10 +266,10 @@ function pushSmsNotification(messageText) {
   smsList.prepend(smsItem);
 }
 
-// Form & Dynamic Local Handlers
+// Form & Local Handlers
 function setupFormEvents() {
   
-  // 1. Send OTP Local Action
+  // 1. Send OTP Action (Client-side Offline safe)
   const sendOtpBtn = document.getElementById('sendOtpBtn');
   if (sendOtpBtn) {
     sendOtpBtn.addEventListener('click', (e) => {
@@ -197,7 +278,7 @@ function setupFormEvents() {
       const phone = phoneInput ? phoneInput.value : '';
 
       if (!phone || phone.length < 10) {
-        alert('Please enter a valid 10-digit mobile number.');
+        alert(currentLang === 'hi' ? 'कृपया मान्य 10-अंकीय मोबाइल नंबर दर्ज करें।' : 'Please enter a valid 10-digit mobile number.');
         return;
       }
 
@@ -210,14 +291,14 @@ function setupFormEvents() {
       const otpInput = document.getElementById('otpCode');
 
       if (otpGroup) otpGroup.classList.remove('hidden');
-      if (otpHint) otpHint.innerText = `Demo OTP: ${currentDemoOtp} (Auto-filled below)`;
-      if (otpInput) otpInput.value = currentDemoOtp; // Auto-fills for quick testing
+      if (otpHint) otpHint.innerText = currentLang === 'hi' ? `डेमो ओटीपी: ${currentDemoOtp} (नीचे भरा गया)` : `Demo OTP: ${currentDemoOtp} (Auto-filled below)`;
+      if (otpInput) otpInput.value = currentDemoOtp; // Auto-fills for demo ease
 
       pushSmsNotification(`Your Mandi Login OTP is ${currentDemoOtp}. Valid for 5 mins.`);
     });
   }
 
-  // 2. Verify OTP Local Action
+  // 2. Verify OTP Action
   const verifyOtpBtn = document.getElementById('verifyOtpBtn');
   if (verifyOtpBtn) {
     verifyOtpBtn.addEventListener('click', (e) => {
@@ -227,12 +308,12 @@ function setupFormEvents() {
 
       if (otpCode && otpCode === currentDemoOtp) {
         isOtpVerified = true;
-        alert('OTP Verified Successfully!');
+        alert(currentLang === 'hi' ? 'ओटीपी सफलतापूर्वक सत्यापित हो गया!' : 'OTP Verified Successfully!');
         const otpGroup = document.getElementById('otpGroup');
         if (otpGroup) otpGroup.classList.add('hidden');
         checkDailyQuota();
       } else {
-        alert('Invalid OTP Code! Please check the generated Demo OTP.');
+        alert(currentLang === 'hi' ? 'अमान्य ओटीपी कोड! कृपया जनरेट किया गया डेमो ओटीपी दर्ज करें।' : 'Invalid OTP Code! Please enter the generated Demo OTP.');
       }
     });
   }
@@ -243,14 +324,14 @@ function setupFormEvents() {
     if (elem) elem.addEventListener('change', checkDailyQuota);
   });
 
-  // 4. Form Submission and Token Generation
+  // 4. Form Submission and Token Pass Generation
   const bookingForm = document.getElementById('bookingForm');
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
       if (!isOtpVerified) {
-        alert('Please verify your mobile number using OTP first.');
+        alert(currentLang === 'hi' ? 'कृपया पहले ओटीपी का उपयोग करके अपना मोबाइल नंबर सत्यापित करें।' : 'Please verify your mobile number using OTP first.');
         return;
       }
 
@@ -291,18 +372,22 @@ function setupFormEvents() {
         totalPayment: 0
       };
 
-      // Store token in local state
+      // Store token state
       localDatabase.tokens[tokenId] = newToken;
+      lastBookedToken = newToken;
 
       // Render Pass & Display QR Code
       renderPassToken(newToken);
       pushSmsNotification(`Booking Confirmed! Pass ID: ${tokenId}. Schedule: ${newToken.schedule}.`);
       checkDailyQuota();
+
+      // Trigger Bhashini Voice Confirmation Speech
+      speakBookingConfirmation(newToken);
     });
   }
 }
 
-// Real-time Capacity Checker (Client-Side)
+// Capacity Checker (Client-Side)
 function checkDailyQuota() {
   const dateElem = document.getElementById('procurementDate');
   const mandiElem = document.getElementById('mandiSelect');
@@ -329,11 +414,11 @@ function checkDailyQuota() {
 
     if (quotaMsg) {
       if (remainingQuota <= 0) {
-        quotaMsg.innerText = "❌ Daily capacity reached! Booking is closed for selected date.";
+        quotaMsg.innerText = currentLang === 'hi' ? "❌ दैनिक क्षमता समाप्त हो गई है! चुनी गई तिथि के लिए बुकिंग बंद है।" : "❌ Daily capacity reached! Booking is closed for selected date.";
         if (quotaMsg.parentElement) quotaMsg.parentElement.className = "result-box danger-result";
         if (submitBtn) submitBtn.disabled = true;
       } else {
-        quotaMsg.innerText = `✅ Capacity Available: ${remainingQuota.toFixed(1)} Tons remaining for selected parameters.`;
+        quotaMsg.innerText = currentLang === 'hi' ? `✅ क्षमता उपलब्ध है: चुने गए पैरामीटर के लिए ${remainingQuota.toFixed(1)} टन शेष है।` : `✅ Capacity Available: ${remainingQuota.toFixed(1)} Tons remaining for selected parameters.`;
         if (quotaMsg.parentElement) quotaMsg.parentElement.className = "result-box success-result";
         if (submitBtn) submitBtn.disabled = !isOtpVerified;
       }
@@ -341,7 +426,7 @@ function checkDailyQuota() {
   }
 }
 
-// Fallback Canvas QR Code Generator (100% Client-Side, No External Server/Library needed)
+// Fallback Canvas QR Code Generator
 function generateFallbackQr(elementId, text) {
   const container = document.getElementById(elementId);
   if (!container) return;
@@ -352,11 +437,9 @@ function generateFallbackQr(elementId, text) {
   canvas.height = 120;
   const ctx = canvas.getContext('2d');
 
-  // Draw background
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, 120, 120);
 
-  // Draw simulated QR Pattern deterministically using string hash
   ctx.fillStyle = '#000000';
   let hash = 0;
   for (let i = 0; i < text.length; i++) {
@@ -368,7 +451,6 @@ function generateFallbackQr(elementId, text) {
 
   for (let x = 0; x < gridSize; x++) {
     for (let y = 0; y < gridSize; y++) {
-      // Corner positioning blocks
       if ((x < 3 && y < 3) || (x > gridSize - 4 && y < 3) || (x < 3 && y > gridSize - 4)) {
         if ((x === 0 || x === 2 || y === 0 || y === 2) && x < 3 && y < 3) ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
         else if ((x === gridSize - 1 || x === gridSize - 3 || y === 0 || y === 2) && x > gridSize - 4 && y < 3) ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
@@ -415,7 +497,7 @@ function renderPassToken(token) {
     if (payBox) payBox.classList.add('hidden');
   }
 
-  // Safely generate QR code locally
+  // Generate QR code locally
   if (typeof QRCode !== 'undefined') {
     try {
       const qrElem = document.getElementById('qrcode');
@@ -430,7 +512,7 @@ function renderPassToken(token) {
     generateFallbackQr('qrcode', token.tokenId);
   }
 
-  // Pre-fill token ID into officer panel for testing convenience
+  // Pre-fill token ID into officer panel for testing
   const manualInput = document.getElementById('manualTokenInput');
   if (manualInput) manualInput.value = token.tokenId;
 }
@@ -509,7 +591,7 @@ function setupOfficerEvents() {
   }
 }
 
-// Fetch and display active token details in Officer Portal
+// Fetch active token details in Officer Portal
 function fetchOfficerTokenDetails(tokenId) {
   const token = localDatabase.tokens[tokenId];
 
@@ -541,7 +623,7 @@ function fetchOfficerTokenDetails(tokenId) {
   }
 }
 
-// Camera Scanner Setup (Safe Fallback)
+// Camera Scanner Setup
 function initQrScanner() {
   if (typeof Html5QrcodeScanner !== 'undefined') {
     try {
