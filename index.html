@@ -34,12 +34,6 @@
           <select id="langSelect" aria-label="Select language">
             <option value="en">English</option>
             <option value="hi">हिंदी</option>
-            <option value="mr">मराठी</option>
-            <option value="te">తెలుగు</option>
-            <option value="ta">தமிழ்</option>
-            <option value="bn">বাংলা</option>
-            <option value="gu">ગુજરાતી</option>
-            <option value="kn">ಕನ್ನಡ</option>
           </select>
         </div>
       </div>
@@ -496,5 +490,16 @@
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Register Service Worker for Offline capability across 3G, 4G, 5G
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registered successfully.', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
