@@ -47,7 +47,7 @@
       </div>
     </div>
     
-    <!-- Module Switcher Tabs -->
+    <!-- Navigation Tabs -->
     <nav class="nav-tabs">
       <button class="tab-btn active" onclick="showModule('farmerModule', this)" data-i18n="tabFarmer">1. Farmer App</button>
       <button class="tab-btn" onclick="showModule('officerModule', this)" data-i18n="tabOfficer">2. Officer Desk</button>
@@ -62,7 +62,7 @@
     <section id="farmerModule" class="module active">
       <h2 data-i18n="farmerPortal">Farmer Portal & Digital Pass</h2>
       
-      <!-- OTP Login Simulation -->
+      <!-- OTP Login Card -->
       <div class="card" id="loginCard">
         <h3 data-i18n="otpHeading">1. Kisan OTP Authentication</h3>
         <input type="tel" id="farmerPhone" placeholder="Enter Mobile Number (+91)" required>
@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <!-- Interactive Token Booking Form (Blank Input) -->
+      <!-- Token Booking Form -->
       <div class="card" id="bookingCard" style="display:none;">
         <h3 data-i18n="bookSlotHeading">2. Book Procurement Slot</h3>
         <form onsubmit="generateToken(event)">
@@ -116,7 +116,7 @@
         </form>
       </div>
 
-      <!-- Dynamic Active Pass & Live Queue Status -->
+      <!-- Pass & Queue Status -->
       <div class="card" id="passCard" style="display:none;">
         <span class="status-badge" id="passStatus">Status: GATE ENROUTE</span>
         <h3 data-i18n="passHeading">Digital Gate Pass</h3>
@@ -177,7 +177,7 @@
       </div>
     </section>
 
-    <!-- MODULE 3: QUEUE ENGINE & WEIGHBRIDGE -->
+    <!-- MODULE 3: QUEUE ENGINE -->
     <section id="engineModule" class="module">
       <h2>Dynamic Queue & Weighbridge Engine</h2>
 
@@ -186,7 +186,7 @@
         <p>Calculates real-time farmer wait time based on tonnage and bridge speed.</p>
         
         <label>Active Weighbridges:</label>
-        <input type="number" id="engineBridges" value="2" onchange="recalculateEngine()">
+        <input type="number" id="engineBridges" value="2" min="1" onchange="recalculateEngine()">
 
         <label>Operational Shift Delay:</label>
         <select id="shiftStatus" onchange="recalculateEngine()">
@@ -207,7 +207,7 @@
       </div>
     </section>
 
-    <!-- MODULE 4: SMS / IVR NOTIFICATION LOGS -->
+    <!-- MODULE 4: SMS LOGS -->
     <section id="smsModule" class="module">
       <h2>Multi-Channel Offline Fallback (SMS & IVR)</h2>
       <div class="card">
