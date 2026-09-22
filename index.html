@@ -68,7 +68,7 @@
           <span class="eyebrow">01</span>
           <h2 data-i18n="farmerPortal">Farmer Portal &amp; Digital Pass</h2>
           <p data-i18n="farmerDescription">
-            Verify your mobile number and reserve a procurement slot.
+            Verify your mobile number, schedule slot, and track procurement &amp; payment status.
           </p>
         </div>
 
@@ -129,9 +129,9 @@
           <div class="card-header">
             <span class="card-step">2</span>
             <div>
-              <h3 data-i18n="bookSlotHeading">Book Procurement Slot</h3>
+              <h3 data-i18n="bookSlotHeading">Book Procurement Schedule</h3>
               <p data-i18n="bookingDescription">
-                Add your produce and vehicle details.
+                Select schedule date, time slot, produce, and vehicle details.
               </p>
             </div>
           </div>
@@ -174,6 +174,22 @@
             </div>
 
             <div class="form-group">
+              <label for="procurementDate" data-i18n="lblDate">Procurement Schedule Date</label>
+              <input type="date" id="procurementDate" required>
+            </div>
+
+            <div class="form-group">
+              <label for="slotTime" data-i18n="lblSlotTime">Preferred Time Window</label>
+              <select id="slotTime" required>
+                <option value="" disabled selected data-i18n="optSelectSlot">-- Select Time Window --</option>
+                <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM (Low Traffic)</option>
+                <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM (Moderate)</option>
+                <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM (Peak Rush)</option>
+                <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM (Moderate)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
               <label for="commoditySelect" data-i18n="lblCommodity">
                 Commodity Type
               </label>
@@ -183,9 +199,7 @@
                 </option>
                 <option value="Onion" data-i18n="cropOnion">Onion</option>
                 <option value="Pulses" data-i18n="cropPulses">Pulses</option>
-                <option value="Vegetables" data-i18n="cropVegetables">
-                  Vegetables
-                </option>
+                <option value="Vegetables" data-i18n="cropVegetables">Vegetables</option>
                 <option value="Wheat" data-i18n="cropWheat">Wheat</option>
                 <option value="Cotton" data-i18n="cropCotton">Cotton</option>
               </select>
@@ -213,17 +227,9 @@
                 <option value="" disabled selected data-i18n="optSelectVehicle">
                   -- Select Vehicle --
                 </option>
-                <option value="Tractor Trolley" data-i18n="vehicleTractor">
-                  Tractor Trolley
-                </option>
-                <option value="Mini Truck" data-i18n="vehicleMiniTruck">
-                  Mini Truck
-                </option>
-                <option
-                  value="Heavy Commercial Truck"
-                  data-i18n="vehicleHeavyTruck">
-                  Heavy Commercial Truck
-                </option>
+                <option value="Tractor Trolley" data-i18n="vehicleTractor">Tractor Trolley</option>
+                <option value="Mini Truck" data-i18n="vehicleMiniTruck">Mini Truck</option>
+                <option value="Heavy Commercial Truck" data-i18n="vehicleHeavyTruck">Heavy Commercial Truck</option>
               </select>
             </div>
 
@@ -240,9 +246,9 @@
           <div class="pass-header">
             <div>
               <span class="eyebrow" data-i18n="passEyebrow">SECURE PASS</span>
-              <h3 data-i18n="passHeading">Digital Gate Pass</h3>
+              <h3 data-i18n="passHeading">Digital Gate Pass &amp; Status</h3>
             </div>
-            <span class="status-badge" data-i18n="slotConfirmed">
+            <span class="status-badge" id="passStatusBadge" data-i18n="slotConfirmed">
               SLOT CONFIRMED
             </span>
           </div>
@@ -250,7 +256,7 @@
           <div class="qr-placeholder">
             <div id="qrcode" class="qr-box"></div>
             <div class="token-tag" id="qrTokenId">#MND-00000</div>
-            <p data-i18n="scanAtGate">Show this QR code at the entry gate.</p>
+            <p data-i18n="scanAtGate">Show this QR code at entry gate.</p>
           </div>
 
           <div class="summary-box">
@@ -264,6 +270,10 @@
                 <strong id="summaryMandi">--</strong>
               </div>
               <div class="summary-item">
+                <span data-i18n="lblSchedule">Schedule Window</span>
+                <strong id="summarySchedule">--</strong>
+              </div>
+              <div class="summary-item">
                 <span data-i18n="lblCommodity">Commodity Type</span>
                 <strong id="summaryCommodity">--</strong>
               </div>
@@ -271,32 +281,50 @@
                 <span data-i18n="lblQty">Produce Quantity</span>
                 <strong id="summaryQty">--</strong>
               </div>
-              <div class="summary-item">
-                <span data-i18n="lblVehicle">Vehicle Type</span>
-                <strong id="summaryVehicle">--</strong>
-              </div>
             </div>
           </div>
 
-          <div class="status-tracker">
+          <!-- Procurement & Payment Status Tracker -->
+          <div class="procurement-tracker">
+            <h4 data-i18n="procurementStatusTitle">Procurement &amp; Payment Status</h4>
+            <div class="pipeline">
+              <div class="pipe-step completed" id="stepBooked">
+                <span class="dot">✓</span>
+                <small data-i18n="stepBooked">Slot Reserved</small>
+              </div>
+              <div class="pipe-step pending" id="stepGate">
+                <span class="dot">2</span>
+                <small data-i18n="stepGate">Gate Entry</small>
+              </div>
+              <div class="pipe-step pending" id="stepWeighed">
+                <span class="dot">3</span>
+                <small data-i18n="stepWeighed">Weighbridge</small>
+              </div>
+              <div class="pipe-step pending" id="stepApproved">
+                <span class="dot">4</span>
+                <small data-i18n="stepApproved">Quality Quality/Procured</small>
+              </div>
+              <div class="pipe-step pending" id="stepPaid">
+                <span class="dot">5</span>
+                <small data-i18n="stepPaid">DBT Payment</small>
+              </div>
+            </div>
+            <div id="paymentDetailsBox" class="result-box info-result hidden">
+              <strong>DBT Payment Ref:</strong> <span id="paymentRef">N/A</span> | <strong>Amount:</strong> ₹<span id="paymentAmount">0</span>
+            </div>
+          </div>
+
+          <div class="status-tracker" style="margin-top: 15px;">
             <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblLivePos">
-                Live Position
-              </span>
+              <span class="tracker-label" data-i18n="lblLivePos">Live Position</span>
               <span class="tracker-val" id="farmerPos">#3</span>
             </div>
-
             <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblETA">
-                Dynamic ETA
-              </span>
+              <span class="tracker-label" data-i18n="lblETA">Dynamic ETA</span>
               <span class="tracker-val" id="farmerETA">10:45 AM</span>
             </div>
-
             <div class="tracker-item">
-              <span class="tracker-label" data-i18n="lblGrace">
-                Grace Period
-              </span>
+              <span class="tracker-label" data-i18n="lblGrace">Grace Period</span>
               <span class="tracker-val" id="farmerGrace">15 min</span>
             </div>
           </div>
@@ -313,7 +341,7 @@
           <span class="eyebrow">02</span>
           <h2 data-i18n="officerDeskTitle">Mandi Officer Control Desk</h2>
           <p data-i18n="officerDescription">
-            Verify passes and manage gate operations.
+            Verify passes, approve procurement quality, and initiate DBT payment settlement.
           </p>
         </div>
 
@@ -323,7 +351,7 @@
             <div>
               <h3 data-i18n="gatePassHeading">Gate Pass Verification</h3>
               <p class="card-desc" data-i18n="gatePassDesc">
-                Scan or enter token ID at the mandi entry gate.
+                Scan or enter token ID at mandi entry gate.
               </p>
             </div>
           </div>
@@ -353,11 +381,9 @@
           <div class="card-header">
             <span class="card-icon">⚖️</span>
             <div>
-              <h3 data-i18n="weighbridgeHeading">
-                Automated Weighbridge Station
-              </h3>
+              <h3 data-i18n="weighbridgeHeading">Automated Weighbridge Station</h3>
               <p class="card-desc" data-i18n="weighbridgeDesc">
-                Simulate live weight scale input from the IoT sensor.
+                Simulate live weight scale input from IoT sensor.
               </p>
             </div>
           </div>
@@ -365,10 +391,23 @@
           <div class="weight-display" id="weighValue">--.--- TONS</div>
 
           <button class="btn btn-success" id="weighBtn" type="button">
-            <span data-i18n="btnCaptureWeight">
-              Capture Weight from Scale
-            </span>
+            <span data-i18n="btnCaptureWeight">Capture Weight &amp; Confirm Procurement</span>
           </button>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">💳</span>
+            <div>
+              <h3>Procurement Approval &amp; Payment Settlement</h3>
+              <p class="card-desc">Approve grade quality and disburse Direct Benefit Transfer (DBT) funds.</p>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-success" id="approveProcurementBtn" type="button">
+              Approve Produce &amp; Pay DBT
+            </button>
+          </div>
         </div>
 
         <div class="card">
@@ -396,7 +435,7 @@
           <span class="eyebrow">03</span>
           <h2 data-i18n="engineTitle">Queue Processing Engine</h2>
           <p data-i18n="engineDescription">
-            Adjust capacity and monitor the current mandi workload.
+            Adjust capacity and monitor real-time mandi traffic to reduce congestion.
           </p>
         </div>
 
@@ -420,15 +459,9 @@
               Shift Efficiency Factor
             </label>
             <select id="shiftStatus">
-              <option value="1" data-i18n="optNormalSpeed">
-                Normal Speed (100%)
-              </option>
-              <option value="1.5" data-i18n="optPeakSpeed">
-                Peak Rush (150%)
-              </option>
-              <option value="0.7" data-i18n="optSlowSpeed">
-                Lunch Break / Slow (70%)
-              </option>
+              <option value="1" data-i18n="optNormalSpeed">Normal Speed (100%)</option>
+              <option value="1.5" data-i18n="optPeakSpeed">Peak Rush (150%)</option>
+              <option value="0.7" data-i18n="optSlowSpeed">Lunch Break / Slow (70%)</option>
             </select>
           </div>
 
@@ -446,13 +479,13 @@
           <div class="metrics-grid">
             <div class="metric-card">
               <span data-i18n="lblInQueue">In Queue</span>
-              <strong>14</strong>
+              <strong id="metricInQueue">14</strong>
               <small data-i18n="vehicles">Vehicles</small>
             </div>
 
             <div class="metric-card">
               <span data-i18n="lblAvgWait">Average Wait</span>
-              <strong>25</strong>
+              <strong id="metricAvgWait">25</strong>
               <small data-i18n="minutes">Minutes</small>
             </div>
 
@@ -471,7 +504,7 @@
           <span class="eyebrow">04</span>
           <h2 data-i18n="smsTitle">SMS Gateway &amp; Broadcast Logs</h2>
           <p data-i18n="smsDescription">
-            View system and farmer communication events.
+            View real-time system and farmer SMS communication logs.
           </p>
         </div>
 
@@ -492,7 +525,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // Register Service Worker for Offline capability across 3G, 4G, 5G
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
