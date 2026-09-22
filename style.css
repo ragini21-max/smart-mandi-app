@@ -11,7 +11,6 @@ body {
   line-height: 1.5;
 }
 
-/* Accessibility Helpers */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -23,7 +22,7 @@ body {
   border: 0;
 }
 
-/* Navbar Navigation */
+/* Header Navbar */
 .navbar {
   background-color: #2e7d32;
   color: #ffffff;
@@ -60,7 +59,6 @@ body {
   background-color: #ffffff;
   color: #2e7d32;
   cursor: pointer;
-  outline: none;
 }
 
 .status-online {
@@ -72,16 +70,7 @@ body {
   font-weight: bold;
 }
 
-.status-offline {
-  background-color: #f44336;
-  color: #ffffff;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: bold;
-}
-
-/* Layout Container */
+/* Layout */
 .container {
   max-width: 1100px;
   margin: 1.5rem auto;
@@ -95,9 +84,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
 
 .card {
@@ -132,9 +119,7 @@ body {
   gap: 1rem;
 }
 
-.half {
-  flex: 1;
-}
+.half { flex: 1; }
 
 label {
   font-size: 0.85rem;
@@ -150,7 +135,6 @@ input, select {
   border-radius: 4px;
   font-size: 0.95rem;
   outline: none;
-  background-color: #ffffff;
 }
 
 input:focus, select:focus {
@@ -163,16 +147,71 @@ input:focus, select:focus {
   gap: 0.5rem;
 }
 
-.input-inline input {
-  flex: 1;
+.input-inline input { flex: 1; }
+
+/* OTP Timer Styles */
+.timer-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
 }
 
 .hint-text {
   font-size: 0.8rem;
   color: #2e7d32;
   font-weight: 600;
-  margin-top: 4px;
 }
+
+.countdown-badge {
+  font-size: 0.78rem;
+  font-weight: bold;
+  background-color: #ffe0b2;
+  color: #e65100;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Machine Slowdown Panel */
+.slowdown-control-panel {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.slowdown-control-panel h3 {
+  font-size: 1rem;
+  color: #f57f17;
+  margin-bottom: 4px;
+}
+
+.slowdown-control-panel p {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.slowdown-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.slowdown-status-card {
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-normal { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+.status-slowed { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
 
 /* Buttons */
 .btn {
@@ -181,46 +220,18 @@ input:focus, select:focus {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
 }
 
-.btn-primary {
-  background-color: #2e7d32;
-  color: #ffffff;
-  width: 100%;
-}
+.btn-primary { background-color: #2e7d32; color: #ffffff; width: 100%; }
+.btn-primary:disabled { background-color: #a5d6a7; cursor: not-allowed; }
+.btn-secondary { background-color: #0288d1; color: #ffffff; }
+.btn-warning { background-color: #ed6c02; color: #ffffff; }
+.btn-success { background-color: #2e7d32; color: #ffffff; width: 100%; }
+.btn-success-light { background-color: #2e7d32; color: #ffffff; }
+.btn-sm { padding: 4px 10px; font-size: 0.8rem; }
 
-.btn-primary:hover:not(:disabled) {
-  background-color: #1b5e20;
-}
-
-.btn-primary:disabled {
-  background-color: #a5d6a7;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #0288d1;
-  color: #ffffff;
-  white-space: nowrap;
-}
-
-.btn-secondary:hover {
-  background-color: #01579b;
-}
-
-.btn-success {
-  background-color: #2e7d32;
-  color: #ffffff;
-  width: 100%;
-}
-
-.btn-success:hover {
-  background-color: #1b5e20;
-}
-
-/* Capacity Meter UI */
+/* Capacity Meter */
 .capacity-meter-box {
   margin-top: 1rem;
   padding: 1rem;
@@ -261,149 +272,38 @@ input:focus, select:focus {
   border-radius: 6px;
 }
 
-.sms-box h3 {
-  font-size: 0.95rem;
-  color: #2e7d32;
-  margin-bottom: 0.5rem;
-}
-
-.sms-list {
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.sms-item {
-  background: #ffffff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border-left: 4px solid #2e7d32;
-  margin-bottom: 8px;
-  font-size: 0.82rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.empty-sms {
-  font-size: 0.85rem;
-  color: #777;
-  font-style: italic;
-}
+.sms-box h3 { font-size: 0.95rem; color: #2e7d32; margin-bottom: 0.5rem; }
+.sms-list { max-height: 150px; overflow-y: auto; }
+.sms-item { background: #ffffff; padding: 8px 12px; border-radius: 4px; border-left: 4px solid #2e7d32; margin-bottom: 8px; font-size: 0.82rem; }
 
 /* Status Alert Boxes */
-.result-box {
-  padding: 0.8rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
+.result-box { padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; font-size: 0.875rem; }
 .info-result { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
 .success-result { background-color: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
 .danger-result { background-color: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
 
 .hidden { display: none !important; }
 
-/* Pass & QR Styles */
-.pass-box {
-  border: 2px dashed #2e7d32;
-  padding: 1.25rem;
-  border-radius: 6px;
-  background-color: #fafafa;
-}
-
-.pass-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.8rem;
-}
-
+/* Pass & QR Code Styles */
+.pass-box { border: 2px dashed #2e7d32; padding: 1.25rem; border-radius: 6px; background-color: #fafafa; }
+.pass-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem; margin-bottom: 0.8rem; }
 .pass-id { font-size: 1.2rem; font-weight: bold; color: #2e7d32; }
 .badge { background: #2e7d32; color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+.pass-layout { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
 
-.pass-layout {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-}
+.qr-container { text-align: center; min-width: 120px; }
+#qrcode canvas, #qrcode img { margin: 0 auto; display: block; }
 
-.qr-container {
-  text-align: center;
-  min-width: 120px;
-  min-height: 120px;
-}
-
-#qrcode canvas, #qrcode img {
-  margin: 0 auto;
-  display: block;
-}
-
-.queue-status {
-  margin-top: 1rem;
-  padding: 0.8rem;
-  background: #fff3e0;
-  border: 1px solid #ffe0b2;
-  border-radius: 4px;
-}
-
-.clickable {
-  cursor: pointer;
-  transition: background 0.2s ease;
-  position: relative;
-}
-
-.clickable:hover {
-  background: #ffe0b2;
-}
-
-.voice-hint {
-  display: block;
-  font-size: 0.75rem;
-  color: #e65100;
-  font-weight: bold;
-  margin-top: 4px;
-}
-
-.payment-box {
-  margin-top: 1rem;
-  padding: 0.8rem;
-  background: #e8f5e9;
-  border: 1px solid #a5d6a7;
-  border-radius: 4px;
-}
-
+.queue-status { margin-top: 1rem; padding: 0.8rem; background: #fff3e0; border: 1px solid #ffe0b2; border-radius: 4px; }
+.payment-box { margin-top: 1rem; padding: 0.8rem; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 4px; }
 .status-completed { color: #2e7d32; }
 
-/* Officer Grid */
-.officer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
+/* Officer Layout */
+.officer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 @media (max-width: 768px) {
   .officer-grid { grid-template-columns: 1fr; }
   .pass-layout { flex-direction: column; text-align: left; }
 }
 
-.officer-action-card {
-  background: #fdfdfd;
-  border: 1px solid #e0e0e0;
-  padding: 1rem;
-  border-radius: 6px;
-}
-
-.officer-action-card h3 {
-  font-size: 1rem;
-  margin-bottom: 10px;
-  color: #1b5e20;
-}
-
-.pass-details-box {
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
+.officer-action-card { background: #fdfdfd; border: 1px solid #e0e0e0; padding: 1rem; border-radius: 6px; }
+.pass-details-box { background: #f5f5f5; padding: 10px; border-radius: 4px; font-size: 0.9rem; }
