@@ -86,7 +86,10 @@ const translations = {
 let currentLang = 'en';
 
 function switchLanguage() {
-  currentLang = document.getElementById('langSelect').value;
+  const langSelect = document.getElementById('langSelect');
+  if (!langSelect) return;
+  
+  currentLang = langSelect.value;
   const langData = translations[currentLang] || translations.en;
   
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -112,15 +115,20 @@ let generatedOTP = null;
 let otpTimerInterval = null;
 
 function sendOTP() {
-  const phone = document.getElementById('farmerPhone').value.trim();
+  const phoneInput = document.getElementById('farmerPhone');
+  if (!phoneInput) return;
+  
+  const phone = phoneInput.value.trim();
   if (!phone || phone.length < 10) {
-    return alert("Please enter a valid 10-digit mobile number.");
+    alert("Please enter a valid 10-digit mobile number.");
+    return;
   }
   
   generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
-  document.getElementById('otpSection').style.display = 'block';
-  logSMS(`[SMS -> +91 ${phone}]: Your Kisan OTP is ${generatedOTP}.`);
+  const otpSec = document.getElementById('otpSection');
+  if (otpSec) otpSec.style.display = 'block';
   
+  logSMS("[SMS -> +91 " + phone + "]: Your Kisan OTP is " + generatedOTP + ".");
   startOtpTimer(30);
 }
 
@@ -130,31 +138,37 @@ function startOtpTimer(seconds) {
   const timerDisplay = document.getElementById('otpTimer');
   const verifyBtn = document.getElementById('verifyOtpBtn');
   
-  verifyBtn.disabled = false;
-  timerDisplay.innerText = `OTP expires in: ${timeLeft}s`;
+  if (verifyBtn) verifyBtn.disabled = false;
+  if (timerDisplay) timerDisplay.innerText = "OTP expires in: " + timeLeft + "s";
   
   otpTimerInterval = setInterval(() => {
     timeLeft--;
     if (timeLeft <= 0) {
       clearInterval(otpTimerInterval);
-      timerDisplay.innerText = "OTP expired! Click 'Send OTP' again.";
+      if (timerDisplay) timerDisplay.innerText = "OTP expired! Click 'Send OTP' again.";
     } else {
-      timerDisplay.innerText = `OTP expires in: ${timeLeft}s`;
+      if (timerDisplay) timerDisplay.innerText = "OTP expires in: " + timeLeft + "s";
     }
   }, 1000);
 }
 
 function verifyOTP() {
-  const inputCode = document.getElementById('otpCode').value.trim();
+  const otpInput = document.getElementById('otpCode');
+  if (!otpInput) return;
+  
+  const inputCode = otpInput.value.trim();
 
   if (!inputCode || inputCode.length !== 4) {
-    return alert("Please enter a valid 4-digit OTP code.");
+    alert("Please enter a valid 4-digit OTP code.");
+    return;
   }
 
   if (inputCode === generatedOTP || inputCode.length === 4) {
     clearInterval(otpTimerInterval);
-    document.getElementById('loginCard').style.display = 'none';
-    document.getElementById('bookingCard').style.display = 'block';
+    const loginCard = document.getElementById('loginCard');
+    const bookingCard = document.getElementById('bookingCard');
+    if (loginCard) loginCard.style.display = 'none';
+    if (bookingCard) bookingCard.style.display = 'block';
   } else {
     alert("Invalid OTP! Check the SMS logs tab for the correct OTP.");
   }
@@ -162,64 +176,75 @@ function verifyOTP() {
 
 // --- 3. Token & Dynamic Data Generation ---
 function generateToken(e) {
-  e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
 
-  const name = document.getElementById('farmerName').value.trim();
-  const mandi = document.getElementById('mandiSelect').value;
-  const commodity = document.getElementById('commoditySelect').value;
-  const qty = document.getElementById('produceQty').value;
-  const vehicle = document.getElementById('vehicleType').value;
+  const name = document.getElementById('farmerName') ? document.getElementById('farmerName').value.trim() : '';
+  const mandi = document.getElementById('mandiSelect') ? document.getElementById('mandiSelect').value : '';
+  const commodity = document.getElementById('commoditySelect') ? document.getElementById('commoditySelect').value : '';
+  const qty = document.getElementById('produceQty') ? document.getElementById('produceQty').value : '';
+  const vehicle = document.getElementById('vehicleType') ? document.getElementById('vehicleType').value : '';
 
   if (!name || !mandi || !commodity || !qty || !vehicle) {
-    return alert("Please complete all form fields.");
+    alert("Please complete all form fields.");
+    return;
   }
 
   // Bind values dynamically to summary elements
-  document.getElementById('summaryFarmerName').innerText = name;
-  document.getElementById('summaryMandi').innerText = mandi;
-  document.getElementById('summaryCommodity').innerText = commodity;
-  document.getElementById('summaryQty').innerText = qty;
-  document.getElementById('summaryVehicle').innerText = vehicle;
+  if (document.getElementById('summaryFarmerName')) document.getElementById('summaryFarmerName').innerText = name;
+  if (document.getElementById('summaryMandi')) document.getElementById('summaryMandi').innerText = mandi;
+  if (document.getElementById('summaryCommodity')) document.getElementById('summaryCommodity').innerText = commodity;
+  if (document.getElementById('summaryQty')) document.getElementById('summaryQty').innerText = qty;
+  if (document.getElementById('summaryVehicle')) document.getElementById('summaryVehicle').innerText = vehicle;
 
-  document.getElementById('bookingCard').style.display = 'none';
-  document.getElementById('passCard').style.display = 'block';
+  if (document.getElementById('bookingCard')) document.getElementById('bookingCard').style.display = 'none';
+  if (document.getElementById('passCard')) document.getElementById('passCard').style.display = 'block';
   
   const token = "#MND-" + Math.floor(10000 + Math.random() * 90000);
-  document.getElementById('qrTokenId').innerText = "Token ID: " + token;
+  if (document.getElementById('qrTokenId')) {
+    document.getElementById('qrTokenId').innerText = "Token ID: " + token;
+  }
   
   const qrContainer = document.getElementById('qrcode');
-  qrContainer.innerHTML = "";
-  new QRCode(qrContainer, {
-    text: `${token}|${name}|${mandi}|${qty}T`,
-    width: 140,
-    height: 140,
-    colorDark: "#1b4332",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
+  if (qrContainer) {
+    qrContainer.innerHTML = "";
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(qrContainer, {
+        text: token + "|" + name + "|" + mandi + "|" + qty + "T",
+        width: 140,
+        height: 140,
+        colorDark: "#1b4332",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    } else {
+      qrContainer.innerText = "[QR Code Ready: " + token + "]";
+    }
+  }
 
-  logSMS(`[SMS -> ${name}]: Booking confirmed! Token ${token} issued for ${mandi}.`);
+  logSMS("[SMS -> " + name + "]: Booking confirmed! Token " + token + " issued for " + mandi + ".");
 }
 
-// Browser Web Speech API Audio Implementation
+// Web Speech API Audio Implementation
 function triggerVoiceAssistance() {
-  const farmer = document.getElementById('summaryFarmerName').innerText;
-  const position = document.getElementById('farmerPos').innerText;
+  const farmerElem = document.getElementById('summaryFarmerName');
+  const posElem = document.getElementById('farmerPos');
+  
+  const farmer = farmerElem ? farmerElem.innerText : 'Farmer';
+  const position = posElem ? posElem.innerText : '#3 in line';
   
   let audioText = "";
   if (currentLang === 'hi') {
-    audioText = `नमस्कार ${farmer}. आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति ${position} है।`;
+    audioText = "नमस्कार " + farmer + ". आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति " + position + " है।";
   } else if (currentLang === 'mr') {
-    audioText = `नमस्कार ${farmer}. तुमचे बुकिंग निश्चित झाले आहे. तुमची रांग मधील स्थिती ${position} आहे.`;
+    audioText = "नमस्कार " + farmer + ". तुमचे बुकिंग निश्चित झाले आहे. तुमची रांग मधील स्थिती " + position + " आहे।";
   } else {
-    audioText = `Hello ${farmer}, your booking is confirmed. Your current queue status is ${position}.`;
+    audioText = "Hello " + farmer + ", your booking is confirmed. Your current queue status is " + position + ".";
   }
 
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel(); // Stop any active speech
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(audioText);
     
-    // Select appropriate language voice
     if (currentLang === 'hi') utterance.lang = 'hi-IN';
     else if (currentLang === 'mr') utterance.lang = 'mr-IN';
     else utterance.lang = 'en-US';
@@ -234,49 +259,62 @@ function triggerVoiceAssistance() {
 let html5QrCode = null;
 
 function scanToken() {
-  const token = document.getElementById('scanInput').value || "#MND-84920";
+  const scanInput = document.getElementById('scanInput');
+  const token = (scanInput && scanInput.value.trim()) ? scanInput.value.trim() : "#MND-84920";
   verifyTokenProcess(token);
 }
 
 function verifyTokenProcess(token) {
-  document.getElementById('scanResult').innerText = `[SUCCESS]: ${token} Verified. Gate Entry Approved. Proceed to Weighbridge 2.`;
-  logSMS(`[GATE]: Token ${token} verified at entry gate.`);
+  const resElem = document.getElementById('scanResult');
+  if (resElem) {
+    resElem.innerText = "[SUCCESS]: " + token + " Verified. Gate Entry Approved. Proceed to Weighbridge 2.";
+  }
+  logSMS("[GATE]: Token " + token + " verified at entry gate.");
 }
 
 function toggleCameraScanner() {
   const readerDiv = document.getElementById('reader');
   const btn = document.getElementById('camToggleBtn');
+  if (!readerDiv || !btn) return;
 
   if (readerDiv.style.display === 'none') {
     readerDiv.style.display = 'block';
     btn.innerText = "❌ Close Camera Scanner";
     
-    html5QrCode = new Html5Qrcode("reader");
-    html5QrCode.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 220, height: 220 } },
-      (decodedText) => {
-        document.getElementById('scanInput').value = decodedText;
-        verifyTokenProcess(decodedText);
-        toggleCameraScanner();
-      },
-      () => {}
-    ).catch(err => {
-      alert("Unable to open camera: " + err);
-      readerDiv.style.display = 'none';
-      btn.innerText = "📷 Open Camera QR Scanner";
-    });
+    if (typeof Html5Qrcode !== 'undefined') {
+      html5QrCode = new Html5Qrcode("reader");
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decodedText) => {
+          const scanInput = document.getElementById('scanInput');
+          if (scanInput) scanInput.value = decodedText;
+          verifyTokenProcess(decodedText);
+          toggleCameraScanner();
+        },
+        () => {}
+      ).catch(err => {
+        alert("Unable to open camera: " + err);
+        readerDiv.style.display = 'none';
+        btn.innerText = "📷 Open Camera QR Scanner";
+      });
+    } else {
+      alert("Camera QR scanning library not loaded.");
+    }
   } else {
     if (html5QrCode) {
       html5QrCode.stop().then(() => {
         readerDiv.style.display = 'none';
         btn.innerText = "📷 Open Camera QR Scanner";
       }).catch(err => console.error(err));
+    } else {
+      readerDiv.style.display = 'none';
+      btn.innerText = "📷 Open Camera QR Scanner";
     }
   }
 }
 
-// --- 5. Utilities & SMS Logs ---
+// --- 5. Utilities & Engine ---
 function applyGracePeriod() {
   alert("15-Minute Grace Period applied.");
   logSMS("[RE-QUEUE]: Late arrival detected. 15-min buffer applied.");
@@ -288,14 +326,23 @@ function triggerEmergency() {
 }
 
 function recalculateEngine() {
-  const bridges = document.getElementById('engineBridges').value || 1;
-  const shift = document.getElementById('shiftStatus').value;
+  const bridgesElem = document.getElementById('engineBridges');
+  const shiftElem = document.getElementById('shiftStatus');
+  const outputElem = document.getElementById('engineOutput');
+  
+  const bridges = bridgesElem ? (parseFloat(bridgesElem.value) || 1) : 1;
+  const shift = shiftElem ? (parseFloat(shiftElem.value) || 1) : 1;
+  
   const minutes = Math.round((20 * shift) / bridges);
-  document.getElementById('engineOutput').innerHTML = `Calculated System Throughput: <strong>${minutes} mins per tractor</strong>`;
+  if (outputElem) {
+    outputElem.innerHTML = "Calculated System Throughput: <strong>" + minutes + " mins per tractor</strong>";
+  }
 }
 
 function simulateWeighment() {
   const display = document.querySelector('.weight-display');
+  if (!display) return;
+  
   display.innerText = "CALCULATING...";
   setTimeout(() => {
     display.innerText = "08.450 TONS";
