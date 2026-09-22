@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Mandi Management System</title>
+  <title data-i18n="appTitle">Smart Mandi Management System</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="manifest" href="./manifest.json">
-  <!-- QR Code Generator & Scanner Libraries -->
+  
+  <!-- QR Code Generator & Scanner Libraries (Optional external CDNs; system falls back gracefully if offline) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
@@ -21,12 +22,14 @@
     
     <div class="nav-controls">
       <!-- Role Switcher -->
+      <label for="roleSelector" class="visually-hidden">Select Role</label>
       <select id="roleSelector" class="nav-select">
         <option value="farmer" data-i18n="roleFarmer">Farmer Portal</option>
         <option value="officer" data-i18n="roleOfficer">Officer Dashboard</option>
       </select>
 
       <!-- Language Switcher -->
+      <label for="langSelector" class="visually-hidden">Select Language</label>
       <select id="langSelector" class="nav-select">
         <option value="en">English</option>
         <option value="hi">हिंदी (Hindi)</option>
@@ -45,7 +48,7 @@
         <section class="card left-panel">
           <h2 data-i18n="farmerRegTitle">Farmer Registration & Slot Booking</h2>
 
-          <form id="bookingForm">
+          <form id="bookingForm" autocomplete="off">
             <div class="form-group">
               <label for="farmerName" data-i18n="labelFarmerName">Farmer Full Name</label>
               <input type="text" id="farmerName" required placeholder="e.g. Ramesh Kumar">
@@ -54,7 +57,7 @@
             <div class="form-group">
               <label for="phoneNumber" data-i18n="labelMobile">Mobile Number</label>
               <div class="input-inline">
-                <input type="tel" id="phoneNumber" placeholder="10-digit number" required>
+                <input type="tel" id="phoneNumber" placeholder="10-digit number" pattern="[0-9]{10}" maxlength="10" required>
                 <button type="button" id="sendOtpBtn" class="btn btn-secondary" data-i18n="btnSendOtp">Send OTP</button>
               </div>
             </div>
@@ -63,7 +66,7 @@
             <div class="form-group hidden" id="otpGroup">
               <label for="otpCode" data-i18n="labelOtp">Enter OTP</label>
               <div class="input-inline">
-                <input type="text" id="otpCode" placeholder="Enter 4-digit OTP">
+                <input type="text" id="otpCode" placeholder="Enter 4-digit OTP" maxlength="4">
                 <button type="button" id="verifyOtpBtn" class="btn btn-secondary" data-i18n="btnVerify">Verify OTP</button>
               </div>
               <small id="otpHint" class="hint-text"></small>
@@ -98,7 +101,7 @@
             <div class="form-row">
               <div class="form-group half">
                 <label for="produceQty" data-i18n="labelQty">Quantity (Tons)</label>
-                <input type="number" id="produceQty" min="0.1" step="0.1" placeholder="e.g. 5.5" required>
+                <input type="number" id="produceQty" min="0.1" max="50" step="0.1" placeholder="e.g. 5.5" required>
               </div>
               <div class="form-group half">
                 <label for="slotTime" data-i18n="labelSlot">Preferred Slot</label>
