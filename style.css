@@ -476,45 +476,45 @@ button {
 .procurement-tracker {
   margin-top: 18px;
   padding: 16px;
+  border: 1px solid var(--border);
   border-radius: 14px;
   background: #f3f7f4;
-  border: 1px solid var(--border);
 }
 
 .procurement-tracker h4 {
-  font-size: 0.88rem;
   margin-bottom: 12px;
   color: var(--primary-dark);
+  font-size: 0.88rem;
 }
 
 .pipeline {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
   gap: 4px;
 }
 
 .pipe-step {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  flex: 1;
 }
 
 .pipe-step .dot {
+  display: flex;
   width: 28px;
   height: 28px;
-  border-radius: 50%;
-  background: #cbd5e1;
-  color: white;
-  display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  color: white;
+  background: #cbd5e1;
   font-size: 0.75rem;
   font-weight: bold;
-  margin-bottom: 6px;
 }
 
 .pipe-step.completed .dot {
@@ -522,8 +522,8 @@ button {
 }
 
 .pipe-step small {
-  font-size: 0.65rem;
   color: var(--text-muted);
+  font-size: 0.65rem;
   font-weight: 600;
 }
 
@@ -537,8 +537,8 @@ button {
   gap: 8px;
   padding: 14px 8px;
   border-radius: 12px;
-  text-align: center;
   background: var(--primary-light);
+  text-align: center;
 }
 
 .tracker-label {
@@ -598,8 +598,8 @@ button {
   padding: 18px 8px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  text-align: center;
   background: #fbfdfb;
+  text-align: center;
 }
 
 .metric-card span,
@@ -618,8 +618,8 @@ button {
 
 .log-box {
   height: 220px;
-  overflow-y: auto;
   padding: 13px;
+  overflow-y: auto;
   border-radius: 12px;
   color: #e2e8f0;
   background: #16251d;
@@ -671,13 +671,13 @@ button {
   .app-shell { min-height: 100vh; border-radius: 0; }
   .app-header { padding: 20px 16px 14px; }
   .app-content { padding: 24px 16px; }
-  .header-top { align-items: flex-start; flex-direction: column; }
+  .header-top { flex-direction: column; align-items: flex-start; }
   .lang-picker, .lang-picker select { width: 100%; }
   .nav-tabs { gap: 4px; }
   .tab-btn { min-height: 58px; font-size: 0.64rem; }
   .card { padding: 18px; }
   .btn-group { grid-template-columns: 1fr; }
-  .summary-item { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .summary-item { flex-direction: column; align-items: flex-start; gap: 4px; }
   .summary-item strong { text-align: left; }
   .metrics-grid { gap: 6px; }
   .metric-card { padding: 13px 4px; }
