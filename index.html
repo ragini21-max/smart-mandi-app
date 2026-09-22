@@ -6,8 +6,10 @@
   <title>Smart Mandi Engine (PS ID 26032)</title>
   <link rel="stylesheet" href="style.css">
   
-  <!-- External Libraries for QR Generation & Camera Scanning -->
+  <!-- QRCode Generation Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Camera QR Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
@@ -58,7 +60,7 @@
       <div class="card" id="bookingCard" style="display:none;">
         <h3 data-i18n="bookSlotHeading">2. Book Procurement Slot</h3>
         <form onsubmit="generateToken(event)">
-          <label data-i18n="lblFarmerName">Farmer Name / Aadhaar:</label>
+          <label data-i18n="lblFarmerName">Farmer Name / Identity:</label>
           <input type="text" id="farmerName" value="Ramesh Patil" required>
 
           <label data-i18n="lblMandi">Select Mandi Center:</label>
@@ -93,7 +95,6 @@
         <h3 data-i18n="passHeading">Digital Gate Pass</h3>
         
         <div class="qr-placeholder">
-          <!-- Dynamic QR Code Canvas -->
           <div id="qrcode" class="qr-box"></div>
           <p id="qrTokenId">Token ID: #MND-84920</p>
         </div>
