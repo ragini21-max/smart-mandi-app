@@ -300,7 +300,7 @@ const translations = {
     lblVehicle: "ವಾಹನದ ಮಾದರಿ:",
     optSelectVehicle: "-- ವಾಹನ ಆಯ್ಕೆಮಾಡಿ --",
     optTractor: "ಟ್ರ್ಯಾಕ್ಟರ್ ಟ್ರಾಲಿ",
-    optMiniTruck: "ಮಿನಿ ટ્રಕ್",
+    optMiniTruck: "ಮಿನಿ truck",
     optHeavyTruck: "ಭಾರೀ ಟ್ರಕ್",
     btnBookSlot: "ಸ್ಲಾಟ್ ಬುಕ್ ಮಾಡಿ ಮತ್ತು QR ಪಾಸ್ ಪಡೆಯಿರಿ",
     passHeading: "ಡಿಜಿಟಲ್ ಗೇಟ್ ಪಾಸ್",
