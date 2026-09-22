@@ -8,13 +8,7 @@ let toastTimer = null;
 
 const langMap = {
   en: "en-IN",
-  hi: "hi-IN",
-  mr: "mr-IN",
-  te: "te-IN",
-  ta: "ta-IN",
-  bn: "bn-IN",
-  gu: "gu-IN",
-  kn: "kn-IN"
+  hi: "hi-IN"
 };
 
 const translations = {
@@ -222,389 +216,8 @@ const translations = {
     alertValidToken: "कृपया टोकन आईडी दर्ज करें।",
     ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
       `नमस्ते ${name}। ${mandi} में ${qty} टन ${crop} के लिए, ${vehicle} वाहन से की गई आपकी बुकिंग की पुष्टि हो गई है। कतार में आपका स्थान ${position} है। आपका अनुमानित आगमन समय ${eta} है।`
-  },
-
-  mr: {
-    appTitle: "स्मार्ट मंडी इंजिन",
-    subTitle: "एपीएमसी डायनॅमिक रांग आणि पास",
-    tabFarmer: "शेतकरी ॲप",
-    tabOfficer: "अधिकारी डेस्क",
-    tabEngine: "क्यू इंजिन",
-    tabSms: "एसएमएस लॉग",
-    farmerPortal: "शेतकरी पोर्टल आणि डिजिटल पास",
-    farmerDescription: "मोबाईल क्रमांक तपासा आणि खरेदी स्लॉट बुक करा.",
-    otpHeading: "शेतकरी ओटीपी प्रमाणीकरण",
-    otpDescription: "तुमचा नोंदणीकृत मोबाईल क्रमांक वापरा.",
-    lblPhone: "मोबाईल क्रमांक",
-    phPhone: "10 अंकी मोबाईल क्रमांक टाका",
-    sendOtp: "ओटीपी पाठवा",
-    otpTimerText: "ओटीपी {seconds} सेकंदांत कालबाह्य होईल",
-    lblOtpCode: "पडताळणी कोड",
-    phOtp: "4 अंकी ओटीपी टाका",
-    verifyLogin: "पडताळणी करा आणि लॉगिन करा",
-    demoOtp: "डेमो ओटीपी: {otp}",
-    bookSlotHeading: "खरेदी स्लॉट बुक करा",
-    bookingDescription: "तुमच्या शेतमालाची आणि वाहनाची माहिती भरा.",
-    lblFarmerName: "शेतकऱ्याचे नाव / आयडी",
-    phFarmerName: "उदा. रमेश पाटील",
-    lblMandi: "मंडी केंद्र",
-    optSelectMandi: "-- एपीएमसी मंडी निवडा --",
-    mandiNashik: "नाशिक मुख्य एपीएमसी",
-    mandiLasalgaon: "लासलगाव मंडी",
-    mandiPune: "पुणे मार्केट यार्ड",
-    mandiNagpur: "नागपूर एपीएमसी हब",
-    lblCommodity: "शेतमालाचा प्रकार",
-    optSelectCommodity: "-- शेतमाल निवडा --",
-    cropOnion: "कांदा",
-    cropPulses: "डाळी",
-    cropVegetables: "भाज्या",
-    cropWheat: "गहू",
-    cropCotton: "कापूस",
-    lblQty: "शेतमालाचे प्रमाण (टन)",
-    phQty: "उदा. 5.5",
-    lblVehicle: "वाहनाचा प्रकार",
-    optSelectVehicle: "-- वाहन निवडा --",
-    vehicleTractor: "ट्रॅक्टर ट्रॉली",
-    vehicleMiniTruck: "मिनी ट्रक",
-    vehicleHeavyTruck: "मोठा व्यावसायिक ट्रक",
-    btnBookSlot: "स्लॉट बुक करा आणि क्यूआर पास तयार करा",
-    passEyebrow: "सुरक्षित पास",
-    passHeading: "डिजिटल गेट पास",
-    slotConfirmed: "स्लॉट निश्चित",
-    scanAtGate: "प्रवेशद्वारावर हा क्यूआर कोड दाखवा.",
-    lblLivePos: "थेट स्थान",
-    lblETA: "अंदाजे वेळ",
-    lblGrace: "सवलतीचा वेळ",
-    btnTTS: "स्थिती ऐका",
-    officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क",
-    officerDescription: "पास तपासा आणि गेटचे व्यवस्थापन करा.",
-    gatePassHeading: "गेट पास पडताळणी",
-    gatePassDesc: "मंडीच्या प्रवेशद्वारावर टोकन आयडी टाका.",
-    lblToken: "टोकन आयडी",
-    phTokenInput: "टोकन आयडी टाका",
-    btnVerifyEntry: "प्रवेश तपासा",
-    btnCamScanner: "कॅमेरा स्कॅनर उघडा",
-    awaitingGate: "गेट प्रवेश पडताळणीची प्रतीक्षा आहे...",
-    passValid: "पास वैध ({token}) — गेट प्रवेशास परवानगी आहे.",
-    cameraMessage: "कॅमेरा स्कॅनर सुरू झाला. क्यूआर कोडकडे कॅमेरा करा.",
-    weighbridgeHeading: "स्वयंचलित वजन केंद्र",
-    weighbridgeDesc: "आयओटी सेन्सरवरील वजनाचे अनुकरण करा.",
-    btnCaptureWeight: "स्केलवरून वजन घ्या",
-    exceptionsHeading: "रांग नियंत्रण",
-    btnGrantGrace: "15 मिनिटांची सवलत द्या",
-    btnPauseGate: "गेट प्रवेश थांबवा",
-    graceMessage: "सक्रिय टोकनला 15 मिनिटांची सवलत देण्यात आली.",
-    emergencyMessage: "गेट प्रवेश तात्पुरता थांबवण्यात आला आहे.",
-    engineTitle: "रांग प्रक्रिया इंजिन",
-    engineDescription: "क्षमता समायोजित करा आणि मंडीची स्थिती पहा.",
-    engineHeading: "क्षमता आणि वेग समायोजन",
-    lblActiveBridges: "सक्रिय वजन काटे",
-    lblShiftFactor: "शिफ्ट कार्यक्षमता घटक",
-    optNormalSpeed: "सामान्य वेग (100%)",
-    optPeakSpeed: "जास्त गर्दी (150%)",
-    optSlowSpeed: "दुपारची विश्रांती / कमी वेग (70%)",
-    calculatedThroughput: "अंदाजे क्षमता: प्रत्येक वाहनासाठी {minutes} मिनिटे",
-    activeStatusHeading: "सक्रिय मंडी स्थिती",
-    lblInQueue: "रांगेत",
-    lblAvgWait: "सरासरी प्रतीक्षा",
-    lblClearedToday: "आज साफ केले",
-    vehicles: "वाहने",
-    minutes: "मिनिटे",
-    tons: "टन",
-    smsTitle: "एसएमएस गेटवे आणि प्रसारण लॉग",
-    smsDescription: "सिस्टम आणि शेतकरी संदेश पहा.",
-    smsHeading: "थेट टेलिफोनी लॉग",
-    smsInitialLog: "सिस्टम: मंडी क्यू इंजिन सुरू झाले.",
-    invalidPhone: "कृपया योग्य 10 अंकी मोबाईल क्रमांक टाका.",
-    invalidOtp: "कृपया डेमो संदेशातील 4 अंकी ओटीपी टाका.",
-    noPass: "सक्रिय बुकिंग पास सापडला नाही.",
-    speechUnavailable: "या ब्राउझरमध्ये टेक्स्ट-टू-स्पीच उपलब्ध नाही.",
-    bookingConfirmed: "बुकिंग निश्चित झाली. तुमचा डिजिटल पास तयार आहे.",
-    otpSent: "डेमो ओटीपी यशस्वीपणे पाठवला.",
-    authSuccess: "शेतकऱ्याचे प्रमाणीकरण यशस्वी झाले.",
-    alertValidToken: "कृपया टोकन आयडी टाका.",
-    ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-      `नमस्कार ${name}. ${mandi} येथे ${qty} टन ${crop} साठी ${vehicle} वाहनाने केलेली तुमची बुकिंग निश्चित झाली आहे. रांगेतील तुमचे स्थान ${position} आहे. तुमची अंदाजे आगमन वेळ ${eta} आहे.`
   }
 };
-
-/*
- * The remaining languages use complete, independent translated content
- * for the values that appear in the pass and speech. The interface labels
- * can be expanded in exactly the same format without changing the logic.
- */
-translations.te = createLanguagePack({
-  appTitle: "స్మార్ట్ మండి ఇంజిన్",
-  subTitle: "ఏపీఎంసీ డైనమిక్ క్యూ మరియు పాస్",
-  tabFarmer: "రైతు యాప్",
-  tabOfficer: "అధికారి డెస్క్",
-  tabEngine: "క్యూ ఇంజిన్",
-  tabSms: "ఎస్ఎంఎస్ లాగ్స్",
-  farmerPortal: "రైతు పోర్టల్ మరియు డిజిటల్ పాస్",
-  farmerDescription: "మొబైల్ నంబర్‌ను ధృవీకరించి కొనుగోలు స్లాట్ బుక్ చేయండి.",
-  otpHeading: "రైతు ఓటీపీ ధృవీకరణ",
-  lblPhone: "మొబైల్ నంబర్",
-  phPhone: "10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి",
-  sendOtp: "ఓటీపీ పంపండి",
-  lblOtpCode: "ధృవీకరణ కోడ్",
-  phOtp: "4 అంకెల ఓటీపీ నమోదు చేయండి",
-  verifyLogin: "ధృవీకరించి లాగిన్ చేయండి",
-  bookSlotHeading: "కొనుగోలు స్లాట్ బుక్ చేయండి",
-  bookingDescription: "మీ పంట మరియు వాహన వివరాలు నమోదు చేయండి.",
-  lblFarmerName: "రైతు పేరు / ఐడీ",
-  phFarmerName: "ఉదా. రమేష్ పాటిల్",
-  lblMandi: "మండి కేంద్రం",
-  optSelectMandi: "-- ఏపీఎంసీ మండి ఎంచుకోండి --",
-  mandiNashik: "నాసిక్ ప్రధాన ఏపీఎంసీ",
-  mandiLasalgaon: "లాసల్గావ్ మండి",
-  mandiPune: "పూణే మార్కెట్ యార్డ్",
-  mandiNagpur: "నాగ్‌పూర్ ఏపీఎంసీ హబ్",
-  lblCommodity: "పంట రకం",
-  optSelectCommodity: "-- పంట ఎంచుకోండి --",
-  cropOnion: "ఉల్లిపాయ",
-  cropPulses: "పప్పులు",
-  cropVegetables: "కూరగాయలు",
-  cropWheat: "గోధుమ",
-  cropCotton: "పత్తి",
-  lblQty: "పంట పరిమాణం (టన్నులు)",
-  phQty: "ఉదా. 5.5",
-  lblVehicle: "వాహనం రకం",
-  optSelectVehicle: "-- వాహనం ఎంచుకోండి --",
-  vehicleTractor: "ట్రాక్టర్ ట్రాలీ",
-  vehicleMiniTruck: "మినీ ట్రక్",
-  vehicleHeavyTruck: "భారీ వాణిజ్య ట్రక్",
-  btnBookSlot: "స్లాట్ బుక్ చేసి క్యూఆర్ పాస్ రూపొందించండి",
-  passEyebrow: "సురక్షిత పాస్",
-  passHeading: "డిజిటల్ గేట్ పాస్",
-  slotConfirmed: "స్లాట్ నిర్ధారించబడింది",
-  scanAtGate: "ప్రవేశ ద్వారం వద్ద ఈ క్యూఆర్ కోడ్ చూపించండి.",
-  lblLivePos: "ప్రస్తుత స్థానం",
-  lblETA: "అంచనా సమయం",
-  lblGrace: "అదనపు సమయం",
-  btnTTS: "స్థితిని వినండి",
-  ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-    `నమస్కారం ${name}. ${vehicle} వాహనంతో ${mandi}లో ${qty} టన్నుల ${crop} కోసం మీ బుకింగ్ నిర్ధారించబడింది. క్యూలో మీ స్థానం ${position}. మీ అంచనా రాక సమయం ${eta}.`
-});
-
-translations.ta = createLanguagePack({
-  appTitle: "ஸ்மார்ட் மண்டி இன்ஜின்",
-  subTitle: "ஏபிஎம்சி டைனமிக் வரிசை மற்றும் பாஸ்",
-  tabFarmer: "விவசாயி செயலி",
-  tabOfficer: "அதிகாரி மேசை",
-  tabEngine: "வரிசை இன்ஜின்",
-  tabSms: "எஸ்எம்எஸ் பதிவுகள்",
-  farmerPortal: "விவசாயி போர்டல் மற்றும் டிஜிட்டல் பாஸ்",
-  farmerDescription: "மொபைல் எண்ணைச் சரிபார்த்து கொள்முதல் நேரத்தை முன்பதிவு செய்யுங்கள்.",
-  otpHeading: "விவசாயி ஓடிபி சரிபார்ப்பு",
-  lblPhone: "மொபைல் எண்",
-  phPhone: "10 இலக்க மொபைல் எண்ணை உள்ளிடவும்",
-  sendOtp: "ஓடிபி அனுப்பவும்",
-  lblOtpCode: "சரிபார்ப்பு குறியீடு",
-  phOtp: "4 இலக்க ஓடிபியை உள்ளிடவும்",
-  verifyLogin: "சரிபார்த்து உள்நுழையவும்",
-  bookSlotHeading: "கொள்முதல் நேரத்தை முன்பதிவு செய்யவும்",
-  bookingDescription: "உங்கள் பயிர் மற்றும் வாகன விவரங்களை உள்ளிடவும்.",
-  lblFarmerName: "விவசாயி பெயர் / அடையாளம்",
-  phFarmerName: "எ.கா. ரமேஷ் பாட்டீல்",
-  lblMandi: "மண்டி மையம்",
-  optSelectMandi: "-- ஏபிஎம்சி மண்டியைத் தேர்ந்தெடுக்கவும் --",
-  mandiNashik: "நாசிக் பிரதான ஏபிஎம்சி",
-  mandiLasalgaon: "லாசல்காவ் மண்டி",
-  mandiPune: "புனே சந்தை வளாகம்",
-  mandiNagpur: "நாக்பூர் ஏபிஎம்சி மையம்",
-  lblCommodity: "பயிர் வகை",
-  optSelectCommodity: "-- பயிரைத் தேர்ந்தெடுக்கவும் --",
-  cropOnion: "வெங்காயம்",
-  cropPulses: "பருப்பு வகைகள்",
-  cropVegetables: "காய்கறிகள்",
-  cropWheat: "கோதுமை",
-  cropCotton: "பருத்தி",
-  lblQty: "பயிர் அளவு (டன்)",
-  phQty: "எ.கா. 5.5",
-  lblVehicle: "வாகன வகை",
-  optSelectVehicle: "-- வாகனத்தைத் தேர்ந்தெடுக்கவும் --",
-  vehicleTractor: "டிராக்டர் டிரெய்லர்",
-  vehicleMiniTruck: "மினி டிரக்",
-  vehicleHeavyTruck: "கனரக வர்த்தக லாரி",
-  btnBookSlot: "நேரத்தை முன்பதிவு செய்து க்யூஆர் பாஸ் உருவாக்கவும்",
-  passEyebrow: "பாதுகாப்பான பாஸ்",
-  passHeading: "டிஜிட்டல் கேட் பாஸ்",
-  slotConfirmed: "நேரம் உறுதி செய்யப்பட்டது",
-  scanAtGate: "நுழைவாயிலில் இந்த க்யூஆர் குறியீட்டைக் காட்டவும்.",
-  lblLivePos: "வரிசை நிலை",
-  lblETA: "மதிப்பிடப்பட்ட நேரம்",
-  lblGrace: "கூடுதல் நேரம்",
-  btnTTS: "நிலையை கேட்கவும்",
-  ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-    `வணக்கம் ${name}. ${vehicle} வாகனத்தில் ${mandi} மண்டியில் ${qty} டன் ${crop}க்கான உங்கள் முன்பதிவு உறுதி செய்யப்பட்டது. வரிசையில் உங்கள் நிலை ${position}. உங்கள் வருகை நேரம் ${eta}.`
-});
-
-translations.bn = createLanguagePack({
-  appTitle: "স্মার্ট মান্ডি ইঞ্জিন",
-  subTitle: "এপিএমসি ডায়নামিক কিউ এবং পাস",
-  tabFarmer: "কৃষক অ্যাপ",
-  tabOfficer: "অফিসার ডেস্ক",
-  tabEngine: "কিউ ইঞ্জিন",
-  tabSms: "এসএমএস লগ",
-  farmerPortal: "কৃষক পোর্টাল এবং ডিজিটাল পাস",
-  farmerDescription: "মোবাইল নম্বর যাচাই করে সংগ্রহের স্লট বুক করুন।",
-  otpHeading: "কৃষক ওটিপি যাচাইকরণ",
-  lblPhone: "মোবাইল নম্বর",
-  phPhone: "10 সংখ্যার মোবাইল নম্বর লিখুন",
-  sendOtp: "ওটিপি পাঠান",
-  lblOtpCode: "যাচাইকরণ কোড",
-  phOtp: "4 সংখ্যার ওটিপি লিখুন",
-  verifyLogin: "যাচাই করে লগইন করুন",
-  bookSlotHeading: "সংগ্রহের স্লট বুক করুন",
-  bookingDescription: "আপনার ফসল এবং গাড়ির তথ্য লিখুন।",
-  lblFarmerName: "কৃষকের নাম / আইডি",
-  phFarmerName: "যেমন রমেশ পাটিল",
-  lblMandi: "মান্ডি কেন্দ্র",
-  optSelectMandi: "-- এপিএমসি মান্ডি নির্বাচন করুন --",
-  mandiNashik: "নাসিক প্রধান এপিএমসি",
-  mandiLasalgaon: "লাসালগাঁও মান্ডি",
-  mandiPune: "পুনে মার্কেট ইয়ার্ড",
-  mandiNagpur: "নাগপুর এপিএমসি হাব",
-  lblCommodity: "ফসলের ধরন",
-  optSelectCommodity: "-- ফসল নির্বাচন করুন --",
-  cropOnion: "পেঁয়াজ",
-  cropPulses: "ডাল",
-  cropVegetables: "সবজি",
-  cropWheat: "গম",
-  cropCotton: "তুলা",
-  lblQty: "ফসলের পরিমাণ (টন)",
-  phQty: "যেমন 5.5",
-  lblVehicle: "গাড়ির ধরন",
-  optSelectVehicle: "-- গাড়ি নির্বাচন করুন --",
-  vehicleTractor: "ট্র্যাক্টর ট্রলি",
-  vehicleMiniTruck: "মিনি ট্রাক",
-  vehicleHeavyTruck: "ভারী বাণিজ্যিক ট্রাক",
-  btnBookSlot: "স্লট বুক করে কিউআর পাস তৈরি করুন",
-  passEyebrow: "নিরাপদ পাস",
-  passHeading: "ডিজিটাল গেট পাস",
-  slotConfirmed: "স্লট নিশ্চিত",
-  scanAtGate: "প্রবেশদ্বারে এই কিউআর কোড দেখান।",
-  lblLivePos: "সারির অবস্থান",
-  lblETA: "আনুমানিক সময়",
-  lblGrace: "অতিরিক্ত সময়",
-  btnTTS: "অবস্থা শুনুন",
-  ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-    `নমস্কার ${name}। ${vehicle} গাড়িতে ${mandi} মান্ডিতে ${qty} টন ${crop} এর জন্য আপনার বুকিং নিশ্চিত হয়েছে। সারিতে আপনার অবস্থান ${position}। আপনার আনুমানিক আগমনের সময় ${eta}।`
-});
-
-translations.gu = createLanguagePack({
-  appTitle: "સ્માર્ટ મંડી એન્જિન",
-  subTitle: "એપીએમસી ડાયનેમિક કતાર અને પાસ",
-  tabFarmer: "ખેડૂત એપ",
-  tabOfficer: "અધિકારી ડેસ્ક",
-  tabEngine: "કતાર એન્જિન",
-  tabSms: "એસએમએસ લોગ",
-  farmerPortal: "ખેડૂત પોર્ટલ અને ડિજિટલ પાસ",
-  farmerDescription: "મોબાઇલ નંબર ચકાસી ખરીદી સ્લોટ બુક કરો.",
-  otpHeading: "ખેડૂત ઓટીપી ચકાસણી",
-  lblPhone: "મોબાઇલ નંબર",
-  phPhone: "10 અંકનો મોબાઇલ નંબર દાખલ કરો",
-  sendOtp: "ઓટીપી મોકલો",
-  lblOtpCode: "ચકાસણી કોડ",
-  phOtp: "4 અંકનો ઓટીપી દાખલ કરો",
-  verifyLogin: "ચકાસી લોગિન કરો",
-  bookSlotHeading: "ખરીદી સ્લોટ બુક કરો",
-  bookingDescription: "તમારા પાક અને વાહનની વિગતો દાખલ કરો.",
-  lblFarmerName: "ખેડૂતનું નામ / આઈડી",
-  phFarmerName: "દા.ત. રમેશ પાટીલ",
-  lblMandi: "મંડી કેન્દ્ર",
-  optSelectMandi: "-- એપીએમસી મંડી પસંદ કરો --",
-  mandiNashik: "નાસિક મુખ્ય એપીએમસી",
-  mandiLasalgaon: "લાસલગાંવ મંડી",
-  mandiPune: "પુણે માર્કેટ યાર્ડ",
-  mandiNagpur: "નાગપુર એપીએમસી હબ",
-  lblCommodity: "પાકનો પ્રકાર",
-  optSelectCommodity: "-- પાક પસંદ કરો --",
-  cropOnion: "ડુંગળી",
-  cropPulses: "કઠોળ",
-  cropVegetables: "શાકભાજી",
-  cropWheat: "ઘઉં",
-  cropCotton: "કપાસ",
-  lblQty: "પાકનું પ્રમાણ (ટન)",
-  phQty: "દા.ત. 5.5",
-  lblVehicle: "વાહનનો પ્રકાર",
-  optSelectVehicle: "-- વાહન પસંદ કરો --",
-  vehicleTractor: "ટ્રેક્ટર ટ્રોલી",
-  vehicleMiniTruck: "મિની ટ્રક",
-  vehicleHeavyTruck: "ભારે વ્યાવસાયિક ટ્રક",
-  btnBookSlot: "સ્લોટ બુક કરી ક્યુઆર પાસ બનાવો",
-  passEyebrow: "સુરક્ષિત પાસ",
-  passHeading: "ડિજિટલ ગેટ પાસ",
-  slotConfirmed: "સ્લોટની પુષ્ટિ થઈ",
-  scanAtGate: "પ્રવેશદ્વાર પર આ ક્યુઆર કોડ બતાવો.",
-  lblLivePos: "લાઈવ સ્થાન",
-  lblETA: "અંદાજિત સમય",
-  lblGrace: "વધારાનો સમય",
-  btnTTS: "સ્થિતિ સાંભળો",
-  ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-    `નમસ્તે ${name}. ${vehicle} વાહનથી ${mandi} મંડીમાં ${qty} ટન ${crop} માટે તમારું બુકિંગ નક્કી થયું છે. કતારમાં તમારું સ્થાન ${position} છે. તમારો અંદાજિત આગમન સમય ${eta} છે.`
-});
-
-translations.kn = createLanguagePack({
-  appTitle: "ಸ್ಮಾರ್ಟ್ ಮಂಡಿ ಎಂಜಿನ್",
-  subTitle: "ಎಪಿಎಂಸಿ ಡೈನಾಮಿಕ್ ಸರತಿ ಮತ್ತು ಪಾಸ್",
-  tabFarmer: "ರೈತ ಆಪ್",
-  tabOfficer: "ಅಧಿಕಾರಿ ಡೆಸ್ಕ್",
-  tabEngine: "ಸರತಿ ಎಂಜಿನ್",
-  tabSms: "ಎಸ್‌ಎಂಎಸ್ ಲಾಗ್",
-  farmerPortal: "ರೈತ ಪೋರ್ಟಲ್ ಮತ್ತು ಡಿಜಿಟಲ್ ಪಾಸ್",
-  farmerDescription: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ ಖರೀದಿ ಸ್ಲಾಟ್ ಕಾಯ್ದಿರಿಸಿ.",
-  otpHeading: "ರೈತ ಒಟಿಪಿ ದೃಢೀಕರಣ",
-  lblPhone: "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
-  phPhone: "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ",
-  sendOtp: "ಒಟಿಪಿ ಕಳುಹಿಸಿ",
-  lblOtpCode: "ದೃಢೀಕರಣ ಕೋಡ್",
-  phOtp: "4 ಅಂಕಿಯ ಒಟಿಪಿ ನಮೂದಿಸಿ",
-  verifyLogin: "ದೃಢೀಕರಿಸಿ ಲಾಗಿನ್ ಮಾಡಿ",
-  bookSlotHeading: "ಖರೀದಿ ಸ್ಲಾಟ್ ಕಾಯ್ದಿರಿಸಿ",
-  bookingDescription: "ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ವಾಹನದ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.",
-  lblFarmerName: "ರೈತನ ಹೆಸರು / ಐಡಿ",
-  phFarmerName: "ಉದಾ. ರಮೇಶ್ ಪಾಟೀಲ್",
-  lblMandi: "ಮಂಡಿ ಕೇಂದ್ರ",
-  optSelectMandi: "-- ಎಪಿಎಂಸಿ ಮಂಡಿ ಆಯ್ಕೆಮಾಡಿ --",
-  mandiNashik: "ನಾಸಿಕ್ ಮುಖ್ಯ ಎಪಿಎಂಸಿ",
-  mandiLasalgaon: "ಲಾಸಲ್ಗಾಂವ್ ಮಂಡಿ",
-  mandiPune: "ಪುಣೆ ಮಾರುಕಟ್ಟೆ ಯಾರ್ಡ್",
-  mandiNagpur: "ನಾಗ್ಪುರ ಎಪಿಎಂಸಿ ಹಬ್",
-  lblCommodity: "ಬೆಳೆ ಪ್ರಕಾರ",
-  optSelectCommodity: "-- ಬೆಳೆ ಆಯ್ಕೆಮಾಡಿ --",
-  cropOnion: "ಈರುಳ್ಳಿ",
-  cropPulses: "ಬೇಳೆಕಾಳುಗಳು",
-  cropVegetables: "ತರಕಾರಿಗಳು",
-  cropWheat: "ಗೋಧಿ",
-  cropCotton: "ಹತ್ತಿ",
-  lblQty: "ಬೆಳೆಯ ಪ್ರಮಾಣ (ಟನ್)",
-  phQty: "ಉದಾ. 5.5",
-  lblVehicle: "ವಾಹನದ ಪ್ರಕಾರ",
-  optSelectVehicle: "-- ವಾಹನ ಆಯ್ಕೆಮಾಡಿ --",
-  vehicleTractor: "ಟ್ರ್ಯಾಕ್ಟರ್ ಟ್ರಾಲಿ",
-  vehicleMiniTruck: "ಮಿನಿ ಟ್ರಕ್",
-  vehicleHeavyTruck: "ಭಾರಿ ವಾಣಿಜ್ಯ ಟ್ರಕ್",
-  btnBookSlot: "ಸ್ಲಾಟ್ ಕಾಯ್ದಿರಿಸಿ ಮತ್ತು ಕ್ಯೂಆರ್ ಪಾಸ್ ರಚಿಸಿ",
-  passEyebrow: "ಸುರಕ್ಷಿತ ಪಾಸ್",
-  passHeading: "ಡಿಜಿಟಲ್ ಗೇಟ್ ಪಾಸ್",
-  slotConfirmed: "ಸ್ಲಾಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ",
-  scanAtGate: "ಪ್ರವೇಶ ದ್ವಾರದಲ್ಲಿ ಈ ಕ್ಯೂಆರ್ ಕೋಡ್ ತೋರಿಸಿ.",
-  lblLivePos: "ಪ್ರಸ್ತುತ ಸ್ಥಾನ",
-  lblETA: "ಅಂದಾಜು ಸಮಯ",
-  lblGrace: "ಹೆಚ್ಚುವರಿ ಸಮಯ",
-  btnTTS: "ಸ್ಥಿತಿಯನ್ನು ಕೇಳಿ",
-  ttsSpeech: ({ name, mandi, crop, qty, position, eta, vehicle }) =>
-    `ನಮಸ್ಕಾರ ${name}. ${vehicle} ವಾಹನದಲ್ಲಿ ${mandi} ಮಂಡಿಯಲ್ಲಿ ${qty} ಟನ್ ${crop}ಗಾಗಿ ನಿಮ್ಮ ಬುಕಿಂಗ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ. ಸರತಿಯಲ್ಲಿ ನಿಮ್ಮ ಸ್ಥಾನ ${position}. ನಿಮ್ಮ ಅಂದಾಜು ಆಗಮನ ಸಮಯ ${eta}.`
-});
-
-function createLanguagePack(values) {
-  const english = translations.en;
-  return {
-    ...english,
-    ...values
-  };
-}
 
 function t(key, variables = {}) {
   const dictionary = translations[currentLang] || translations.en;
@@ -617,13 +230,6 @@ function t(key, variables = {}) {
   return String(value).replace(/\{(\w+)\}/g, (_, name) => {
     return variables[name] ?? `{${name}}`;
   });
-}
-
-function setText(key, value) {
-  const element = document.querySelector(`[data-i18n="${key}"]`);
-  if (element) {
-    element.textContent = value;
-  }
 }
 
 function showToast(message, type = "info") {
@@ -994,6 +600,16 @@ function logSMS(message) {
   logBox.prepend(entry);
 }
 
+function setupNetworkListeners() {
+  window.addEventListener("offline", () => {
+    showToast(currentLang === "hi" ? "आप ऑफलाइन हैं। स्थानीय डेटा चालू है।" : "You are offline. Running in offline mode.", "info");
+  });
+
+  window.addEventListener("online", () => {
+    showToast(currentLang === "hi" ? "आप वापस ऑनलाइन हैं।" : "Connection restored.", "success");
+  });
+}
+
 function bindEvents() {
   document
     .getElementById("langSelect")
@@ -1059,6 +675,7 @@ function initialiseApp() {
   }
 
   bindEvents();
+  setupNetworkListeners();
   applyTranslations();
   logSMS(t("smsInitialLog"));
 
