@@ -1,24 +1,23 @@
-const CACHE_NAME = 'smart-mandi-v2';
-
-// Core assets required for offline functionality
+const CACHE_NAME = 'mandi-app-v1';
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './style.css',
-  './script.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+  '/',
+  '/index.html',
+  '/style.css',
+  '/app.js',
+  '/manifest.json'
 ];
 
-// Install Event: Pre-caches critical app assets
+// Install Service Worker and Cache Static Assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    })
   );
+  self.skipWaiting();
 });
 
-// Activate Event: Cleans up older cache versions
+// Activate & Cleanup Old Caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -29,38 +28,26 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
+  self.clients.claim();
 });
 
-// Fetch Event: Network-first strategy with cache fallback
+// Fetch Strategy: Network First with Cache Fallback for API, Cache First for Static Files
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
-  if (event.request.method !== 'GET') return;
+  const requestUrl = new URL(event.request.url);
 
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Clone and store fresh response in cache
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
+  if (requestUrl.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request);
       })
-      .catch(() => {
-        // Serve cached version if offline
-        return caches.match(event.request).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          // Fallback for root page if exact request isn't matched
-          if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
-          }
-        });
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        return cachedResponse || fetch(event.request);
       })
-  );
+    );
+  }
 });
