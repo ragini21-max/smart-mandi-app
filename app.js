@@ -113,10 +113,19 @@ const translations = {
 
 let currentLang = 'en';
 let isOtpVerified = false;
+let currentDemoOtp = null;
 let currentActiveTokenId = null;
 let html5QrcodeScanner = null;
 
-// Application State Initializer
+// Local In-Memory Database for Standalone Operation
+const localDatabase = {
+  dailyBookings: {}, // Stores booked tonnage per "Date_Mandi_Commodity"
+  tokens: {}        // Stores token objects keyed by tokenId
+};
+
+const DAILY_LIMIT_TONS = 50.0;
+
+// Application Initializer
 document.addEventListener('DOMContentLoaded', () => {
   setupLanguage();
   setupRoleSwitcher();
@@ -139,7 +148,7 @@ function setupLanguage() {
   });
 }
 
-// Role Switching Handler (Farmer vs Officer)
+// Role Switcher Handler (Farmer vs Officer)
 function setupRoleSwitcher() {
   const roleSelect = document.getElementById('roleSelector');
   roleSelect.addEventListener('change', (e) => {
@@ -154,7 +163,7 @@ function setupRoleSwitcher() {
   });
 }
 
-// Simulated SMS Dispatcher
+// Simulated Mobile SMS Box
 function pushSmsNotification(messageText) {
   const smsList = document.getElementById('smsMessageList');
   const emptyMsg = smsList.querySelector('.empty-sms');
@@ -166,105 +175,109 @@ function pushSmsNotification(messageText) {
   smsList.prepend(smsItem);
 }
 
-// Form & Capacity Events
+// Form & Dynamic Local Handlers
 function setupFormEvents() {
-  // OTP Requests
-  document.getElementById('sendOtpBtn').addEventListener('click', async () => {
+  
+  // 1. Send OTP Local Action
+  document.getElementById('sendOtpBtn').addEventListener('click', () => {
     const phone = document.getElementById('phoneNumber').value;
     if (!phone || phone.length < 10) {
       alert('Please enter a valid 10-digit mobile number.');
       return;
     }
 
-    try {
-      const res = await fetch('/api/mandi/otp/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: phone })
-      });
-      const data = await res.json();
+    // Generate random 4-digit code locally
+    currentDemoOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
-      document.getElementById('otpGroup').classList.remove('hidden');
-      document.getElementById('otpHint').innerText = `Demo OTP Code: ${data.demoOtp}`;
-      pushSmsNotification(`Your Mandi Login OTP is ${data.demoOtp}. Valid for 5 mins.`);
-    } catch (err) {
-      alert('Failed to send OTP. Server unreachable.');
-    }
+    // Reveal OTP Group & Display Demo OTP code directly on screen
+    const otpGroup = document.getElementById('otpGroup');
+    const otpHint = document.getElementById('otpHint');
+    const otpInput = document.getElementById('otpCode');
+
+    otpGroup.classList.remove('hidden');
+    otpHint.innerText = `Demo OTP: ${currentDemoOtp} (Auto-filled below)`;
+    otpInput.value = currentDemoOtp; // Auto-fills for quick testing
+
+    pushSmsNotification(`Your Mandi Login OTP is ${currentDemoOtp}. Valid for 5 mins.`);
   });
 
-  document.getElementById('verifyOtpBtn').addEventListener('click', async () => {
-    const phone = document.getElementById('phoneNumber').value;
+  // 2. Verify OTP Local Action
+  document.getElementById('verifyOtpBtn').addEventListener('click', () => {
     const otpCode = document.getElementById('otpCode').value;
 
-    try {
-      const res = await fetch('/api/mandi/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: phone, otpCode: otpCode })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        isOtpVerified = true;
-        alert('OTP Verified Successfully!');
-        document.getElementById('otpGroup').classList.add('hidden');
-        checkDailyQuota();
-      } else {
-        alert('Invalid OTP Code!');
-      }
-    } catch (err) {
-      alert('Error verifying OTP.');
+    if (otpCode && otpCode === currentDemoOtp) {
+      isOtpVerified = true;
+      alert('OTP Verified Successfully!');
+      document.getElementById('otpGroup').classList.add('hidden');
+      checkDailyQuota();
+    } else {
+      alert('Invalid OTP Code! Please check the generated Demo OTP.');
     }
   });
 
-  // Check Quota Events
+  // 3. Quota Check Listeners
   document.getElementById('procurementDate').addEventListener('change', checkDailyQuota);
   document.getElementById('mandiSelect').addEventListener('change', checkDailyQuota);
   document.getElementById('commoditySelect').addEventListener('change', checkDailyQuota);
 
-  // Booking Submit Event
-  document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  // 4. Form Submission and Token Generation
+  document.getElementById('bookingForm').addEventListener('submit', (e) => {
     e.preventDefault();
 
     if (!isOtpVerified) {
-      alert('Please verify your phone number via OTP first.');
+      alert('Please verify your mobile number using OTP first.');
       return;
     }
 
-    const payload = {
+    const date = document.getElementById('procurementDate').value;
+    const mandi = document.getElementById('mandiSelect').value;
+    const commodity = document.getElementById('commoditySelect').value;
+    const produceQty = parseFloat(document.getElementById('produceQty').value);
+
+    const quotaKey = `${date}_${mandi}_${commodity}`;
+    const currentBooked = localDatabase.dailyBookings[quotaKey] || 0.0;
+
+    if (currentBooked + produceQty > DAILY_LIMIT_TONS) {
+      alert(`Booking Failed! Exceeds daily quota limit. Remaining capacity: ${(DAILY_LIMIT_TONS - currentBooked).toFixed(1)} Tons.`);
+      return;
+    }
+
+    // Update Daily Bookings Quota
+    localDatabase.dailyBookings[quotaKey] = currentBooked + produceQty;
+
+    // Generate Pass Token
+    const randomId = Math.floor(10000 + Math.random() * 90000);
+    const tokenId = `#MND-${randomId}`;
+
+    const newToken = {
+      tokenId: tokenId,
       farmerName: document.getElementById('farmerName').value,
-      mandi: document.getElementById('mandiSelect').value,
-      procurementDate: document.getElementById('procurementDate').value,
-      slotTime: document.getElementById('slotTime').value,
-      commodity: document.getElementById('commoditySelect').value,
-      produceQty: parseFloat(document.getElementById('produceQty').value),
-      vehicleType: document.getElementById('vehicleType').value
+      mandi: mandi,
+      commodity: commodity,
+      requestedQty: produceQty,
+      verifiedQty: null,
+      schedule: `${date} [${document.getElementById('slotTime').value}]`,
+      vehicleType: document.getElementById('vehicleType').value,
+      queuePosition: 3,
+      eta: "10:45 AM",
+      stage: "BOOKED",
+      paymentStatus: "PENDING",
+      dbtTxnId: null,
+      totalPayment: 0
     };
 
-    try {
-      const res = await fetch('/api/mandi/booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+    // Store token in local state
+    localDatabase.tokens[tokenId] = newToken;
 
-      if (res.ok) {
-        const token = await res.json();
-        renderPassToken(token);
-        pushSmsNotification(`Booking Confirmed! Pass ID: ${token.tokenId}. Slot: ${token.schedule}.`);
-        checkDailyQuota();
-      } else {
-        const errorData = await res.json();
-        alert(`Booking Failed: ${errorData.error}`);
-      }
-    } catch (err) {
-      alert('Error processing booking.');
-    }
+    // Render Pass & Display QR Code
+    renderPassToken(newToken);
+    pushSmsNotification(`Booking Confirmed! Pass ID: ${tokenId}. Schedule: ${newToken.schedule}.`);
+    checkDailyQuota();
   });
 }
 
-// Capacity Meter & Availability Checker
-async function checkDailyQuota() {
+// Real-time Capacity Checker (Client-Side)
+function checkDailyQuota() {
   const date = document.getElementById('procurementDate').value;
   const mandi = document.getElementById('mandiSelect').value;
   const commodity = document.getElementById('commoditySelect').value;
@@ -274,33 +287,27 @@ async function checkDailyQuota() {
   const bookedCapacityText = document.getElementById('bookedCapacityText');
 
   if (date && mandi && commodity) {
-    try {
-      const res = await fetch(`/api/mandi/quota?date=${date}&mandi=${encodeURIComponent(mandi)}&commodity=${encodeURIComponent(commodity)}`);
-      const data = await res.json();
-      
-      const maxLimit = 50.0;
-      const bookedQty = maxLimit - data.remainingQuotaTons;
-      const fillPercentage = Math.min(100, (bookedQty / maxLimit) * 100);
+    const quotaKey = `${date}_${mandi}_${commodity}`;
+    const bookedQty = localDatabase.dailyBookings[quotaKey] || 0.0;
+    const remainingQuota = Math.max(0, DAILY_LIMIT_TONS - bookedQty);
+    const fillPercentage = Math.min(100, (bookedQty / DAILY_LIMIT_TONS) * 100);
 
-      capacityBar.style.width = `${fillPercentage}%`;
-      bookedCapacityText.innerText = bookedQty.toFixed(1);
+    capacityBar.style.width = `${fillPercentage}%`;
+    bookedCapacityText.innerText = bookedQty.toFixed(1);
 
-      if (data.remainingQuotaTons <= 0) {
-        quotaMsg.innerText = "❌ Daily capacity reached! Slot booking closed for selected date.";
-        quotaMsg.parentElement.className = "result-box danger-result";
-        submitBtn.disabled = true;
-      } else {
-        quotaMsg.innerText = `✅ Capacity Available: ${data.remainingQuotaTons.toFixed(1)} Tons remaining for selected date.`;
-        quotaMsg.parentElement.className = "result-box success-result";
-        submitBtn.disabled = !isOtpVerified;
-      }
-    } catch (err) {
-      console.error("Quota fetch error:", err);
+    if (remainingQuota <= 0) {
+      quotaMsg.innerText = "❌ Daily capacity reached! Booking is closed for selected date.";
+      quotaMsg.parentElement.className = "result-box danger-result";
+      submitBtn.disabled = true;
+    } else {
+      quotaMsg.innerText = `✅ Capacity Available: ${remainingQuota.toFixed(1)} Tons remaining for selected parameters.`;
+      quotaMsg.parentElement.className = "result-box success-result";
+      submitBtn.disabled = !isOtpVerified;
     }
   }
 }
 
-// Render Pass Token & QR Code Generator
+// Render Entry Pass Card with Dynamic QR Code
 function renderPassToken(token) {
   document.getElementById('passCard').classList.remove('hidden');
   document.getElementById('passTokenId').innerText = token.tokenId;
@@ -319,9 +326,11 @@ function renderPassToken(token) {
     document.getElementById('paymentDetailsBox').classList.remove('hidden');
     document.getElementById('paymentRef').innerText = token.dbtTxnId;
     document.getElementById('paymentAmount').innerText = token.totalPayment.toLocaleString('en-IN');
+  } else {
+    document.getElementById('paymentDetailsBox').classList.add('hidden');
   }
 
-  // Generate QR Code
+  // Generate QR Code using QRCode.js
   const qrElem = document.getElementById('qrcode');
   qrElem.innerHTML = '';
   new QRCode(qrElem, {
@@ -329,86 +338,112 @@ function renderPassToken(token) {
     width: 110,
     height: 110
   });
+
+  // Pre-fill token ID into officer panel for testing convenience
+  document.getElementById('manualTokenInput').value = token.tokenId;
 }
 
-// Officer Dashboard Logic
+// Officer Operations Handlers
 function setupOfficerEvents() {
   document.getElementById('searchTokenBtn').addEventListener('click', () => {
     const tokenId = document.getElementById('manualTokenInput').value.trim();
     if (tokenId) fetchOfficerTokenDetails(tokenId);
   });
 
-  document.getElementById('verifyGateBtn').addEventListener('click', async () => {
-    if (!currentActiveTokenId) return;
-    const res = await fetch(`/api/mandi/gate/verify?tokenId=${encodeURIComponent(currentActiveTokenId)}`, { method: 'POST' });
-    if (res.ok) {
-      alert('Gate entry approved!');
-      fetchOfficerTokenDetails(currentActiveTokenId);
+  // Approve Gate Entry Action
+  document.getElementById('verifyGateBtn').addEventListener('click', () => {
+    if (!currentActiveTokenId || !localDatabase.tokens[currentActiveTokenId]) return;
+    
+    const token = localDatabase.tokens[currentActiveTokenId];
+    token.stage = "GATE_VERIFIED";
+    token.queuePosition = 1;
+
+    alert(`Gate entry approved for ${token.tokenId}!`);
+    fetchOfficerTokenDetails(currentActiveTokenId);
+    if (document.getElementById('passTokenId').innerText === token.tokenId) {
+      renderPassToken(token);
     }
   });
 
-  document.getElementById('saveWeightBtn').addEventListener('click', async () => {
+  // Record Weighment Bridge Weight Action
+  document.getElementById('saveWeightBtn').addEventListener('click', () => {
     const weight = parseFloat(document.getElementById('weighmentInput').value);
-    if (!currentActiveTokenId || isNaN(weight)) return;
+    if (!currentActiveTokenId || isNaN(weight) || !localDatabase.tokens[currentActiveTokenId]) {
+      alert('Please enter a valid weight in tons.');
+      return;
+    }
 
-    const res = await fetch('/api/mandi/weighment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tokenId: currentActiveTokenId, weight: weight })
-    });
+    const token = localDatabase.tokens[currentActiveTokenId];
+    token.verifiedQty = weight;
+    token.stage = "WEIGHED";
 
-    if (res.ok) {
-      alert('Weighment recorded!');
-      fetchOfficerTokenDetails(currentActiveTokenId);
+    alert(`Weighment of ${weight} Tons recorded for ${token.tokenId}!`);
+    fetchOfficerTokenDetails(currentActiveTokenId);
+    if (document.getElementById('passTokenId').innerText === token.tokenId) {
+      renderPassToken(token);
     }
   });
 
-  document.getElementById('approveDbtBtn').addEventListener('click', async () => {
-    if (!currentActiveTokenId) return;
-    const res = await fetch(`/api/mandi/payment/approve?tokenId=${encodeURIComponent(currentActiveTokenId)}`, { method: 'POST' });
-    if (res.ok) {
-      const token = await res.json();
-      alert(`Payment Approved! DBT Ref: ${token.dbtTxnId}`);
-      fetchOfficerTokenDetails(currentActiveTokenId);
-      pushSmsNotification(`DBT Transfer Complete! ₹${token.totalPayment} credited for Token ${token.tokenId}. Ref: ${token.dbtTxnId}`);
+  // Release Payment (DBT) Action
+  document.getElementById('approveDbtBtn').addEventListener('click', () => {
+    if (!currentActiveTokenId || !localDatabase.tokens[currentActiveTokenId]) return;
+
+    const token = localDatabase.tokens[currentActiveTokenId];
+    const ratePerTon = 28000.0;
+    const qty = token.verifiedQty ? token.verifiedQty : token.requestedQty;
+    
+    token.totalPayment = qty * ratePerTon;
+    token.dbtTxnId = `DBT-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+    token.stage = "PAID";
+    token.paymentStatus = "COMPLETED";
+
+    alert(`Payment Approved! DBT Ref: ${token.dbtTxnId} Amount: ₹${token.totalPayment.toLocaleString('en-IN')}`);
+    
+    fetchOfficerTokenDetails(currentActiveTokenId);
+    if (document.getElementById('passTokenId').innerText === token.tokenId) {
+      renderPassToken(token);
     }
+
+    pushSmsNotification(`DBT Transfer Complete! ₹${token.totalPayment.toLocaleString('en-IN')} credited for Token ${token.tokenId}. Ref: ${token.dbtTxnId}`);
   });
 }
 
-// Fetch Token Details for Officer Dashboard
-async function fetchOfficerTokenDetails(tokenId) {
-  try {
-    const res = await fetch(`/api/mandi/pass/${encodeURIComponent(tokenId)}`);
-    if (res.ok) {
-      const token = await res.json();
-      currentActiveTokenId = token.tokenId;
+// Fetch and display active token details in Officer Portal
+function fetchOfficerTokenDetails(tokenId) {
+  const token = localDatabase.tokens[tokenId];
 
-      document.getElementById('officerNoTokenMsg').classList.add('hidden');
-      document.getElementById('officerTokenDetails').classList.remove('hidden');
+  if (token) {
+    currentActiveTokenId = token.tokenId;
 
-      document.getElementById('offTokenId').innerText = token.tokenId;
-      document.getElementById('offFarmerName').innerText = token.farmerName;
-      document.getElementById('offCommodity').innerText = token.commodity;
-      document.getElementById('offStage').innerText = token.stage;
-      
-      if (token.verifiedQty) {
-        document.getElementById('weighmentInput').value = token.verifiedQty;
-      }
+    document.getElementById('officerNoTokenMsg').classList.add('hidden');
+    document.getElementById('officerTokenDetails').classList.remove('hidden');
+
+    document.getElementById('offTokenId').innerText = token.tokenId;
+    document.getElementById('offFarmerName').innerText = token.farmerName;
+    document.getElementById('offCommodity').innerText = token.commodity;
+    document.getElementById('offStage').innerText = token.stage;
+
+    if (token.verifiedQty) {
+      document.getElementById('weighmentInput').value = token.verifiedQty;
     } else {
-      alert('Token ID not found in database.');
+      document.getElementById('weighmentInput').value = '';
     }
-  } catch (err) {
-    alert('Error fetching token details.');
+  } else {
+    alert('Token ID not found. Please create a booking first.');
   }
 }
 
-// QR Code Camera Scanner Setup
+// Camera Scanner Setup (HTML5 QR Code)
 function initQrScanner() {
-  html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 200 });
-  html5QrcodeScanner.render((decodedText) => {
-    document.getElementById('manualTokenInput').value = decodedText;
-    fetchOfficerTokenDetails(decodedText);
-  }, (error) => {
-    // Continuous scanning logs ignored
-  });
+  try {
+    html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 200 });
+    html5QrcodeScanner.render((decodedText) => {
+      document.getElementById('manualTokenInput').value = decodedText;
+      fetchOfficerTokenDetails(decodedText);
+    }, (error) => {
+      // Continuous camera scanning noise
+    });
+  } catch (e) {
+    console.log("QR scanner initialized without camera support.");
+  }
 }
