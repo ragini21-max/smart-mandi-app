@@ -62,14 +62,17 @@
               </div>
             </div>
 
-            <!-- OTP Verification Box -->
+            <!-- OTP Verification Box with 20s Countdown Timer -->
             <div class="form-group hidden" id="otpGroup">
               <label for="otpCode" data-i18n="labelOtp">Enter OTP</label>
               <div class="input-inline">
                 <input type="text" id="otpCode" placeholder="Enter 4-digit OTP" maxlength="4">
                 <button type="button" id="verifyOtpBtn" class="btn btn-secondary" data-i18n="btnVerify">Verify OTP</button>
               </div>
-              <small id="otpHint" class="hint-text"></small>
+              <div id="otpTimerBox" class="timer-box">
+                <small id="otpHint" class="hint-text"></small>
+                <span id="otpCountdown" class="countdown-badge">Expires in 20s</span>
+              </div>
             </div>
 
             <div class="form-group">
@@ -88,13 +91,14 @@
             </div>
 
             <div class="form-group">
-              <label for="commoditySelect" data-i18n="labelCommodity">Commodity</label>
+              <label for="commoditySelect" data-i18n="labelCommodity">Vegetable / Commodity</label>
               <select id="commoditySelect" required>
                 <option value="">-- Choose Commodity --</option>
-                <option value="Wheat">Wheat</option>
-                <option value="Paddy">Paddy</option>
-                <option value="Maize">Maize</option>
-                <option value="Mustard">Mustard</option>
+                <option value="Potato">Potato (आलू)</option>
+                <option value="Tomato">Tomato (टमाटर)</option>
+                <option value="Onion">Onion (प्याज)</option>
+                <option value="Wheat">Wheat (गेहूं)</option>
+                <option value="Paddy">Paddy (धान)</option>
               </select>
             </div>
 
@@ -127,7 +131,7 @@
           </form>
         </section>
 
-        <!-- Right Side: Check Capacity / Mandi Status Dashboard -->
+        <!-- Right Side: Check Capacity & Mandi Slowdown Controls -->
         <section class="card right-panel">
           <h2 data-i18n="capacityTitle">Check Mandi Capacity</h2>
           <p class="subtitle" data-i18n="capacitySubtitle">Real-time daily limits and availability status</p>
@@ -137,12 +141,18 @@
             <span id="quotaMessage" data-i18n="capacityDefault">Select Date, Mandi & Commodity to check availability.</span>
           </div>
 
+          <!-- Slowdown / Speed Status Indicator -->
+          <div id="slowdownStatusCard" class="slowdown-status-card status-normal">
+            <span id="slowdownModeIcon">⚡</span>
+            <span id="slowdownModeText">Speed: Normal Processing Rate (5.0 Tons/hr)</span>
+          </div>
+
           <div class="capacity-meter-box">
             <label data-i18n="meterLabel">Daily Quota Utilization</label>
             <div class="progress-bar-bg">
               <div id="capacityBar" class="progress-bar-fill" style="width: 0%;"></div>
             </div>
-            <p class="meter-text"><span id="bookedCapacityText">0</span> / 50 Tons Booked</p>
+            <p class="meter-text"><span id="bookedCapacityText">0</span> / <span id="maxCapacityText">50</span> Tons Booked</p>
           </div>
 
           <!-- SMS Notification Center Simulation -->
@@ -169,7 +179,7 @@
             <div class="pass-body">
               <p><strong data-i18n="passFarmer">Farmer:</strong> <span id="passFarmerName">-</span></p>
               <p><strong data-i18n="passMandi">Mandi:</strong> <span id="passMandi">-</span></p>
-              <p><strong data-i18n="passCommodity">Commodity:</strong> <span id="passCommodity">-</span></p>
+              <p><strong data-i18n="passCommodity">Vegetable/Commodity:</strong> <span id="passCommodity">-</span></p>
               <p><strong data-i18n="passSchedule">Schedule:</strong> <span id="passSchedule">-</span></p>
               <p><strong data-i18n="passVehicle">Vehicle:</strong> <span id="passVehicle">-</span></p>
               <p><strong data-i18n="passReqQty">Requested Qty:</strong> <span id="passRequestedQty">0</span> Tons</p>
@@ -183,10 +193,10 @@
             </div>
           </div>
           
-          <div class="queue-status clickable" id="queueStatusCard" title="Click to hear queue position details">
+          <div class="queue-status clickable" id="queueStatusCard" title="Click to listen to Bhashini TTS details">
             <p><span data-i18n="queuePos">Queue Position:</span> <strong id="passQueuePos">-</strong></p>
             <p><span data-i18n="queueEta">Estimated Entry ETA:</span> <strong id="passEta">-</strong></p>
-            <small class="voice-hint">🔊 Click to listen</small>
+            <button type="button" id="readAudioBtn" class="btn btn-secondary btn-sm" style="margin-top: 8px;">🔊 Listen in Bhashini Audio</button>
           </div>
 
           <div id="paymentDetailsBox" class="payment-box hidden">
@@ -203,7 +213,17 @@
     <div id="officerPortalView" class="portal-view hidden">
       <section class="card">
         <h2 data-i18n="officerTitle">Mandi Officer Operations Dashboard</h2>
-        <p class="subtitle" data-i18n="officerSubtitle">Scan farmer entry passes, verify weighment bridge data, and trigger direct bank transfers (DBT).</p>
+        <p class="subtitle" data-i18n="officerSubtitle">Scan farmer entry passes, adjust intake speed during lunch/break, verify weighment bridge data, and trigger direct bank transfers (DBT).</p>
+
+        <!-- Machine Intake Rate Control Box (Lunch & Emergency Slowdown Toggle) -->
+        <div class="slowdown-control-panel">
+          <h3>🍱 Mandi Intake Speed / Machine Slowdown Control</h3>
+          <p>Slow down intake per hour for lunch or emergency purposes. Restore normal intake afterwards.</p>
+          <div class="slowdown-actions">
+            <button type="button" id="btnSlowdownLunch" class="btn btn-warning">⏸️ Slowdown Machine (Lunch / Emergency)</button>
+            <button type="button" id="btnRestoreSpeed" class="btn btn-success-light">▶️ Restore Original Intake Rate</button>
+          </div>
+        </div>
 
         <div class="officer-grid">
           <!-- QR Code Scanner Box -->
