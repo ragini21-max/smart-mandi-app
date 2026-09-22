@@ -12,20 +12,32 @@ const translations = {
     verifyLogin: "Verify & Login",
     bookSlotHeading: "Book Procurement Slot",
     lblFarmerName: "Farmer Name / ID:",
+    phFarmerName: "e.g. Ramesh Patil",
     lblMandi: "Select Mandi Center:",
+    optSelectMandi: "-- Select APMC Mandi --",
     lblCommodity: "Commodity Type:",
+    optSelectCommodity: "-- Select Commodity --",
     optOnion: "Onion (Kanda)",
     optPulses: "Pulses (Dal)",
     optVeg: "Vegetables",
+    optWheat: "Wheat (Gehun)",
+    optCotton: "Cotton (Kapas)",
     lblQty: "Produce Quantity (Tons):",
+    phQty: "e.g. 5.5",
     lblVehicle: "Vehicle Type:",
+    optSelectVehicle: "-- Select Vehicle --",
+    optTractor: "Tractor Trolley",
+    optMiniTruck: "Mini Truck",
+    optHeavyTruck: "Heavy Commercial Truck",
     btnBookSlot: "Book Slot & Generate QR Pass",
     passHeading: "Digital Gate Pass",
     lblLivePos: "Live Position",
     lblETA: "Dynamic ETA",
     lblGrace: "Grace Period",
     btnTTS: "🔊 Listen Status (Bhashini Audio)",
-    officerDeskTitle: "Mandi Officer Control Desk"
+    officerDeskTitle: "Mandi Officer Control Desk",
+    phPhone: "Enter 10-digit mobile number",
+    phOtp: "Enter 4-Digit OTP"
   },
   hi: {
     appTitle: "स्मार्ट मंडी इंजन",
@@ -39,20 +51,32 @@ const translations = {
     verifyLogin: "सत्यापित करें और लॉगिन करें",
     bookSlotHeading: "खरीद स्लॉट बुक करें",
     lblFarmerName: "किसान का नाम / आईडी:",
+    phFarmerName: "उदा. रमेश पाटिल",
     lblMandi: "मंडी केंद्र चुनें:",
+    optSelectMandi: "-- एपीएमसी मंडी चुनें --",
     lblCommodity: "उपज का प्रकार:",
+    optSelectCommodity: "-- उपज चुनें --",
     optOnion: "प्याज (कांदा)",
     optPulses: "दाल",
     optVeg: "सब्जियां",
+    optWheat: "गेहूं",
+    optCotton: "कपास",
     lblQty: "मात्रा (टन):",
+    phQty: "उदा. 5.5",
     lblVehicle: "वाहन प्रकार:",
+    optSelectVehicle: "-- वाहन चुनें --",
+    optTractor: "ट्रैक्टर ट्रॉली",
+    optMiniTruck: "मिनी ट्रक",
+    optHeavyTruck: "भारी ट्रक",
     btnBookSlot: "स्लॉट बुक करें और QR पास बनाएं",
     passHeading: "डिजिटल गेट पास",
     lblLivePos: "लाइव स्थिति",
     lblETA: "अनुमानित समय",
     lblGrace: "ग्रेस समय",
     btnTTS: "🔊 जानकारी सुनें (भाषिणी आवाज)",
-    officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क"
+    officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क",
+    phPhone: "10 अंकों का मोबाइल नंबर दर्ज करें",
+    phOtp: "4 अंकों का ओटीपी दर्ज करें"
   },
   mr: {
     appTitle: "स्मार्ट मंडी इंजिन",
@@ -66,20 +90,32 @@ const translations = {
     verifyLogin: "पडताळणी करा आणि लॉगिन करा",
     bookSlotHeading: "खरेदी स्लॉट बुक करा",
     lblFarmerName: "शेतकऱ्याचे नाव / ओळख:",
+    phFarmerName: "उदा. रमेश पाटील",
     lblMandi: "मंडी केंद्र निवडा:",
+    optSelectMandi: "-- एपीएमसी मंडी निवडा --",
     lblCommodity: "शेतीमाल प्रकार:",
+    optSelectCommodity: "-- शेतीमाल निवडा --",
     optOnion: "कांदा",
     optPulses: "डाळ",
     optVeg: "भाजीपाला",
+    optWheat: "गहू",
+    optCotton: "कापूस",
     lblQty: "प्रमाण (टन):",
+    phQty: "उदा. 5.5",
     lblVehicle: "वाहनाचा प्रकार:",
+    optSelectVehicle: "-- वाहन निवडा --",
+    optTractor: "ट्रॅक्टर ट्रॉली",
+    optMiniTruck: "मिनी ट्रक",
+    optHeavyTruck: "मोठे ट्रक",
     btnBookSlot: "स्लॉट बुक करा आणि QR पास तयार करा",
     passHeading: "डिजिटल गेट पास",
     lblLivePos: "थेट स्थान",
     lblETA: "अंदाजे वेळ",
     lblGrace: "सवलत वेळ",
     btnTTS: "🔊 माहिती ऐका (भाषिणी आवाज)",
-    officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क"
+    officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क",
+    phPhone: "10 अंकी मोबाईल क्रमांक टाका",
+    phOtp: "4 अंकी ओटीपी टाका"
   },
   te: {
     appTitle: "స్మార్ట్ మండి ఇంజిన్",
@@ -93,20 +129,32 @@ const translations = {
     verifyLogin: "ధృవీకరించి లాగిన్ చేయండి",
     bookSlotHeading: "కొనుగోలు స్లాట్ బుక్ చేయండి",
     lblFarmerName: "రైతు పేరు / ID:",
+    phFarmerName: "ఉదా. రమేష్ పాటిల్",
     lblMandi: "మండి కేంద్రాన్ని ఎంచుకోండి:",
+    optSelectMandi: "-- APMC మండి ఎంచుకోండి --",
     lblCommodity: "సరుకు రకం:",
+    optSelectCommodity: "-- సరుకును ఎంచుకోండి --",
     optOnion: "ఉల్లిపాయలు",
     optPulses: "పప్పు ధాన్యాలు",
     optVeg: "కూరగాయలు",
+    optWheat: "గోధుమలు",
+    optCotton: "పత్తి",
     lblQty: "పరిమాణం (టన్నులు):",
+    phQty: "ఉదా. 5.5",
     lblVehicle: "వాహనం రకం:",
+    optSelectVehicle: "-- వాహనం ఎంచుకోండి --",
+    optTractor: "ట్రాక్టర్ ట్రాలీ",
+    optMiniTruck: "మిని ట్రక్",
+    optHeavyTruck: "భారీ ట్రక్",
     btnBookSlot: "స్లాట్ బుక్ చేయండి & QR పాస్ పొందండి",
     passHeading: "డిజిటల్ గేట్ పాస్",
     lblLivePos: "లైవ్ స్థానం",
     lblETA: "అంచనా సమయం",
     lblGrace: "గ్రేస్ సమయం",
     btnTTS: "🔊 స్థితి వినండి (భాషిణి ఆడియో)",
-    officerDeskTitle: "మండి అధికారి కంట్రోల్ డెస్క్"
+    officerDeskTitle: "మండి అధికారి కంట్రోల్ డెస్క్",
+    phPhone: "10 అంకెల మొబైల్ సంఖ్యను నమోదు చేయండి",
+    phOtp: "4 అంకెల OTP నమోదు చేయండి"
   },
   ta: {
     appTitle: "ስማርት மண்டி என்ஜின்",
@@ -120,20 +168,32 @@ const translations = {
     verifyLogin: "சரிபார்த்து உள்நுழைக",
     bookSlotHeading: "ஸ்லாட் முன்பதிவு செய்க",
     lblFarmerName: "விவசாயி பெயர் / ID:",
+    phFarmerName: "எ.கா. ரமேஷ் பாட்டீல்",
     lblMandi: "மண்டி மையத்தைத் தேர்ந்தெடுக்கவும்:",
+    optSelectMandi: "-- APMC மண்டியைத் தேர்ந்தெடுக்கவும் --",
     lblCommodity: "பொருள் வகை:",
+    optSelectCommodity: "-- பொருளைத் தேர்ந்தெடுக்கவும் --",
     optOnion: "வெங்காயம்",
     optPulses: "பருப்பு வகைகள்",
     optVeg: "காய்கறிகள்",
+    optWheat: "கோதுமை",
+    optCotton: "பருத்தி",
     lblQty: "அளவு (டன்கள்):",
+    phQty: "எ.கா. 5.5",
     lblVehicle: "வாகன வகை:",
+    optSelectVehicle: "-- வாகனத்தைத் தேர்ந்தெடுக்கவும் --",
+    optTractor: "டிராக்டர் டிராலி",
+    optMiniTruck: "மினி டிரக்",
+    optHeavyTruck: "கனரக டிரக்",
     btnBookSlot: "முன்பதிவு செய்து QR பாஸ் பெறுக",
     passHeading: "டிஜிட்டல் கேட் பாஸ்",
     lblLivePos: "நேரலை நிலை",
     lblETA: "எதிர்பார்க்கப்படும் நேரம்",
     lblGrace: "சலுகை நேரம்",
     btnTTS: "🔊 குரலில் கேட்க (பாஷினி ஆடியோ)",
-    officerDeskTitle: "மண்டி அதிகாரி கட்டுப்பாட்டு மையம்"
+    officerDeskTitle: "மண்டி அதிகாரி கட்டுப்பாட்டு மையம்",
+    phPhone: "10 இலக்க மொபைல் எண்ணை உள்ளிடவும்",
+    phOtp: "4 இலக்க OTP ஐ உள்ளிடவும்"
   },
   bn: {
     appTitle: "স্মার্ট মান্ডি ইঞ্জিন",
@@ -147,20 +207,32 @@ const translations = {
     verifyLogin: "যাচাই করুন ও লগইন করুন",
     bookSlotHeading: "স্লট বুক করুন",
     lblFarmerName: "কৃষকের নাম / আইডি:",
+    phFarmerName: "যেমন: রমেশ পাতিল",
     lblMandi: "মান্ডি কেন্দ্র নির্বাচন করুন:",
+    optSelectMandi: "-- এপিএমসি মান্ডি নির্বাচন করুন --",
     lblCommodity: "পণ্যের ধরন:",
+    optSelectCommodity: "-- পণ্য নির্বাচন করুন --",
     optOnion: "পিঁয়াজ",
     optPulses: "ডাল",
     optVeg: "শাকসবজি",
+    optWheat: "গম",
+    optCotton: "তুলা",
     lblQty: "পরিমাণ (টন):",
+    phQty: "যেমন: 5.5",
     lblVehicle: "গাড়ির ধরন:",
+    optSelectVehicle: "-- গাড়ি নির্বাচন করুন --",
+    optTractor: "ট্রাক্টর ট্রলি",
+    optMiniTruck: "মিনি ট্রাক",
+    optHeavyTruck: "ভারী ট্রাক",
     btnBookSlot: "স্লট বুক করুন ও ক্যুআর পাস পান",
     passHeading: "ডিজিটাল গেট পাস",
     lblLivePos: "লাইভ অবস্থান",
     lblETA: "আনুষঙ্গিক সময়",
     lblGrace: "গ্রেস সময়",
     btnTTS: "🔊 স্ট্যাটাস শুনুন (ভাষিণী অডিও)",
-    officerDeskTitle: "মান্ডি অফিসার কন্ট্রোল ডেস্ক"
+    officerDeskTitle: "মান্ডি অফিসার কন্ট্রোল ডেস্ক",
+    phPhone: "১০ সংখ্যার মোবাইল নম্বর দিন",
+    phOtp: "৪ সংখ্যার ওটিপি দিন"
   },
   gu: {
     appTitle: "સ્માર્ટ મંડી એન્જિન",
@@ -174,20 +246,32 @@ const translations = {
     verifyLogin: "ચકાસો અને લોગિન કરો",
     bookSlotHeading: "સ્લોટ બુક કરો",
     lblFarmerName: "ખેડૂતનું નામ / ID:",
+    phFarmerName: "દા.ત. રમેશ પાટીલ",
     lblMandi: "મંડી કેન્દ્ર પસંદ કરો:",
+    optSelectMandi: "-- APMC મંડી પસંદ કરો --",
     lblCommodity: "પાકનો પ્રકાર:",
+    optSelectCommodity: "-- પાક પસંદ કરો --",
     optOnion: "ડુંગળી (કાંદા)",
     optPulses: "કઠોળ",
     optVeg: "શાકભાજી",
+    optWheat: "ઘઉં",
+    optCotton: "કપાસ",
     lblQty: "જથ્થો (ટન):",
+    phQty: "દા.ત. 5.5",
     lblVehicle: "વાહનનો પ્રકાર:",
+    optSelectVehicle: "-- વાહન પસંદ કરો --",
+    optTractor: "ટ્રેક્ટર ટ્રોલી",
+    optMiniTruck: "મિની ટ્રક",
+    optHeavyTruck: "ભારે ટ્રક",
     btnBookSlot: "સ્લોટ બુક કરો અને QR પાસ મેળવો",
     passHeading: "ડિજિટલ ગેટ પાસ",
     lblLivePos: "લાઇવ સ્થિતિ",
     lblETA: "અંદાજિત સમય",
     lblGrace: "ગ્રેસ સમય",
     btnTTS: "🔊 વિગત સાંભળો (ભાષિણી ઓડિયો)",
-    officerDeskTitle: "મંડી અધિકારી નિયંત્રણ ડેસ્ક"
+    officerDeskTitle: "મંડી અધિકારી નિયંત્રણ ડેસ્ક",
+    phPhone: "10 અંકનો મોબાઈલ નંબર નાખો",
+    phOtp: "4 અંકનો OTP નાખો"
   },
   kn: {
     appTitle: "స్మార్ట్ మండి ఇంజిన్",
@@ -201,25 +285,38 @@ const translations = {
     verifyLogin: "ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಲಾಗಿನ್ ಮಾಡಿ",
     bookSlotHeading: "ಸ್ಲಾಟ್ ಬುಕ್ ಮಾಡಿ",
     lblFarmerName: "ರೈತನ ಹೆಸರು / ID:",
+    phFarmerName: "ಉದಾ. ರಮೇಶ್ ಪಾಟೀಲ್",
     lblMandi: "ಮಂಡಿ ಕೇಂದ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ:",
+    optSelectMandi: "-- APMC ಮಂಡಿ ಆಯ್ಕೆಮಾಡಿ --",
     lblCommodity: "ಸರಕಿನ ಮಾದರಿ:",
+    optSelectCommodity: "-- ಸರಕು ಆಯ್ಕೆಮಾಡಿ --",
     optOnion: "ಈರುಳ್ಳಿ",
     optPulses: "ಬೇಳೆಕಾಳುಗಳು",
     optVeg: "ತರಕಾರಿಗಳು",
+    optWheat: "ಗೋಧಿ",
+    optCotton: "ಹತ್ತಿ",
     lblQty: "ಪ್ರಮಾಣ (ಟನ್‌ಗಳು):",
+    phQty: "ಉದಾ. 5.5",
     lblVehicle: "ವಾಹನದ ಮಾದರಿ:",
+    optSelectVehicle: "-- ವಾಹನ ಆಯ್ಕೆಮಾಡಿ --",
+    optTractor: "ಟ್ರ್ಯಾಕ್ಟರ್ ಟ್ರಾಲಿ",
+    optMiniTruck: "ಮಿನಿ ટ્રಕ್",
+    optHeavyTruck: "ಭಾರೀ ಟ್ರಕ್",
     btnBookSlot: "ಸ್ಲಾಟ್ ಬುಕ್ ಮಾಡಿ ಮತ್ತು QR ಪಾಸ್ ಪಡೆಯಿರಿ",
     passHeading: "ಡಿಜಿಟಲ್ ಗೇಟ್ ಪಾಸ್",
     lblLivePos: "ಲೈವ್ ಸ್ಥಾನ",
     lblETA: "ಅಂದಾಜು ಸಮಯ",
     lblGrace: "ಗ್ರೇಸ್ ಸಮಯ",
     btnTTS: "🔊 ಸ್ಥಿತಿ ಆಲಿಸಿ (ಭಾಷಿಣಿ ಆಡಿಯೋ)",
-    officerDeskTitle: "ಮಂಡಿ ಅಧಿಕಾರಿ ನಿಯಂತ್ರಣ ಡೆಸ್ಕ್"
+    officerDeskTitle: "ಮಂಡಿ ಅಧಿಕಾರಿ ನಿಯಂತ್ರಣ ಡೆಸ್ಕ್",
+    phPhone: "10 ಅಂಕಿಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ",
+    phOtp: "4 ಅಂಕಿಗಳ OTP నమూದಿಸಿ"
   }
 };
 
 let currentLang = 'en';
 
+// Switch text content and input placeholders dynamically
 function switchLanguage() {
   const langSelect = document.getElementById('langSelect');
   if (!langSelect) return;
@@ -227,10 +324,19 @@ function switchLanguage() {
   currentLang = langSelect.value;
   const langData = translations[currentLang] || translations.en;
   
+  // Translate standard innerText elements
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (langData[key]) {
       el.innerText = langData[key];
+    }
+  });
+
+  // Translate input placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (langData[key]) {
+      el.placeholder = langData[key];
     }
   });
 }
@@ -359,7 +465,7 @@ function generateToken(e) {
   logSMS("[SMS -> " + name + "]: Booking confirmed! Token " + token + " issued for " + mandi + ".");
 }
 
-// Web Speech API Audio Implementation
+// --- Web Speech API Audio (Multi-Language Bhashini Simulation) ---
 function triggerVoiceAssistance() {
   const farmerElem = document.getElementById('summaryFarmerName');
   const posElem = document.getElementById('farmerPos');
@@ -409,6 +515,14 @@ function triggerVoiceAssistance() {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(audioText);
     utterance.lang = langTag;
+    
+    // Find matching language voice if installed in browser
+    const voices = window.speechSynthesis.getVoices();
+    const matchedVoice = voices.find(v => v.lang.startsWith(langTag.split('-')[0]));
+    if (matchedVoice) {
+      utterance.voice = matchedVoice;
+    }
+
     window.speechSynthesis.speak(utterance);
   } else {
     alert(audioText);
