@@ -10,7 +10,7 @@ function showModule(moduleId) {
 // Bhashini Language Switcher Simulation
 function switchLanguage() {
   const lang = document.getElementById('langSelect').value;
-  if (lang === 'mr') {
+  if (lang === 'Marathi') {
     alert("Bhashini AI: भाषा बदलून मराठी करण्यात आली आहे.");
   } else if (lang === 'hi') {
     alert("Bhashini AI: भाषा बदलकर हिंदी कर दी गई है।");
