@@ -75,7 +75,7 @@
             <h3 data-i18n="otpHeading">Kisan OTP Authentication</h3>
           </div>
           <div class="form-group">
-            <label for="farmerPhone" data-i18n="phPhone">Mobile Number:</label>
+            <label for="farmerPhone">Mobile Number:</label>
             <input type="tel" id="farmerPhone" data-i18n-ph="phPhone" placeholder="Enter 10-digit mobile number" maxlength="10" required>
           </div>
           <button class="btn btn-primary" onclick="sendOTP()" data-i18n="sendOtp">Send OTP</button>
@@ -83,7 +83,7 @@
           <div id="otpSection" class="otp-container" style="display: none;">
             <div class="timer-text" id="otpTimer">OTP expires in: 30s</div>
             <div class="form-group">
-              <label for="otpCode" data-i18n="phOtp">Verification Code:</label>
+              <label for="otpCode">Verification Code:</label>
               <input type="text" id="otpCode" data-i18n-ph="phOtp" placeholder="Enter 4-Digit OTP" maxlength="4">
             </div>
             <button class="btn btn-success" id="verifyOtpBtn" onclick="verifyOTP()" data-i18n="verifyLogin">Verify & Login</button>
@@ -250,11 +250,11 @@
         <div class="card">
           <h3>Capacity & Speed Adjuster</h3>
           <div class="form-group">
-            <label>Active Weighbridges:</label>
+            <label for="engineBridges">Active Weighbridges:</label>
             <input type="number" id="engineBridges" value="2" min="1" max="10" onchange="recalculateEngine()">
           </div>
           <div class="form-group">
-            <label>Shift Efficiency Factor:</label>
+            <label for="shiftStatus">Shift Efficiency Factor:</label>
             <select id="shiftStatus" onchange="recalculateEngine()">
               <option value="1.0">Normal Speed (100%)</option>
               <option value="1.5">Peak Rush (150%)</option>
