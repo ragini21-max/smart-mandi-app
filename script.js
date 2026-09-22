@@ -1,4 +1,4 @@
-// --- 1. Multilingual i18n Dictionary ---
+// --- 1. Expanded Multilingual i18n Dictionary ---
 const translations = {
   en: {
     appTitle: "Smart Mandi Engine",
@@ -80,6 +80,141 @@ const translations = {
     lblGrace: "सवलत वेळ",
     btnTTS: "🔊 माहिती ऐका (भाषिणी आवाज)",
     officerDeskTitle: "मंडी अधिकारी नियंत्रण डेस्क"
+  },
+  te: {
+    appTitle: "స్మార్ట్ మండి ఇంజిన్",
+    tabFarmer: "రైతు యాప్",
+    tabOfficer: "అధికారి డెస్క్",
+    tabEngine: "క్యూ ఇంజిన్",
+    tabSms: "SMS లాగ్స్",
+    farmerPortal: "రైతు పోర్టల్ మరియు డిజిటల్ పాస్",
+    otpHeading: "కిసాన్ OTP ప్రమాణీకరణ",
+    sendOtp: "OTP పంపండి",
+    verifyLogin: "ధృవీకరించి లాగిన్ చేయండి",
+    bookSlotHeading: "కొనుగోలు స్లాట్ బుక్ చేయండి",
+    lblFarmerName: "రైతు పేరు / ID:",
+    lblMandi: "మండి కేంద్రాన్ని ఎంచుకోండి:",
+    lblCommodity: "సరుకు రకం:",
+    optOnion: "ఉల్లిపాయలు",
+    optPulses: "పప్పు ధాన్యాలు",
+    optVeg: "కూరగాయలు",
+    lblQty: "పరిమాణం (టన్నులు):",
+    lblVehicle: "వాహనం రకం:",
+    btnBookSlot: "స్లాట్ బుక్ చేయండి & QR పాస్ పొందండి",
+    passHeading: "డిజిటల్ గేట్ పాస్",
+    lblLivePos: "లైవ్ స్థానం",
+    lblETA: "అంచనా సమయం",
+    lblGrace: "గ్రేస్ సమయం",
+    btnTTS: "🔊 స్థితి వినండి (భాషిణి ఆడియో)",
+    officerDeskTitle: "మండి అధికారి కంట్రోల్ డెస్క్"
+  },
+  ta: {
+    appTitle: "ስማርት மண்டி என்ஜின்",
+    tabFarmer: "விவசாயி செயலி",
+    tabOfficer: "அதிகாரி டெஸ்க்",
+    tabEngine: "வரிசை என்ஜின்",
+    tabSms: "SMS பதிவுகள்",
+    farmerPortal: "விவசாயி போர்ட்டல் & டிஜிட்டல் பாஸ்",
+    otpHeading: "கிசான் OTP சரிபார்ப்பு",
+    sendOtp: "OTP அனுப்புக",
+    verifyLogin: "சரிபார்த்து உள்நுழைக",
+    bookSlotHeading: "ஸ்லாட் முன்பதிவு செய்க",
+    lblFarmerName: "விவசாயி பெயர் / ID:",
+    lblMandi: "மண்டி மையத்தைத் தேர்ந்தெடுக்கவும்:",
+    lblCommodity: "பொருள் வகை:",
+    optOnion: "வெங்காயம்",
+    optPulses: "பருப்பு வகைகள்",
+    optVeg: "காய்கறிகள்",
+    lblQty: "அளவு (டன்கள்):",
+    lblVehicle: "வாகன வகை:",
+    btnBookSlot: "முன்பதிவு செய்து QR பாஸ் பெறுக",
+    passHeading: "டிஜிட்டல் கேட் பாஸ்",
+    lblLivePos: "நேரலை நிலை",
+    lblETA: "எதிர்பார்க்கப்படும் நேரம்",
+    lblGrace: "சலுகை நேரம்",
+    btnTTS: "🔊 குரலில் கேட்க (பாஷினி ஆடியோ)",
+    officerDeskTitle: "மண்டி அதிகாரி கட்டுப்பாட்டு மையம்"
+  },
+  bn: {
+    appTitle: "স্মার্ট মান্ডি ইঞ্জিন",
+    tabFarmer: "কৃষক অ্যাপ",
+    tabOfficer: "অফিসার ডেস্ক",
+    tabEngine: "ক্লিয়ারেন্স ইঞ্জিন",
+    tabSms: "এসএমএস লগ",
+    farmerPortal: "কৃষক পোর্টাল ও ডিজিটাল পাস",
+    otpHeading: "কিসান ওটিপি যাচাইকরণ",
+    sendOtp: "ওটিপি পাঠান",
+    verifyLogin: "যাচাই করুন ও লগইন করুন",
+    bookSlotHeading: "স্লট বুক করুন",
+    lblFarmerName: "কৃষকের নাম / আইডি:",
+    lblMandi: "মান্ডি কেন্দ্র নির্বাচন করুন:",
+    lblCommodity: "পণ্যের ধরন:",
+    optOnion: "পিঁয়াজ",
+    optPulses: "ডাল",
+    optVeg: "শাকসবজি",
+    lblQty: "পরিমাণ (টন):",
+    lblVehicle: "গাড়ির ধরন:",
+    btnBookSlot: "স্লট বুক করুন ও ক্যুআর পাস পান",
+    passHeading: "ডিজিটাল গেট পাস",
+    lblLivePos: "লাইভ অবস্থান",
+    lblETA: "আনুষঙ্গিক সময়",
+    lblGrace: "গ্রেস সময়",
+    btnTTS: "🔊 স্ট্যাটাস শুনুন (ভাষিণী অডিও)",
+    officerDeskTitle: "মান্ডি অফিসার কন্ট্রোল ডেস্ক"
+  },
+  gu: {
+    appTitle: "સ્માર્ટ મંડી એન્જિન",
+    tabFarmer: "ખેડૂત એપ",
+    tabOfficer: "અધિકારી ડેસ્ક",
+    tabEngine: "ક્યુ એન્જિન",
+    tabSms: "SMS લોગ",
+    farmerPortal: "ખેડૂત પોર્ટલ અને ડિજિટલ પાસ",
+    otpHeading: "કિસાાન OTP ચકાસણી",
+    sendOtp: "OTP મોકલો",
+    verifyLogin: "ચકાસો અને લોગિન કરો",
+    bookSlotHeading: "સ્લોટ બુક કરો",
+    lblFarmerName: "ખેડૂતનું નામ / ID:",
+    lblMandi: "મંડી કેન્દ્ર પસંદ કરો:",
+    lblCommodity: "પાકનો પ્રકાર:",
+    optOnion: "ડુંગળી (કાંદા)",
+    optPulses: "કઠોળ",
+    optVeg: "શાકભાજી",
+    lblQty: "જથ્થો (ટન):",
+    lblVehicle: "વાહનનો પ્રકાર:",
+    btnBookSlot: "સ્લોટ બુક કરો અને QR પાસ મેળવો",
+    passHeading: "ડિજિટલ ગેટ પાસ",
+    lblLivePos: "લાઇવ સ્થિતિ",
+    lblETA: "અંદાજિત સમય",
+    lblGrace: "ગ્રેસ સમય",
+    btnTTS: "🔊 વિગત સાંભળો (ભાષિણી ઓડિયો)",
+    officerDeskTitle: "મંડી અધિકારી નિયંત્રણ ડેસ્ક"
+  },
+  kn: {
+    appTitle: "స్మార్ట్ మండి ఇంజిన్",
+    tabFarmer: "ರೈತ ಆ್ಯಪ್",
+    tabOfficer: "ಅಧಿಕಾರಿ ಡೆಸ್ಕ್",
+    tabEngine: "ಕ್ಯೂ ಇಂಜಿನ್",
+    tabSms: "SMS ಲಾಗ್‌ಗಳು",
+    farmerPortal: "ರೈತ ಪೋರ್ಟಲ್ ಮತ್ತು ಡಿಜಿಟಲ್ ಪಾಸ್",
+    otpHeading: "ಕಿಸಾನ್ OTP ಪರಿಶೀಲನೆ",
+    sendOtp: "OTP ಕಳುಹಿಸಿ",
+    verifyLogin: "ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಲಾಗಿನ್ ಮಾಡಿ",
+    bookSlotHeading: "ಸ್ಲಾಟ್ ಬುಕ್ ಮಾಡಿ",
+    lblFarmerName: "ರೈತನ ಹೆಸರು / ID:",
+    lblMandi: "ಮಂಡಿ ಕೇಂದ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ:",
+    lblCommodity: "ಸರಕಿನ ಮಾದರಿ:",
+    optOnion: "ಈರುಳ್ಳಿ",
+    optPulses: "ಬೇಳೆಕಾಳುಗಳು",
+    optVeg: "ತರಕಾರಿಗಳು",
+    lblQty: "ಪ್ರಮಾಣ (ಟನ್‌ಗಳು):",
+    lblVehicle: "ವಾಹನದ ಮಾದರಿ:",
+    btnBookSlot: "ಸ್ಲಾಟ್ ಬುಕ್ ಮಾಡಿ ಮತ್ತು QR ಪಾಸ್ ಪಡೆಯಿರಿ",
+    passHeading: "ಡಿಜಿಟಲ್ ಗೇಟ್ ಪಾಸ್",
+    lblLivePos: "ಲೈವ್ ಸ್ಥಾನ",
+    lblETA: "ಅಂದಾಜು ಸಮಯ",
+    lblGrace: "ಗ್ರೇಸ್ ಸಮಯ",
+    btnTTS: "🔊 ಸ್ಥಿತಿ ಆಲಿಸಿ (ಭಾಷಿಣಿ ಆಡಿಯೋ)",
+    officerDeskTitle: "ಮಂಡಿ ಅಧಿಕಾರಿ ನಿಯಂತ್ರಣ ಡೆಸ್ಕ್"
   }
 };
 
@@ -233,22 +368,47 @@ function triggerVoiceAssistance() {
   const position = posElem ? posElem.innerText : '#3 in line';
   
   let audioText = "";
-  if (currentLang === 'hi') {
-    audioText = "नमस्कार " + farmer + ". आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति " + position + " है।";
-  } else if (currentLang === 'mr') {
-    audioText = "नमस्कार " + farmer + ". तुमचे बुकिंग निश्चित झाले आहे. तुमची रांग मधील स्थिती " + position + " आहे।";
-  } else {
-    audioText = "Hello " + farmer + ", your booking is confirmed. Your current queue status is " + position + ".";
+  let langTag = "en-US";
+
+  switch (currentLang) {
+    case 'hi':
+      audioText = "नमस्कार " + farmer + ". आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति " + position + " है।";
+      langTag = "hi-IN";
+      break;
+    case 'mr':
+      audioText = "नमस्कार " + farmer + ". तुमचे बुकिंग निश्चित झाले आहे. तुमची रांग मधील स्थिती " + position + " आहे।";
+      langTag = "mr-IN";
+      break;
+    case 'te':
+      audioText = "నమస్కారం " + farmer + ". మీ బుకింగ్ ఖరారైంది. మీ క్యూ స్థానం " + position + ".";
+      langTag = "te-IN";
+      break;
+    case 'ta':
+      audioText = "வணக்கம் " + farmer + ". உங்கள் முன்பதிவு உறுதி செய்யப்பட்டது. உங்கள் வரிசை நிலை " + position + ".";
+      langTag = "ta-IN";
+      break;
+    case 'bn':
+      audioText = "নমস্কার " + farmer + ". আপনার বুকিং নিশ্চিত হয়েছে। আপনার লাইনের অবস্থান " + position + "।";
+      langTag = "bn-IN";
+      break;
+    case 'gu':
+      audioText = "નમસ્તે " + farmer + ". તમારું બુકિંગ કન્ફર્મ થયું છે. તમારી લાઇન સ્થિતિ " + position + " છે.";
+      langTag = "gu-IN";
+      break;
+    case 'kn':
+      audioText = "ನಮಸ್ಕಾರ " + farmer + ". ನಿಮ್ಮ ಬುಕಿಂಗ್ ಖಚಿತವಾಗಿದೆ. ನಿಮ್ಮ ಸಾಲಿನ ಸ್ಥಾನ " + position + ".";
+      langTag = "kn-IN";
+      break;
+    default:
+      audioText = "Hello " + farmer + ", your booking is confirmed. Your current queue status is " + position + ".";
+      langTag = "en-US";
+      break;
   }
 
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(audioText);
-    
-    if (currentLang === 'hi') utterance.lang = 'hi-IN';
-    else if (currentLang === 'mr') utterance.lang = 'mr-IN';
-    else utterance.lang = 'en-US';
-
+    utterance.lang = langTag;
     window.speechSynthesis.speak(utterance);
   } else {
     alert(audioText);
