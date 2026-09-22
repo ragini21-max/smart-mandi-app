@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./style.css">
   <link rel="manifest" href="./manifest.json">
   
-  <!-- QR Code Generator & Scanner Libraries (Optional external CDNs; system falls back gracefully if offline) -->
+  <!-- QR Code Generator & Scanner Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
@@ -183,9 +183,10 @@
             </div>
           </div>
           
-          <div class="queue-status">
+          <div class="queue-status clickable" id="queueStatusCard" title="Click to hear queue position details">
             <p><span data-i18n="queuePos">Queue Position:</span> <strong id="passQueuePos">-</strong></p>
             <p><span data-i18n="queueEta">Estimated Entry ETA:</span> <strong id="passEta">-</strong></p>
+            <small class="voice-hint">🔊 Click to listen</small>
           </div>
 
           <div id="paymentDetailsBox" class="payment-box hidden">
@@ -197,7 +198,6 @@
       </section>
 
     </div>
-
 
     <!-- ================= OFFICER DASHBOARD ================= -->
     <div id="officerPortalView" class="portal-view hidden">
