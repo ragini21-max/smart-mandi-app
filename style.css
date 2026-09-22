@@ -108,6 +108,11 @@ button:hover {
   background-color: #1b4332;
 }
 
+button:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+
 .btn-warn {
   background-color: #e0a96d;
   color: black;
@@ -134,16 +139,27 @@ button:hover {
 }
 
 .qr-box {
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 180px;
   border: 2px dashed #2d6a4f;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
+  background: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.qr-box img {
+  margin: auto;
+}
+
+.timer-text {
+  font-size: 0.85rem;
+  color: #d90429;
   font-weight: bold;
-  color: #2d6a4f;
+  margin-top: 5px;
 }
 
 .info-grid, .metrics-grid {
