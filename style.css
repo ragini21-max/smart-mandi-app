@@ -155,6 +155,24 @@ button:disabled {
   margin: auto;
 }
 
+.info-summary-card {
+  background: #f1f8f5;
+  border-left: 4px solid #2d6a4f;
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.info-summary-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: #1b4332;
+}
+
+.info-summary-card p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
 .timer-text {
   font-size: 0.85rem;
   color: #d90429;
