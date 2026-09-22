@@ -316,7 +316,7 @@ const translations = {
 
 let currentLang = 'en';
 
-// Switch text content and input placeholders dynamically
+// Switch text content, input placeholders, and dynamic components
 function switchLanguage() {
   const langSelect = document.getElementById('langSelect');
   if (!langSelect) return;
@@ -339,6 +339,27 @@ function switchLanguage() {
       el.placeholder = langData[key];
     }
   });
+
+  // Update dynamic pass text if pass is visible
+  updatePassLanguage();
+}
+
+function updatePassLanguage() {
+  const posElem = document.getElementById('farmerPos');
+  if (!posElem) return;
+
+  const positions = {
+    en: "#3 in line",
+    hi: "कतार में #3",
+    mr: "रांगेत #३",
+    te: "క్యూలో #3",
+    ta: "வரிசையில் #3",
+    bn: "লাইনে #৩",
+    gu: "લાઇનમાં #3",
+    kn: "ಸಾಲು #3"
+  };
+
+  posElem.innerText = positions[currentLang] || positions.en;
 }
 
 // Navigation Tab Switcher
@@ -430,7 +451,6 @@ function generateToken(e) {
     return;
   }
 
-  // Bind values dynamically to summary elements
   if (document.getElementById('summaryFarmerName')) document.getElementById('summaryFarmerName').innerText = name;
   if (document.getElementById('summaryMandi')) document.getElementById('summaryMandi').innerText = mandi;
   if (document.getElementById('summaryCommodity')) document.getElementById('summaryCommodity').innerText = commodity;
@@ -463,67 +483,80 @@ function generateToken(e) {
   }
 
   logSMS("[SMS -> " + name + "]: Booking confirmed! Token " + token + " issued for " + mandi + ".");
+  updatePassLanguage();
 }
 
-// --- Web Speech API Audio (Multi-Language Bhashini Simulation) ---
+// Web Speech API Audio (Multi-Language Bhashini Simulation)
 function triggerVoiceAssistance() {
   const farmerElem = document.getElementById('summaryFarmerName');
   const posElem = document.getElementById('farmerPos');
   
-  const farmer = farmerElem ? farmerElem.innerText : 'Farmer';
-  const position = posElem ? posElem.innerText : '#3 in line';
+  const farmer = (farmerElem && farmerElem.innerText !== '--') ? farmerElem.innerText : 'किसान';
+  const position = posElem ? posElem.innerText : '3';
   
   let audioText = "";
-  let langTag = "en-US";
+  let langTag = "hi-IN";
 
   switch (currentLang) {
     case 'hi':
-      audioText = "नमस्कार " + farmer + ". आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति " + position + " है।";
+      audioText = `नमस्कार ${farmer}। आपकी बुकिंग की पुष्टि हो गई है। आपकी कतार स्थिति ${position} है।`;
       langTag = "hi-IN";
       break;
     case 'mr':
-      audioText = "नमस्कार " + farmer + ". तुमचे बुकिंग निश्चित झाले आहे. तुमची रांग मधील स्थिती " + position + " आहे।";
+      audioText = `नमस्कार ${farmer}। तुमचे बुकिंग निश्चित झाले आहे। तुमची रांगेतील स्थिती ${position} आहे।`;
       langTag = "mr-IN";
       break;
     case 'te':
-      audioText = "నమస్కారం " + farmer + ". మీ బుకింగ్ ఖరారైంది. మీ క్యూ స్థానం " + position + ".";
+      audioText = `నమస్కారం ${farmer}। మీ బుకింగ్ ఖరారైంది। మీ క్యూ స్థానం ${position}।`;
       langTag = "te-IN";
       break;
     case 'ta':
-      audioText = "வணக்கம் " + farmer + ". உங்கள் முன்பதிவு உறுதி செய்யப்பட்டது. உங்கள் வரிசை நிலை " + position + ".";
+      audioText = `வணக்கம் ${farmer}। உங்கள் முன்பதிவு உறுதி செய்யப்பட்டது। உங்கள் வரிசை நிலை ${position}।`;
       langTag = "ta-IN";
       break;
     case 'bn':
-      audioText = "নমস্কার " + farmer + ". আপনার বুকিং নিশ্চিত হয়েছে। আপনার লাইনের অবস্থান " + position + "।";
+      audioText = `নমস্কার ${farmer}। আপনার বুকিং নিশ্চিত হয়েছে। আপনার লাইনের অবস্থান ${position}।`;
       langTag = "bn-IN";
       break;
     case 'gu':
-      audioText = "નમસ્તે " + farmer + ". તમારું બુકિંગ કન્ફર્મ થયું છે. તમારી લાઇન સ્થિતિ " + position + " છે.";
+      audioText = `નમસ્તે ${farmer}। તમારું બુકિંગ કન્ફર્મ થયું છે। તમારી લાઇન સ્થિતિ ${position} છે।`;
       langTag = "gu-IN";
       break;
     case 'kn':
-      audioText = "ನಮಸ್ಕಾರ " + farmer + ". ನಿಮ್ಮ ಬುಕಿಂಗ್ ಖಚಿತವಾಗಿದೆ. ನಿಮ್ಮ ಸಾಲಿನ ಸ್ಥಾನ " + position + ".";
+      audioText = `ನಮಸ್ಕಾರ ${farmer}। ನಿಮ್ಮ ಬುಕಿಂಗ್ ಖಚಿತವಾಗಿದೆ। ನಿಮ್ಮ ಸಾಲಿನ ಸ್ಥಾನ ${position}।`;
       langTag = "kn-IN";
       break;
     default:
-      audioText = "Hello " + farmer + ", your booking is confirmed. Your current queue status is " + position + ".";
+      audioText = `Hello ${farmer}, your booking is confirmed. Your current queue status is ${position}.`;
       langTag = "en-US";
       break;
   }
 
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
+    
     const utterance = new SpeechSynthesisUtterance(audioText);
     utterance.lang = langTag;
-    
-    // Find matching language voice if installed in browser
-    const voices = window.speechSynthesis.getVoices();
-    const matchedVoice = voices.find(v => v.lang.startsWith(langTag.split('-')[0]));
-    if (matchedVoice) {
-      utterance.voice = matchedVoice;
-    }
+    utterance.rate = 0.9;
 
-    window.speechSynthesis.speak(utterance);
+    let voices = window.speechSynthesis.getVoices();
+    
+    const speakWithVoice = () => {
+      voices = window.speechSynthesis.getVoices();
+      const targetLangPrefix = langTag.split('-')[0];
+      const matchedVoice = voices.find(v => v.lang.startsWith(targetLangPrefix) || v.lang.includes(targetLangPrefix));
+      
+      if (matchedVoice) {
+        utterance.voice = matchedVoice;
+      }
+      window.speechSynthesis.speak(utterance);
+    };
+
+    if (voices.length === 0) {
+      window.speechSynthesis.onvoiceschanged = speakWithVoice;
+    } else {
+      speakWithVoice();
+    }
   } else {
     alert(audioText);
   }
