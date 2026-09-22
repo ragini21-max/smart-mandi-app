@@ -3,136 +3,257 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Mandi Procurement System</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
+  <title>Smart Mandi Management System</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="./manifest.json">
+  <!-- QR Code Generator & Scanner Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
 
+  <!-- Top Navigation Bar -->
   <header class="navbar">
-    <h1>Smart Mandi Management</h1>
-    <div id="connectionStatus" class="status-online">Online</div>
+    <div class="nav-brand">
+      <h1 data-i18n="appTitle">Smart Mandi Management</h1>
+      <span id="connectionStatus" class="status-online">Online</span>
+    </div>
+    
+    <div class="nav-controls">
+      <!-- Role Switcher -->
+      <select id="roleSelector" class="nav-select">
+        <option value="farmer" data-i18n="roleFarmer">Farmer Portal</option>
+        <option value="officer" data-i18n="roleOfficer">Officer Dashboard</option>
+      </select>
+
+      <!-- Language Switcher -->
+      <select id="langSelector" class="nav-select">
+        <option value="en">English</option>
+        <option value="hi">हिंदी (Hindi)</option>
+      </select>
+    </div>
   </header>
 
   <main class="container">
-    <!-- Booking Section -->
-    <section class="card" id="bookingCard">
-      <h2>Farmer Registration & Slot Booking</h2>
 
-      <div id="quotaAlertBox" class="result-box info-result">
-        <strong>Daily Capacity Alert:</strong> <span id="quotaMessage">Select details to check capacity</span>
-      </div>
-
-      <form id="bookingForm">
-        <div class="form-group">
-          <label for="farmerName">Farmer Full Name</label>
-          <input type="text" id="farmerName" required placeholder="Enter full name">
-        </div>
-
-        <div class="form-group">
-          <label for="phoneNumber">Mobile Number</label>
-          <div class="input-inline">
-            <input type="tel" id="phoneNumber" placeholder="10-digit number" required>
-            <button type="button" id="sendOtpBtn" class="btn btn-secondary">Send OTP</button>
-          </div>
-        </div>
-
-        <div class="form-group hidden" id="otpGroup">
-          <label for="otpCode">Enter OTP</label>
-          <div class="input-inline">
-            <input type="text" id="otpCode" placeholder="Enter OTP">
-            <button type="button" id="verifyOtpBtn" class="btn btn-secondary">Verify</button>
-          </div>
-          <small id="otpHint" class="hint-text"></small>
-        </div>
-
-        <div class="form-group">
-          <label for="procurementDate">Procurement Date</label>
-          <input type="date" id="procurementDate" required>
-        </div>
-
-        <div class="form-group">
-          <label for="mandiSelect">Select Mandi</label>
-          <select id="mandiSelect" required>
-            <option value="">-- Choose Mandi --</option>
-            <option value="Central Mandi A">Central Mandi A</option>
-            <option value="North Market Yard B">North Market Yard B</option>
-            <option value="South Hub C">South Hub C</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="commoditySelect">Commodity</label>
-          <select id="commoditySelect" required>
-            <option value="">-- Choose Commodity --</option>
-            <option value="Wheat">Wheat</option>
-            <option value="Paddy">Paddy</option>
-            <option value="Maize">Maize</option>
-            <option value="Mustard">Mustard</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="produceQty">Quantity (in Tons)</label>
-            <input type="number" id="produceQty" min="0.1" step="0.1" placeholder="e.g. 5.5" required>
-          </div>
-          <div class="form-group half">
-            <label for="slotTime">Preferred Slot</label>
-            <select id="slotTime" required>
-              <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM</option>
-              <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
-              <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM</option>
-              <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="vehicleType">Vehicle Type</label>
-          <select id="vehicleType" required>
-            <option value="Tractor">Tractor</option>
-            <option value="Small Truck">Small Truck</option>
-            <option value="Large Commercial Truck">Large Commercial Truck</option>
-          </select>
-        </div>
-
-        <button type="submit" id="submitBookingBtn" class="btn btn-primary" disabled>Generate E-Pass Token</button>
-      </form>
-    </section>
-
-    <!-- Digital Pass & Tracking Section -->
-    <section class="card hidden" id="passCard">
-      <h2>Digital Entry Token Pass</h2>
-      <div class="pass-box">
-        <div class="pass-header">
-          <span class="pass-id" id="passTokenId">#MND-00000</span>
-          <span class="badge" id="passStageBadge">BOOKED</span>
-        </div>
-        <div class="pass-body">
-          <p><strong>Farmer:</strong> <span id="passFarmerName">-</span></p>
-          <p><strong>Mandi:</strong> <span id="passMandi">-</span></p>
-          <p><strong>Commodity:</strong> <span id="passCommodity">-</span></p>
-          <p><strong>Schedule:</strong> <span id="passSchedule">-</span></p>
-          <p><strong>Vehicle:</strong> <span id="passVehicle">-</span></p>
-          <p><strong>Requested Qty:</strong> <span id="passRequestedQty">0</span> Tons</p>
-          <p><strong>Verified Weight:</strong> <span id="passVerifiedQty">Pending</span></p>
-        </div>
+    <!-- ================= FARMER PORTAL ================= -->
+    <div id="farmerPortalView" class="portal-view">
+      
+      <div class="dashboard-grid">
         
-        <div class="queue-status">
-          <p>Queue Position: <strong id="passQueuePos">-</strong></p>
-          <p>Estimated Entry ETA: <strong id="passEta">-</strong></p>
-        </div>
+        <!-- Left Side: Registration & Booking Form -->
+        <section class="card left-panel">
+          <h2 data-i18n="farmerRegTitle">Farmer Registration & Slot Booking</h2>
 
-        <div id="paymentDetailsBox" class="payment-box hidden">
-          <h3>Payment Status: <span id="paymentStatus" class="status-completed">COMPLETED</span></h3>
-          <p>DBT Ref Number: <strong id="paymentRef">-</strong></p>
-          <p>Total Paid Amount: <strong>₹<span id="paymentAmount">0</span></strong></p>
-        </div>
+          <form id="bookingForm">
+            <div class="form-group">
+              <label for="farmerName" data-i18n="labelFarmerName">Farmer Full Name</label>
+              <input type="text" id="farmerName" required placeholder="e.g. Ramesh Kumar">
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber" data-i18n="labelMobile">Mobile Number</label>
+              <div class="input-inline">
+                <input type="tel" id="phoneNumber" placeholder="10-digit number" required>
+                <button type="button" id="sendOtpBtn" class="btn btn-secondary" data-i18n="btnSendOtp">Send OTP</button>
+              </div>
+            </div>
+
+            <!-- OTP Verification Box -->
+            <div class="form-group hidden" id="otpGroup">
+              <label for="otpCode" data-i18n="labelOtp">Enter OTP</label>
+              <div class="input-inline">
+                <input type="text" id="otpCode" placeholder="Enter 4-digit OTP">
+                <button type="button" id="verifyOtpBtn" class="btn btn-secondary" data-i18n="btnVerify">Verify OTP</button>
+              </div>
+              <small id="otpHint" class="hint-text"></small>
+            </div>
+
+            <div class="form-group">
+              <label for="procurementDate" data-i18n="labelDate">Procurement Date</label>
+              <input type="date" id="procurementDate" required>
+            </div>
+
+            <div class="form-group">
+              <label for="mandiSelect" data-i18n="labelMandi">Select Mandi</label>
+              <select id="mandiSelect" required>
+                <option value="">-- Choose Mandi --</option>
+                <option value="Central Mandi A">Central Mandi A</option>
+                <option value="North Market Yard B">North Market Yard B</option>
+                <option value="South Hub C">South Hub C</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="commoditySelect" data-i18n="labelCommodity">Commodity</label>
+              <select id="commoditySelect" required>
+                <option value="">-- Choose Commodity --</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Paddy">Paddy</option>
+                <option value="Maize">Maize</option>
+                <option value="Mustard">Mustard</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half">
+                <label for="produceQty" data-i18n="labelQty">Quantity (Tons)</label>
+                <input type="number" id="produceQty" min="0.1" step="0.1" placeholder="e.g. 5.5" required>
+              </div>
+              <div class="form-group half">
+                <label for="slotTime" data-i18n="labelSlot">Preferred Slot</label>
+                <select id="slotTime" required>
+                  <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM</option>
+                  <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
+                  <option value="12:00 PM - 02:00 PM">12:00 PM - 02:00 PM</option>
+                  <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="vehicleType" data-i18n="labelVehicle">Vehicle Type</label>
+              <select id="vehicleType" required>
+                <option value="Tractor">Tractor</option>
+                <option value="Small Truck">Small Truck</option>
+                <option value="Large Commercial Truck">Large Commercial Truck</option>
+              </select>
+            </div>
+
+            <button type="submit" id="submitBookingBtn" class="btn btn-primary" disabled data-i18n="btnBook">Generate Token Pass</button>
+          </form>
+        </section>
+
+        <!-- Right Side: Check Capacity / Mandi Status Dashboard -->
+        <section class="card right-panel">
+          <h2 data-i18n="capacityTitle">Check Mandi Capacity</h2>
+          <p class="subtitle" data-i18n="capacitySubtitle">Real-time daily limits and availability status</p>
+
+          <div id="quotaAlertBox" class="result-box info-result">
+            <strong data-i18n="capacityHeader">Capacity Status:</strong> 
+            <span id="quotaMessage" data-i18n="capacityDefault">Select Date, Mandi & Commodity to check availability.</span>
+          </div>
+
+          <div class="capacity-meter-box">
+            <label data-i18n="meterLabel">Daily Quota Utilization</label>
+            <div class="progress-bar-bg">
+              <div id="capacityBar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <p class="meter-text"><span id="bookedCapacityText">0</span> / 50 Tons Booked</p>
+          </div>
+
+          <!-- SMS Notification Center Simulation -->
+          <div class="sms-box">
+            <h3 data-i18n="smsTitle">📲 Mobile SMS Inbox (Simulation)</h3>
+            <div id="smsMessageList" class="sms-list">
+              <p class="empty-sms" data-i18n="noSms">No SMS alerts received yet.</p>
+            </div>
+          </div>
+        </section>
+
       </div>
-    </section>
+
+      <!-- Digital Entry Pass Result Section -->
+      <section class="card hidden" id="passCard">
+        <h2 data-i18n="tokenTitle">Digital Entry Token Pass</h2>
+        <div class="pass-box">
+          <div class="pass-header">
+            <span class="pass-id" id="passTokenId">#MND-00000</span>
+            <span class="badge" id="passStageBadge">BOOKED</span>
+          </div>
+
+          <div class="pass-layout">
+            <div class="pass-body">
+              <p><strong data-i18n="passFarmer">Farmer:</strong> <span id="passFarmerName">-</span></p>
+              <p><strong data-i18n="passMandi">Mandi:</strong> <span id="passMandi">-</span></p>
+              <p><strong data-i18n="passCommodity">Commodity:</strong> <span id="passCommodity">-</span></p>
+              <p><strong data-i18n="passSchedule">Schedule:</strong> <span id="passSchedule">-</span></p>
+              <p><strong data-i18n="passVehicle">Vehicle:</strong> <span id="passVehicle">-</span></p>
+              <p><strong data-i18n="passReqQty">Requested Qty:</strong> <span id="passRequestedQty">0</span> Tons</p>
+              <p><strong data-i18n="passVerQty">Verified Weight:</strong> <span id="passVerifiedQty">Pending</span></p>
+            </div>
+
+            <!-- Generated QR Code Container -->
+            <div class="qr-container">
+              <div id="qrcode"></div>
+              <small data-i18n="qrHelp">Scan at Mandi Gate</small>
+            </div>
+          </div>
+          
+          <div class="queue-status">
+            <p><span data-i18n="queuePos">Queue Position:</span> <strong id="passQueuePos">-</strong></p>
+            <p><span data-i18n="queueEta">Estimated Entry ETA:</span> <strong id="passEta">-</strong></p>
+          </div>
+
+          <div id="paymentDetailsBox" class="payment-box hidden">
+            <h3><span data-i18n="payStatus">Payment Status:</span> <span id="paymentStatus" class="status-completed">COMPLETED</span></h3>
+            <p><span data-i18n="payRef">DBT Ref Number:</span> <strong id="paymentRef">-</strong></p>
+            <p><span data-i18n="payAmt">Total Paid Amount:</span> <strong>₹<span id="paymentAmount">0</span></strong></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ================= OFFICER DASHBOARD ================= -->
+    <div id="officerPortalView" class="portal-view hidden">
+      <section class="card">
+        <h2 data-i18n="officerTitle">Mandi Officer Operations Dashboard</h2>
+        <p class="subtitle" data-i18n="officerSubtitle">Scan farmer entry passes, verify weighment bridge data, and trigger direct bank transfers (DBT).</p>
+
+        <div class="officer-grid">
+          <!-- QR Code Scanner Box -->
+          <div class="officer-action-card">
+            <h3 data-i18n="scanHeader">1. Gate Verification (QR Scanner)</h3>
+            <div id="qr-reader" style="width: 100%;"></div>
+            <div class="form-group" style="margin-top: 10px;">
+              <label for="manualTokenInput" data-i18n="labelManualToken">Or Enter Token ID Manually:</label>
+              <div class="input-inline">
+                <input type="text" id="manualTokenInput" placeholder="e.g. #MND-12345">
+                <button type="button" id="searchTokenBtn" class="btn btn-secondary" data-i18n="btnFetch">Fetch Token</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Pass Operations -->
+          <div class="officer-action-card">
+            <h3 data-i18n="actionHeader">2. Entry & Process Action</h3>
+            
+            <div id="officerTokenDetails" class="pass-details-box hidden">
+              <p><strong>Token:</strong> <span id="offTokenId">-</span></p>
+              <p><strong>Farmer:</strong> <span id="offFarmerName">-</span></p>
+              <p><strong>Commodity:</strong> <span id="offCommodity">-</span></p>
+              <p><strong>Status Stage:</strong> <span id="offStage" class="badge">UNKNOWN</span></p>
+
+              <hr style="margin: 10px 0;">
+
+              <!-- Step A: Gate Verification -->
+              <button type="button" id="verifyGateBtn" class="btn btn-primary" style="margin-bottom: 10px;" data-i18n="btnGateApprove">Approve Gate Entry</button>
+
+              <!-- Step B: Weigh Bridge Form -->
+              <div class="form-group">
+                <label for="weighmentInput" data-i18n="labelWeighment">Weighment Bridge Quantity (Tons)</label>
+                <div class="input-inline">
+                  <input type="number" id="weighmentInput" step="0.1" placeholder="Actual Weight">
+                  <button type="button" id="saveWeightBtn" class="btn btn-secondary" data-i18n="btnSaveWeight">Record Weight</button>
+                </div>
+              </div>
+
+              <!-- Step C: Payment Approval -->
+              <button type="button" id="approveDbtBtn" class="btn btn-success" data-i18n="btnApproveDbt">Approve & Release Payment (DBT)</button>
+            </div>
+
+            <div id="officerNoTokenMsg" class="empty-sms">
+              <p data-i18n="officerPrompt">Scan QR or enter token ID to process weighment and payments.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </main>
 
-  <script src="app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
