@@ -1,40 +1,52 @@
+/* Base Resets & Global Styles */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
   background-color: #f4f7f6;
-  color: #333;
+  color: #333333;
+  line-height: 1.5;
 }
 
+/* Navbar */
 .navbar {
   background-color: #2e7d32;
-  color: white;
+  color: #ffffff;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .status-online {
   background-color: #4caf50;
-  padding: 4px 10px;
+  color: #ffffff;
+  padding: 4px 12px;
   border-radius: 12px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: bold;
 }
 
 .status-offline {
   background-color: #f44336;
-  padding: 4px 10px;
+  color: #ffffff;
+  padding: 4px 12px;
   border-radius: 12px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: bold;
 }
 
+/* Main Container */
 .container {
   max-width: 650px;
   margin: 2rem auto;
@@ -42,18 +54,20 @@ body {
 }
 
 .card {
-  background: white;
+  background: #ffffff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 1.5rem;
 }
 
 .card h2 {
   margin-bottom: 1rem;
   color: #1b5e20;
+  font-size: 1.2rem;
 }
 
+/* Form Styles */
 .form-group {
   margin-bottom: 1rem;
   display: flex;
@@ -70,16 +84,24 @@ body {
 }
 
 label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
+  color: #444444;
 }
 
 input, select {
-  padding: 0.6rem;
-  border: 1px solid #ccc;
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #cccccc;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  border-color: #2e7d32;
 }
 
 .input-inline {
@@ -91,6 +113,7 @@ input, select {
   flex: 1;
 }
 
+/* Buttons */
 .btn {
   padding: 0.65rem 1.2rem;
   border: none;
@@ -98,12 +121,18 @@ input, select {
   cursor: pointer;
   font-weight: bold;
   font-size: 0.95rem;
+  transition: background-color 0.2s ease;
 }
 
 .btn-primary {
   background-color: #2e7d32;
-  color: white;
+  color: #ffffff;
   width: 100%;
+  margin-top: 0.5rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #1b5e20;
 }
 
 .btn-primary:disabled {
@@ -113,14 +142,20 @@ input, select {
 
 .btn-secondary {
   background-color: #0288d1;
-  color: white;
+  color: #ffffff;
+  white-space: nowrap;
 }
 
+.btn-secondary:hover {
+  background-color: #01579b;
+}
+
+/* Status & Alert Boxes */
 .result-box {
   padding: 0.8rem;
   border-radius: 4px;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .info-result {
@@ -146,14 +181,15 @@ input, select {
 }
 
 .hint-text {
-  color: #666;
+  color: #666666;
   font-size: 0.8rem;
-  margin-top: 0.2rem;
+  margin-top: 0.3rem;
 }
 
+/* Digital Pass UI */
 .pass-box {
   border: 2px dashed #2e7d32;
-  padding: 1rem;
+  padding: 1.25rem;
   border-radius: 6px;
   background-color: #fafafa;
 }
@@ -162,7 +198,7 @@ input, select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e0e0e0;
   padding-bottom: 0.5rem;
   margin-bottom: 0.8rem;
 }
@@ -175,17 +211,25 @@ input, select {
 
 .badge {
   background: #2e7d32;
-  color: white;
-  padding: 2px 8px;
+  color: #ffffff;
+  padding: 3px 8px;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.pass-body p {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
 }
 
 .queue-status {
   margin-top: 1rem;
   padding: 0.8rem;
   background: #fff3e0;
+  border: 1px solid #ffe0b2;
   border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .payment-box {
@@ -194,8 +238,17 @@ input, select {
   background: #e8f5e9;
   border: 1px solid #a5d6a7;
   border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .status-completed {
   color: #2e7d32;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }
